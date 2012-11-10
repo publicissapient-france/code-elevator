@@ -3,7 +3,7 @@ package fr.xebia.elevator;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import static fr.xebia.elevator.Instruction.open;
+import static fr.xebia.elevator.Instruction.*;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -32,6 +32,8 @@ public class Elevator {
     public Elevator call(Integer fromFloor) {
         if (currentFloor.equals(fromFloor)) {
             instructions.offer(open);
+            instructions.offer(wait);
+            instructions.offer(close);
         }
 
         return this;
@@ -44,4 +46,10 @@ public class Elevator {
         doorsOpen = TRUE;
     }
 
+    void closeDoors() {
+        if (!doorsOpen) {
+            throw new IllegalStateException("Can't close doors because they are already closed");
+        }
+        doorsOpen = FALSE;
+    }
 }

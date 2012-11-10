@@ -45,4 +45,22 @@ public class ElevatorTest {
         assertThat(doorsOpen).isTrue();
     }
 
+    @Test
+    public void should_let_doors_open_when_open() {
+        elevator.call(0).tick().tick();
+
+        final Boolean doorsOpen = elevator.isDoorsOpen();
+
+        assertThat(doorsOpen).isTrue();
+    }
+
+    @Test
+    public void should_close_doors_after_open() {
+        elevator.call(0).tick().tick().tick();
+
+        final Boolean doorsOpen = elevator.isDoorsOpen();
+
+        assertThat(doorsOpen).isFalse();
+    }
+
 }
