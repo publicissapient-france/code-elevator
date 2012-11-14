@@ -63,4 +63,11 @@ public class ElevatorTest {
         assertThat(doorsOpen).isFalse();
     }
 
+    @Test
+    public void should_go_to_called_floor() {
+        final Integer floor = elevator.call(1).tick().floor();
+
+        assertThat(floor).isEqualTo(1);
+    }
+
 }

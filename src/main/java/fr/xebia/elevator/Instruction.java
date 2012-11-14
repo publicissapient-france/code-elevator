@@ -16,6 +16,16 @@ public enum Instruction {
         public void run(Elevator elevator) {
             elevator.closeDoors();
         }
+    }, up {
+        @Override
+        public void run(Elevator elevator) {
+            elevator.up();
+        }
+    }, down {
+        @Override
+        public void run(Elevator elevator) {
+            elevator.down();
+        }
     };
 
     public abstract void run(final Elevator elevator);

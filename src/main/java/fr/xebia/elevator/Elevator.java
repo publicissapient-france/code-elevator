@@ -34,6 +34,23 @@ public class Elevator {
             instructions.offer(open);
             instructions.offer(wait);
             instructions.offer(close);
+            return this;
+        }
+
+        if (currentFloor < fromFloor) {
+            for (Integer i = currentFloor; i < fromFloor; i++) {
+                instructions.offer(up);
+            }
+            instructions.offer(open);
+            return this;
+        }
+
+        if (currentFloor > fromFloor) {
+            for (Integer i = currentFloor; i > fromFloor; i--) {
+                instructions.offer(down);
+            }
+            instructions.offer(open);
+            return this;
         }
 
         return this;
@@ -52,4 +69,19 @@ public class Elevator {
         }
         doorsOpen = FALSE;
     }
+
+    void up() {
+        if (doorsOpen) {
+            throw new IllegalStateException("Can't go up because doors are open");
+        }
+        currentFloor++;
+    }
+
+    void down() {
+        if (doorsOpen) {
+            throw new IllegalStateException("Can't go down because doors are open");
+        }
+        currentFloor--;
+    }
+
 }
