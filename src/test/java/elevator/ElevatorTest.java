@@ -67,7 +67,6 @@ public class ElevatorTest {
     }
 
     @Test
-    @Ignore // TODO
     public void should_stop_at_two_stages() {
         assertThat(elevator).with(clock).call(0, UP).tick().go(4).go(2).
                 onTick("CLOSE 0").
@@ -95,7 +94,6 @@ public class ElevatorTest {
     }
 
     @Test
-    @Ignore // TODO
     public void should_go_to_first_direction_and_then_to_other() {
         assertThat(elevator).with(clock).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
