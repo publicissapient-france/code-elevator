@@ -62,7 +62,7 @@ public class InteractionPanel extends JPanel {
 
         private final Elevator elevator;
         private final int currentStage;
-        private Direction direction;
+        private final Direction direction;
 
         public CallElevatorAction(Elevator elevator, int currentStage, Direction direction) {
             this.elevator = elevator;
