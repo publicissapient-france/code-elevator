@@ -78,13 +78,11 @@ public class Elevator implements Observer {
 
         if (direction == UP) {
             stage++;
-            direction = UP;
             return;
         }
 
-        if (direction == DOWN) { // stage > nextStage.stage
+        if (direction == DOWN) {
             stage--;
-            direction = DOWN;
         }
     }
 
