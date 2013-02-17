@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="lib/easeljs-0.6.0.min.js"></script>
+    <script type="text/javascript" src="lib/tweenjs-0.4.0.min.js"></script>
+    <script>
+
+        var numberOfFloors = 6;
+        var floor = 0;
+        var stage;
+        var elevator;
+
+        function init(canvasId) {
+            stage = new createjs.Stage(canvasId);
+
+            createjs.Ticker.addListener(stage, true);
+            createjs.Ticker.setFPS(30);
+            createjs.Ticker.useRAF = true;
+
+            for (var floorNumber = 1; floorNumber < numberOfFloors; floorNumber++) {
+                drawFloor(floorNumber, stage);
+            }
+
+            drawElevator(floor, stage);
+
+            // stage.update();
+        }
+
+        function tick(elapsedTime) {
+            stage.update();
+        }
+
+        function drawFloor(floorNumber, stage) {
+            var x = Math.floor(stage.canvas.width * .25);
+            var y = Math.floor(stage.canvas.height / numberOfFloors * floorNumber);
+
+            var floor = new createjs.Graphics().beginStroke('black')
+                    .moveTo(x, y)
+                    .lineTo(stage.canvas.width, y)
+                    .endStroke();
+
+            stage.addChild(new createjs.Shape(floor));
+        }
+
+        function drawElevator(floorNumber, stage) {
+            var x = Math.floor(stage.canvas.width * .05);
+            var y = stage.canvas.height - (stage.canvas.height / numberOfFloors * (floorNumber + 1));
+            var rect = new createjs.Graphics().beginStroke('black').drawRect(
+                    x,
+                    y,
+                    Math.floor(stage.canvas.width * .2),
+                    stage.canvas.height / numberOfFloors
+            );
+            elevator = new createjs.Shape(rect);
+            createjs.Tween.get(elevator, {}).to({y:-50}, 1500, createjs.Ease.linear);
+
+            stage.addChild(elevator);
+        }
+
+        function onClick() {
+            createjs.Tween.get(elevator, {}).to({y:-100}, 1500, createjs.Ease.linear);
+            stage.update();
+        }
+
+    </script>
+</head>
+<body onload="init('elevator');">
+<canvas id="elevator" width="200" height="300" onclick="onClick();">
+    elevator
+</canvas>
+</body>
+</html>
