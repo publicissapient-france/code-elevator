@@ -63,10 +63,10 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
         }
 
         if (currentState != null) {
-            assertThat(actual.getState()).isEqualTo(currentState);
+            assertThat(actual.state()).isEqualTo(currentState);
         }
         if (currentStage != null) {
-            assertThat(actual.getStage()).isEqualTo(currentStage);
+            assertThat(actual.stage()).isEqualTo(currentStage);
         }
     }
 }

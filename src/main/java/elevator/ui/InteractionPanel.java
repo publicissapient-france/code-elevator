@@ -48,8 +48,8 @@ public class InteractionPanel extends JPanel {
     public InteractionPanel update() {
         Integer i = 0;
         for (JLabel jLabel : elevatorStack) {
-            if (elevator.getStage().equals(i)) {
-                jLabel.setText(elevator.getState().equals(OPEN) ? "[| |]" : "[ | ]");
+            if (elevator.stage().equals(i)) {
+                jLabel.setText(elevator.state().equals(OPEN) ? "[| |]" : "[ | ]");
             } else {
                 jLabel.setText(i.toString());
             }

@@ -13,15 +13,16 @@ public class Elevator implements Observer {
     private static final Integer maxStage = 5;
 
     private final Commands commands = new Commands(0, maxStage);
+
     private Integer stage = 0;
     private Direction direction;
     private ElevatorState state = CLOSE;
 
-    public ElevatorState getState() {
+    public ElevatorState state() {
         return state;
     }
 
-    public Integer getStage() {
+    public Integer stage() {
         return stage;
     }
 
