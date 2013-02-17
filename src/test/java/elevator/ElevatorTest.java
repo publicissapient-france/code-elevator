@@ -1,11 +1,11 @@
 package elevator;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static elevator.Direction.UP;
 import static elevator.assertions.Assertions.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 
 public class ElevatorTest {
 
@@ -17,6 +17,11 @@ public class ElevatorTest {
         clock = new Clock();
         elevator = new Elevator();
         clock.addObserver(elevator);
+    }
+
+    @Test
+    public void should_print_pretty_string() {
+        assertThat(elevator.toString()).isEqualTo("elevator CLOSE 0");
     }
 
     @Test
@@ -106,6 +111,9 @@ public class ElevatorTest {
                 onTick("      3").
                 onTick("      2").
                 onTick("      1").
+                onTick("OPEN   ").go(0).
+                onTick("CLOSE  ").
+                onTick("      0").
                 onTick("OPEN   ").
                 onTick("CLOSE  ");
     }

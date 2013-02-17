@@ -6,6 +6,7 @@ import org.junit.Test;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.assertions.Assertions.assertThat;
+import static org.fest.assertions.Fail.fail;
 
 public class CommandsTest {
 
@@ -19,6 +20,12 @@ public class CommandsTest {
     @Test
     public void should_tell_if_there_is_no_command() throws Exception {
         assertThat(commands).isEmpty();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void should_not_get_command_with_null_direction() throws Exception {
+        commands.get(0, null);
+        fail();
     }
 
     @Test
