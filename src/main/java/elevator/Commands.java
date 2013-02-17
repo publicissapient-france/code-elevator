@@ -64,14 +64,7 @@ public class Commands {
     }
 
     private Direction getDirection(Integer stage) {
-        Command firstCommand = commands.iterator().next();
-        if (firstCommand.stage.equals(stage)) {
-            return firstCommand.direction;
-        } else if (firstCommand.stage < stage) {
-            return DOWN;
-        } else {
-            return UP;
-        }
+        return commands.iterator().next().getDirection(stage);
     }
 
 }

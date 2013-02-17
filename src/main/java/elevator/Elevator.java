@@ -62,13 +62,7 @@ public class Elevator implements Observer {
             return;
         }
 
-        if (nextCommand.stage.equals(stage)) {
-            direction = nextCommand.direction;
-        } else if (nextCommand.stage < stage) {
-            direction = DOWN;
-        } else {
-            direction = UP;
-        }
+        direction = nextCommand.getDirection(stage);
 
         if (nextCommand.equals(new Command(stage, direction)) || (nextCommand.stage.equals(stage) && commands.commands().isEmpty())) {
             state = OPEN;

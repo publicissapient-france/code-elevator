@@ -1,5 +1,8 @@
 package elevator;
 
+import static elevator.Direction.DOWN;
+import static elevator.Direction.UP;
+
 public class Command {
 
     final Integer stage;
@@ -33,5 +36,16 @@ public class Command {
     @Override
     public String toString() {
         return stage + " " + direction;
+    }
+
+    public Direction getDirection(Integer stage) {
+        if (this.stage.equals(stage)) {
+            return direction;
+        } else if (this.stage < stage) {
+            return DOWN;
+        } else {
+            return UP;
+        }
+
     }
 }
