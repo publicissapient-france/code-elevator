@@ -13,9 +13,6 @@
         function init(canvasId) {
             stage = new createjs.Stage(canvasId);
 
-            createjs.Ticker.addListener(stage, true);
-            createjs.Ticker.setFPS(30);
-            createjs.Ticker.useRAF = true;
 
             for (var floorNumber = 1; floorNumber < numberOfFloors; floorNumber++) {
                 drawFloor(floorNumber, stage);
@@ -23,11 +20,10 @@
 
             drawElevator(floor, stage);
 
-            // stage.update();
-        }
+            createjs.Ticker.addEventListener("tick", stage);
+            createjs.Ticker.setFPS(30);
+            createjs.Ticker.useRAF = true;
 
-        function tick(elapsedTime) {
-            stage.update();
         }
 
         function drawFloor(floorNumber, stage) {
