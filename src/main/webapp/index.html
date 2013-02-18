@@ -8,6 +8,14 @@
         var stage;
         var elevator;
 
+        document.onkeydown = function(e) {
+            if (e.keyCode == 38) {
+                elevator.up();
+            } else if (e.keyCode == 40) {
+                elevator.down();
+            }
+        }
+
         function init(canvasId) {
             stage = new createjs.Stage(canvasId);
 
@@ -21,6 +29,13 @@
             createjs.Ticker.setFPS(30);
             createjs.Ticker.useRAF = true;
 
+            elevator.up = function() {
+                createjs.Tween.get(elevator, {}).to({y:elevator.y - stage.canvas.height / NUMBER_OF_FLOORS}, 1000, createjs.Ease.sineInOut);
+            }
+
+            elevator.down = function() {
+                createjs.Tween.get(elevator, {}).to({y:elevator.y + stage.canvas.height / NUMBER_OF_FLOORS}, 1000, createjs.Ease.sineInOut);
+            }
         }
 
         function drawFloor(floorNumber, stage) {
@@ -45,16 +60,9 @@
                     stage.canvas.height / NUMBER_OF_FLOORS
             );
             elevator = new createjs.Shape(rect);
-            createjs.Tween.get(elevator, {}).to({y:-50}, 1500, createjs.Ease.linear);
 
             stage.addChild(elevator);
         }
-
-        function onClick() {
-            createjs.Tween.get(elevator, {}).to({y:-100}, 1500, createjs.Ease.linear);
-            stage.update();
-        }
-
     </script>
     <style type="text/css">
 body {
@@ -63,7 +71,7 @@ body {
     </style>
 </head>
 <body onload="init('elevator');">
-<canvas id="elevator" width="200" height="300" onclick="onClick();">
+<canvas id="elevator" width="200" height="300">
     elevator
 </canvas>
 </body>
