@@ -27,7 +27,7 @@
             var x = Math.floor(stage.canvas.width * .25);
             var y = Math.floor(stage.canvas.height / NUMBER_OF_FLOORS * floorNumber);
 
-            var floor = new createjs.Graphics().beginStroke('black')
+            var floor = new createjs.Graphics().beginStroke('rgb(96, 96, 96)')
                     .moveTo(x, y)
                     .lineTo(stage.canvas.width - 20, y)
                     .endStroke();
@@ -37,8 +37,8 @@
 
         function drawElevator(stage) {
             var x = Math.floor(stage.canvas.width * .05);
-            var rect = new createjs.Graphics().beginStroke('black').drawRect(
             var y = stage.canvas.height - (stage.canvas.height / NUMBER_OF_FLOORS);
+            var rect = new createjs.Graphics().beginStroke('rgb(96, 96, 96)').drawRect(
                     x,
                     y,
                     Math.floor(stage.canvas.width * .2),
@@ -56,6 +56,11 @@
         }
 
     </script>
+    <style type="text/css">
+body {
+    background-color: rgb(57, 57, 57);
+}
+    </style>
 </head>
 <body onload="init('elevator');">
 <canvas id="elevator" width="200" height="300" onclick="onClick();">
