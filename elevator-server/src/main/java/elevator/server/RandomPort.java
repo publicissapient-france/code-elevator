@@ -1,4 +1,4 @@
-package elevator;
+package elevator.server;
 
 import static java.lang.Math.random;
 import static java.lang.Math.round;

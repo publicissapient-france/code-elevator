@@ -1,4 +1,4 @@
-package elevator;
+package elevator.server;
 
 import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.jersey.api.core.PackagesResourceConfig;
@@ -13,7 +13,7 @@ public class ElevatorServer {
         try {
             HttpServer httpServer = HttpServerFactory.create("http://localhost:" + new RandomPort().port + "/", resourceConfig);
             httpServer.start();
-            return new StartedElevatorServer(httpServer);
+            return new StartedElevatorServer();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

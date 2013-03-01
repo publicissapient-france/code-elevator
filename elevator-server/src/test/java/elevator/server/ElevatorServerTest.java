@@ -1,4 +1,4 @@
-package elevator;
+package elevator.server;
 
 import org.junit.Test;
 
