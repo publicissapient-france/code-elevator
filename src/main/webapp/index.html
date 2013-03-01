@@ -8,6 +8,9 @@
         const NUMBER_OF_FLOORS = 6;
         const LINE_COLOR = 'rgb(96, 96, 96)';
 
+        const img = new Image();
+        img.src = "smile.png";
+
         var Elevator = function(canvasId) {
             this.stage = new createjs.Stage(canvasId);
 
@@ -74,6 +77,13 @@
         Elevator.prototype.elevatorHeight = function() {
             return this.stage.canvas.height / (NUMBER_OF_FLOORS + 1);
         }
+
+        Elevator.prototype.drawNewUser = function(floorNumber, rank) {
+            var user = new createjs.Bitmap(img);
+            user.x = Math.floor(this.stage.canvas.width * .30 + (img.width + img.width / 5) * rank);
+            user.y = Math.floor(this.elevatorHeight() * (NUMBER_OF_FLOORS - floorNumber)) - img.height;
+            this.stage.addChild(user);
+        }
     </script>
     <style type="text/css">
         body {
@@ -81,7 +91,7 @@
         }
     </style>
 </head>
-<body onload="new Elevator('elevator1'); new Elevator('elevator2');">
+<body onload="var elevator = new Elevator('elevator1'); elevator.drawNewUser(0, 0); new Elevator('elevator2');">
 <canvas id="elevator1" width="200" height="400">
     elevator1
 </canvas>
