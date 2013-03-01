@@ -2,8 +2,42 @@
 <html>
 <head>
     <title>Code Elevator</title>
+<!--
     <script type="text/javascript" src="lib/easeljs-0.6.0.min.js"></script>
     <script type="text/javascript" src="lib/tweenjs-0.4.0.min.js"></script>
+-->
+
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/events/EventDispatcher.js"></script>
+
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/utils/UID.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/utils/Ticker.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/events/MouseEvent.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/geom/Matrix2D.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/geom/Point.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/geom/Rectangle.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/ui/ButtonHelper.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Shadow.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/SpriteSheet.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Graphics.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/DisplayObject.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Container.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Stage.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Bitmap.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/BitmapAnimation.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Shape.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/Text.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/utils/SpriteSheetUtils.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/utils/SpriteSheetBuilder.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/display/DOMElement.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/filters/Filter.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/ui/Touch.js"></script>
+    <script type="text/javascript" src="lib/EaselJS-release_v0.6.0/src/easeljs/version.js"></script>
+
+    <script type="text/javascript" src="lib/TweenJS-release_v0.4.0/src/tweenjs/Tween.js"></script>
+    <script type="text/javascript" src="lib/TweenJS-release_v0.4.0/src/tweenjs/Timeline.js"></script>
+    <script type="text/javascript" src="lib/TweenJS-release_v0.4.0/src/tweenjs/Ease.js"></script>
+    <script type="text/javascript" src="lib/TweenJS-release_v0.4.0/src/tweenjs/MotionGuidePlugin.js"></script>
+    <script type="text/javascript" src="lib/TweenJS-release_v0.4.0/src/tweenjs/version.js"></script>
     <script>
         const NUMBER_OF_FLOORS = 6;
         const LINE_COLOR = 'rgb(96, 96, 96)';
