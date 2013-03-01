@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
+        <module>elevator-server</module>
         <module>elevator-client</module>
     </modules>
 
