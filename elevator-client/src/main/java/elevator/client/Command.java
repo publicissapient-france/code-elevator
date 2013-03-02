@@ -1,7 +1,4 @@
-package elevator;
-
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
+package elevator.client;
 
 public class Command {
 
@@ -42,9 +39,9 @@ public class Command {
         if (this.stage.equals(stage)) {
             return direction;
         } else if (this.stage < stage) {
-            return DOWN;
+            return Direction.DOWN;
         } else {
-            return UP;
+            return Direction.UP;
         }
 
     }

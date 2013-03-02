@@ -1,9 +1,11 @@
-package elevator;
+package elevator.client;
 
+import elevator.client.Command;
+import elevator.client.DistanceEvaluator;
 import org.junit.Test;
 
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
+import static elevator.client.Direction.DOWN;
+import static elevator.client.Direction.UP;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class DistanceEvaluatorTest {

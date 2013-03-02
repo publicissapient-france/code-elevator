@@ -1,12 +1,10 @@
-package elevator;
+package elevator.client;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
 import static java.lang.Math.abs;
 import static java.util.Collections.unmodifiableSet;
 

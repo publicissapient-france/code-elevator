@@ -1,7 +1,7 @@
-package elevator.ui;
+package elevator.client.ui;
 
-import elevator.Clock;
-import elevator.Elevator;
+import elevator.client.Clock;
+import elevator.client.Elevator;
 
 import javax.swing.*;
 import java.awt.*;

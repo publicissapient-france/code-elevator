@@ -1,6 +1,6 @@
-package elevator;
+package elevator.client;
 
-import static elevator.Direction.UP;
+import static elevator.client.Direction.UP;
 
 public class DistanceEvaluator {
 

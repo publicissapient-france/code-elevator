@@ -1,8 +1,8 @@
-package elevator.assertions;
+package elevator.client.assertions;
 
-import elevator.Clock;
-import elevator.Direction;
-import elevator.Elevator;
+import elevator.client.Clock;
+import elevator.client.Direction;
+import elevator.client.Elevator;
 
 import java.util.regex.Matcher;
 

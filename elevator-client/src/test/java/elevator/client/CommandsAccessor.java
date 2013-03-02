@@ -1,4 +1,7 @@
-package elevator;
+package elevator.client;
+
+import elevator.client.Command;
+import elevator.client.Commands;
 
 import java.util.Set;
 

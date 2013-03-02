@@ -1,12 +1,10 @@
-package elevator;
+package elevator.client;
 
 import java.util.Observable;
 import java.util.Observer;
 
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
-import static elevator.ElevatorState.CLOSE;
-import static elevator.ElevatorState.OPEN;
+import static elevator.client.Direction.DOWN;
+import static elevator.client.Direction.UP;
 
 public class Elevator implements Observer {
 
@@ -16,7 +14,7 @@ public class Elevator implements Observer {
 
     private Integer stage = 0;
     private Direction direction;
-    private ElevatorState state = CLOSE;
+    private ElevatorState state = ElevatorState.CLOSE;
 
     public ElevatorState state() {
         return state;
@@ -51,13 +49,13 @@ public class Elevator implements Observer {
             nextCommand = commands.get(stage, direction);
         }
         if (nextCommand == null) {
-            state = CLOSE;
+            state = ElevatorState.CLOSE;
             direction = null;
             return;
         }
 
-        if (state == OPEN) {
-            state = CLOSE;
+        if (state == ElevatorState.OPEN) {
+            state = ElevatorState.CLOSE;
             direction = null;
             return;
         }
@@ -65,7 +63,7 @@ public class Elevator implements Observer {
         direction = nextCommand.getDirection(stage);
 
         if (nextCommand.equals(new Command(stage, direction)) || (nextCommand.stage.equals(stage) && commands.commands().isEmpty())) {
-            state = OPEN;
+            state = ElevatorState.OPEN;
             direction = null;
             return;
         }

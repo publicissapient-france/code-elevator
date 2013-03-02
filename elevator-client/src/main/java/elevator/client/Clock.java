@@ -1,4 +1,4 @@
-package elevator;
+package elevator.client;
 
 import java.util.Observable;
 

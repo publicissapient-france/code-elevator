@@ -1,10 +1,10 @@
-package elevator;
+package elevator.client;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static elevator.Direction.UP;
-import static elevator.assertions.Assertions.assertThat;
+import static elevator.client.Direction.UP;
+import static elevator.client.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class ElevatorTest {

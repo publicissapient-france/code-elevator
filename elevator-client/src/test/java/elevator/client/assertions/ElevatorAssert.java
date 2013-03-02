@@ -1,9 +1,9 @@
-package elevator.assertions;
+package elevator.client.assertions;
 
-import elevator.Clock;
-import elevator.Direction;
-import elevator.Elevator;
-import elevator.ElevatorState;
+import elevator.client.Clock;
+import elevator.client.Direction;
+import elevator.client.Elevator;
+import elevator.client.ElevatorState;
 import org.fest.assertions.GenericAssert;
 
 import java.util.regex.Matcher;

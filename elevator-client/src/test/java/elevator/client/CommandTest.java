@@ -1,8 +1,9 @@
-package elevator;
+package elevator.client;
 
+import elevator.client.Command;
 import org.junit.Test;
 
-import static elevator.Direction.UP;
+import static elevator.client.Direction.UP;
 
 public class CommandTest {
 

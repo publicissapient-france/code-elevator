@@ -1,8 +1,8 @@
-package elevator.assertions;
+package elevator.client.assertions;
 
-import elevator.Command;
-import elevator.Commands;
-import elevator.Elevator;
+import elevator.client.Command;
+import elevator.client.Commands;
+import elevator.client.Elevator;
 
 public class Assertions {
 
