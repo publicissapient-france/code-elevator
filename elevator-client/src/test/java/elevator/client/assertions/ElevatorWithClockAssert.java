@@ -27,13 +27,13 @@ public class ElevatorWithClockAssert extends ElevatorAssert {
         return this;
     }
 
-    public ElevatorWithClockAssert call(Integer atStage, Direction to) {
-        super.call(atStage, to);
+    public ElevatorWithClockAssert call(Integer atFloor, Direction to) {
+        super.call(atFloor, to);
         return this;
     }
 
-    public ElevatorWithClockAssert go(Integer toStage) {
-        super.go(toStage);
+    public ElevatorWithClockAssert go(Integer floorToGo) {
+        super.go(floorToGo);
         return this;
     }
 

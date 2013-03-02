@@ -60,7 +60,7 @@ public class ElevatorTest {
     }
 
     @Test
-    public void should_go_to_stage() {
+    public void should_go_to_floor() {
         assertThat(elevator).with(clock).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
                 onTick("      1").
@@ -72,7 +72,7 @@ public class ElevatorTest {
     }
 
     @Test
-    public void should_stop_at_two_stages() {
+    public void should_stop_at_two_floors() {
         assertThat(elevator).with(clock).call(0, UP).tick().go(4).go(2).
                 onTick("CLOSE 0").
                 onTick("      1").
@@ -86,7 +86,7 @@ public class ElevatorTest {
     }
 
     @Test
-    public void should_go_at_same_stage_for_any_times() {
+    public void should_go_at_same_floor_for_any_times() {
         assertThat(elevator).with(clock).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
                 onTick("      1").

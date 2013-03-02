@@ -11,13 +11,13 @@ import static java.util.Collections.unmodifiableSet;
 public class Commands {
 
     private final Set<Command> commands;
-    private final Integer minStage;
-    private final Integer maxStage;
+    private final Integer minFloor;
+    private final Integer maxFloor;
 
-    public Commands(Integer minStage, Integer maxStage) {
-        this.minStage = minStage;
-        this.maxStage = maxStage;
-        commands = new LinkedHashSet<>(abs(maxStage - minStage) * 2);
+    public Commands(Integer minFloor, Integer maxFloor) {
+        this.minFloor = minFloor;
+        this.maxFloor = maxFloor;
+        commands = new LinkedHashSet<>(abs(maxFloor - minFloor) * 2);
     }
 
     Set<Command> commands() {
@@ -29,21 +29,21 @@ public class Commands {
         return this;
     }
 
-    public Command get(Integer stage) {
+    public Command get(Integer floor) {
         if (commands.isEmpty()) {
             return null;
         }
-        return get(stage, getDirection(stage));
+        return get(floor, getDirection(floor));
     }
 
-    public Command get(Integer stage, Direction direction) {
+    public Command get(Integer floor, Direction direction) {
         if (direction == null) {
             throw new NullPointerException();
         }
         if (commands.isEmpty()) {
             return null;
         }
-        final Command commandFromElevator = new Command(stage, direction);
+        final Command commandFromElevator = new Command(floor, direction);
         if (commands.contains(commandFromElevator)) {
             commands.remove(commandFromElevator);
             return commandFromElevator;
@@ -52,7 +52,7 @@ public class Commands {
             return commands.iterator().next();
         }
         SortedSet<Command> sortedCommands = new TreeSet<Command>((o1, o2) -> {
-            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, minStage, maxStage);
+            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, minFloor, maxFloor);
             Integer distance1 = distanceEvaluator.getDistance(o1);
             Integer distance2 = distanceEvaluator.getDistance(o2);
             return distance1 - distance2;
@@ -61,8 +61,8 @@ public class Commands {
         return sortedCommands.first();
     }
 
-    private Direction getDirection(Integer stage) {
-        return commands.iterator().next().getDirection(stage);
+    private Direction getDirection(Integer floor) {
+        return commands.iterator().next().getDirection(floor);
     }
 
 }

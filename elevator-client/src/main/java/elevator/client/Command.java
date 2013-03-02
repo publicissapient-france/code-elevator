@@ -2,14 +2,14 @@ package elevator.client;
 
 public class Command {
 
-    final Integer stage;
+    final Integer floor;
     final Direction direction;
 
-    Command(Integer stage, Direction direction) {
-        if (stage == null || direction == null) {
+    Command(Integer floor, Direction direction) {
+        if (floor == null || direction == null) {
             throw new NullPointerException();
         }
-        this.stage = stage;
+        this.floor = floor;
         this.direction = direction;
     }
 
@@ -20,25 +20,25 @@ public class Command {
 
         Command command = (Command) o;
 
-        return direction == command.direction && stage.equals(command.stage);
+        return direction == command.direction && floor.equals(command.floor);
     }
 
     @Override
     public int hashCode() {
-        int result = stage.hashCode();
+        int result = floor.hashCode();
         result = 31 * result + direction.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return stage + " " + direction;
+        return floor + " " + direction;
     }
 
-    public Direction getDirection(Integer stage) {
-        if (this.stage.equals(stage)) {
+    public Direction getDirection(Integer floor) {
+        if (this.floor.equals(floor)) {
             return direction;
-        } else if (this.stage < stage) {
+        } else if (this.floor < floor) {
             return Direction.DOWN;
         } else {
             return Direction.UP;

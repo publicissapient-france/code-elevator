@@ -48,7 +48,7 @@ public class InteractionPanel extends JPanel {
     public InteractionPanel update() {
         Integer i = 0;
         for (JLabel jLabel : elevatorStack) {
-            if (elevator.stage().equals(i)) {
+            if (elevator.floor().equals(i)) {
                 jLabel.setText(elevator.state().equals(OPEN) ? "[| |]" : "[ | ]");
             } else {
                 jLabel.setText(i.toString());
@@ -61,19 +61,19 @@ public class InteractionPanel extends JPanel {
     private static class CallElevatorAction extends AbstractAction {
 
         private final Elevator elevator;
-        private final int currentStage;
+        private final int currentFloor;
         private final Direction direction;
 
-        public CallElevatorAction(Elevator elevator, int currentStage, Direction direction) {
+        public CallElevatorAction(Elevator elevator, int currentFloor, Direction direction) {
             this.elevator = elevator;
-            this.currentStage = currentStage;
+            this.currentFloor = currentFloor;
             this.direction = direction;
             this.putValue(NAME, direction.toString());
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            elevator.call(currentStage, direction);
+            elevator.call(currentFloor, direction);
         }
 
     }

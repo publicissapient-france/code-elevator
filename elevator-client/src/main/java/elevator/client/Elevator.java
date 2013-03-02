@@ -8,11 +8,11 @@ import static elevator.client.Direction.UP;
 
 public class Elevator implements Observer {
 
-    private static final Integer maxStage = 5;
+    private static final Integer maxFloor = 5;
 
-    private final Commands commands = new Commands(0, maxStage);
+    private final Commands commands = new Commands(0, maxFloor);
 
-    private Integer stage = 0;
+    private Integer floor = 0;
     private Direction direction;
     private ElevatorState state = ElevatorState.CLOSE;
 
@@ -20,23 +20,23 @@ public class Elevator implements Observer {
         return state;
     }
 
-    public Integer stage() {
-        return stage;
+    public Integer floor() {
+        return floor;
     }
 
-    public Elevator call(Integer atStage, Direction to) {
-        commands.add(new Command(atStage, to));
+    public Elevator call(Integer atFloor, Direction to) {
+        commands.add(new Command(atFloor, to));
         return this;
     }
 
-    public Elevator go(Integer stageToGo) {
+    public Elevator go(Integer floorToGo) {
         final Direction direction;
-        if (stage > stageToGo) {
+        if (floor > floorToGo) {
             direction = DOWN;
         } else {
             direction = UP;
         }
-        call(stageToGo, direction);
+        call(floorToGo, direction);
         return this;
     }
 
@@ -44,9 +44,9 @@ public class Elevator implements Observer {
     public void update(Observable clock, Object arg) {
         Command nextCommand;
         if (direction == null) {
-            nextCommand = commands.get(stage);
+            nextCommand = commands.get(floor);
         } else {
-            nextCommand = commands.get(stage, direction);
+            nextCommand = commands.get(floor, direction);
         }
         if (nextCommand == null) {
             state = ElevatorState.CLOSE;
@@ -60,27 +60,27 @@ public class Elevator implements Observer {
             return;
         }
 
-        direction = nextCommand.getDirection(stage);
+        direction = nextCommand.getDirection(floor);
 
-        if (nextCommand.equals(new Command(stage, direction)) || (nextCommand.stage.equals(stage) && commands.commands().isEmpty())) {
+        if (nextCommand.equals(new Command(floor, direction)) || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
             state = ElevatorState.OPEN;
             direction = null;
             return;
         }
 
         if (direction == UP) {
-            stage++;
+            floor++;
             return;
         }
 
         if (direction == DOWN) {
-            stage--;
+            floor--;
         }
     }
 
     @Override
     public String toString() {
-        return "elevator " + (direction == null ? state : direction) + " " + stage;
+        return "elevator " + (direction == null ? state : direction) + " " + floor;
     }
 
 }

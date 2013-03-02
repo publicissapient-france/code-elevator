@@ -16,7 +16,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
 
     private static final Pattern PATTERN = Pattern.compile("(OPEN|CLOSE)?(?: )*(\\d+)?");
-    private Integer currentStage;
+    private Integer currentFloor;
     private ElevatorState currentState;
 
     ElevatorAssert(final Elevator actual) {
@@ -32,13 +32,13 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
         return this;
     }
 
-    public ElevatorAssert call(Integer atStage, Direction to) {
-        actual.call(atStage, to);
+    public ElevatorAssert call(Integer atFloor, Direction to) {
+        actual.call(atFloor, to);
         return this;
     }
 
-    public ElevatorAssert go(Integer stageToGo) {
-        actual.go(stageToGo);
+    public ElevatorAssert go(Integer floorToGo) {
+        actual.go(floorToGo);
         return this;
     }
 
@@ -53,20 +53,20 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
 
     protected void assertState(Matcher matcher) {
         String expectedElevatorState = matcher.group(1);
-        String expectedElevatorStage = matcher.group(2);
+        String expectedElevatorFloor = matcher.group(2);
 
         if (expectedElevatorState != null) {
             currentState = ElevatorState.valueOf(expectedElevatorState);
         }
-        if (expectedElevatorStage != null) {
-            currentStage = parseInt(expectedElevatorStage);
+        if (expectedElevatorFloor != null) {
+            currentFloor = parseInt(expectedElevatorFloor);
         }
 
         if (currentState != null) {
             assertThat(actual.state()).isEqualTo(currentState);
         }
-        if (currentStage != null) {
-            assertThat(actual.stage()).isEqualTo(currentStage);
+        if (currentFloor != null) {
+            assertThat(actual.floor()).isEqualTo(currentFloor);
         }
     }
 }
