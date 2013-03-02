@@ -2,8 +2,8 @@ package elevator.client.assertions;
 
 import elevator.client.Clock;
 import elevator.client.Direction;
+import elevator.client.Door;
 import elevator.client.Elevator;
-import elevator.client.ElevatorState;
 import org.fest.assertions.GenericAssert;
 
 import java.util.regex.Matcher;
@@ -17,7 +17,7 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
 
     private static final Pattern PATTERN = Pattern.compile("(OPEN|CLOSE)?(?: )*(\\d+)?");
     private Integer currentFloor;
-    private ElevatorState currentState;
+    private Door currentState;
 
     ElevatorAssert(final Elevator actual) {
         super(ElevatorAssert.class, actual);
@@ -56,14 +56,14 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
         String expectedElevatorFloor = matcher.group(2);
 
         if (expectedElevatorState != null) {
-            currentState = ElevatorState.valueOf(expectedElevatorState);
+            currentState = Door.valueOf(expectedElevatorState);
         }
         if (expectedElevatorFloor != null) {
             currentFloor = parseInt(expectedElevatorFloor);
         }
 
         if (currentState != null) {
-            assertThat(actual.state()).isEqualTo(currentState);
+            assertThat(actual.door()).isEqualTo(currentState);
         }
         if (currentFloor != null) {
             assertThat(actual.floor()).isEqualTo(currentFloor);

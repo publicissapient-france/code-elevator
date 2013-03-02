@@ -14,10 +14,10 @@ public class Elevator implements Observer {
 
     private Integer floor = 0;
     private Direction direction;
-    private ElevatorState state = ElevatorState.CLOSE;
+    private Door door = Door.CLOSE;
 
-    public ElevatorState state() {
-        return state;
+    public Door door() {
+        return door;
     }
 
     public Integer floor() {
@@ -49,13 +49,13 @@ public class Elevator implements Observer {
             nextCommand = commands.get(floor, direction);
         }
         if (nextCommand == null) {
-            state = ElevatorState.CLOSE;
+            door = Door.CLOSE;
             direction = null;
             return;
         }
 
-        if (state == ElevatorState.OPEN) {
-            state = ElevatorState.CLOSE;
+        if (door == Door.OPEN) {
+            door = Door.CLOSE;
             direction = null;
             return;
         }
@@ -63,7 +63,7 @@ public class Elevator implements Observer {
         direction = nextCommand.getDirection(floor);
 
         if (nextCommand.equals(new Command(floor, direction)) || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
-            state = ElevatorState.OPEN;
+            door = Door.OPEN;
             direction = null;
             return;
         }
@@ -80,7 +80,7 @@ public class Elevator implements Observer {
 
     @Override
     public String toString() {
-        return "elevator " + (direction == null ? state : direction) + " " + floor;
+        return "elevator " + (direction == null ? door : direction) + " " + floor;
     }
 
 }

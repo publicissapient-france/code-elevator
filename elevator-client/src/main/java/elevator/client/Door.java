@@ -1,6 +1,6 @@
 package elevator.client;
 
-public enum ElevatorState {
+public enum Door {
 
     OPEN, CLOSE,
 

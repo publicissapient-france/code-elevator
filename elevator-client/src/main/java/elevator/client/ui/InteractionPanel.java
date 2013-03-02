@@ -11,7 +11,7 @@ import java.util.Deque;
 
 import static elevator.client.Direction.DOWN;
 import static elevator.client.Direction.UP;
-import static elevator.client.ElevatorState.OPEN;
+import static elevator.client.Door.OPEN;
 
 public class InteractionPanel extends JPanel {
 
@@ -49,7 +49,7 @@ public class InteractionPanel extends JPanel {
         Integer i = 0;
         for (JLabel jLabel : elevatorStack) {
             if (elevator.floor().equals(i)) {
-                jLabel.setText(elevator.state().equals(OPEN) ? "[| |]" : "[ | ]");
+                jLabel.setText(elevator.door().equals(OPEN) ? "[| |]" : "[ | ]");
             } else {
                 jLabel.setText(i.toString());
             }
