@@ -7,6 +7,8 @@ import static java.util.Collections.unmodifiableSet;
 
 public class ElevatorGame {
 
+    private static final Integer MAX_NUMBER_OF_USERS = 10;
+
     private final Elevator elevator;
     private Set<User> users;
 
@@ -31,6 +33,9 @@ public class ElevatorGame {
     }
 
     public ElevatorGame addUser() {
+        if (users.size() >= 10) {
+            throw new IllegalStateException("can't add more than " + MAX_NUMBER_OF_USERS + " users");
+        }
         users.add(new User());
         return this;
     }
