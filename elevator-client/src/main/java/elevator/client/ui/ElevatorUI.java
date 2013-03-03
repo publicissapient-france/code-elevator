@@ -5,10 +5,11 @@ import elevator.client.Elevator;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static java.awt.BorderLayout.CENTER;
-import static java.awt.BorderLayout.SOUTH;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.swing.SwingUtilities.invokeLater;
 
 public class ElevatorUI extends JFrame {
@@ -25,16 +26,14 @@ public class ElevatorUI extends JFrame {
         InteractionPanel interactionPanel = new InteractionPanel(elevator);
         add(interactionPanel, CENTER);
 
-        JButton clockButton = new JButton(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                clock.tick();
-                interactionPanel.update();
-            }
-        });
-        clockButton.setText("tick");
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-        add(clockButton, SOUTH);
+        Runnable periodicTask = () -> {
+            clock.tick();
+            interactionPanel.update();
+        };
+
+        executor.scheduleAtFixedRate(periodicTask, 0, 1, SECONDS);
 
         pack();
         setVisible(true);
