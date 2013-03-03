@@ -1,4 +1,4 @@
-package elevator.client;
+package elevator;
 
 public enum Door {
 

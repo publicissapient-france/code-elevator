@@ -1,5 +1,7 @@
 package elevator.client;
 
+import elevator.Direction;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;

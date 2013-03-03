@@ -1,8 +1,8 @@
 package elevator.client.assertions;
 
+import elevator.Direction;
+import elevator.Door;
 import elevator.client.Clock;
-import elevator.client.Direction;
-import elevator.client.Door;
 import elevator.client.Elevator;
 import org.fest.assertions.GenericAssert;
 

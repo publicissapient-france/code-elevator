@@ -1,7 +1,7 @@
 package elevator.client.assertions;
 
+import elevator.Direction;
 import elevator.client.Clock;
-import elevator.client.Direction;
 import elevator.client.Elevator;
 
 import java.util.regex.Matcher;

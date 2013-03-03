@@ -1,12 +1,15 @@
 package elevator.client;
 
+import elevator.Direction;
+import elevator.Door;
+
 import java.util.Observable;
 import java.util.Observer;
 
-import static elevator.client.Direction.DOWN;
-import static elevator.client.Direction.UP;
+import static elevator.Direction.DOWN;
+import static elevator.Direction.UP;
 
-public class Elevator implements Observer {
+public class Elevator implements Observer, elevator.Elevator {
 
     private static final Integer maxFloor = 5;
 
@@ -24,12 +27,14 @@ public class Elevator implements Observer {
         return floor;
     }
 
-    public Elevator call(Integer atFloor, Direction to) {
+    @Override
+    public elevator.Elevator call(Integer atFloor, Direction to) {
         commands.add(new Command(atFloor, to));
         return this;
     }
 
-    public Elevator go(Integer floorToGo) {
+    @Override
+    public elevator.Elevator go(Integer floorToGo) {
         final Direction direction;
         if (floor > floorToGo) {
             direction = DOWN;

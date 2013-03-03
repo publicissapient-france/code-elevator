@@ -1,6 +1,6 @@
 package elevator.client.ui;
 
-import elevator.client.Direction;
+import elevator.Direction;
 import elevator.client.Elevator;
 
 import javax.swing.*;
@@ -9,9 +9,9 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import static elevator.client.Direction.DOWN;
-import static elevator.client.Direction.UP;
-import static elevator.client.Door.OPEN;
+import static elevator.Direction.DOWN;
+import static elevator.Direction.UP;
+import static elevator.Door.OPEN;
 
 public class InteractionPanel extends JPanel {
 

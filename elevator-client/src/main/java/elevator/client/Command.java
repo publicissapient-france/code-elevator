@@ -1,5 +1,7 @@
 package elevator.client;
 
+import elevator.Direction;
+
 public class Command {
 
     final Integer floor;

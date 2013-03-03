@@ -3,8 +3,8 @@ package elevator.client;
 import org.junit.Before;
 import org.junit.Test;
 
-import static elevator.client.Direction.DOWN;
-import static elevator.client.Direction.UP;
+import static elevator.Direction.DOWN;
+import static elevator.Direction.UP;
 import static elevator.client.assertions.Assertions.assertThat;
 import static org.fest.assertions.Fail.fail;
 
