@@ -1,6 +1,7 @@
 package elevator.server;
 
 class Email {
+
     private final String email;
 
     Email(String email) {
@@ -27,4 +28,5 @@ class Email {
     public String toString() {
         return email;
     }
+
 }

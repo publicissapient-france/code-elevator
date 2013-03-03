@@ -3,6 +3,7 @@ package elevator.server;
 import java.net.URL;
 
 public class Elevator {
+
     final Email email;
 
     public Elevator(Email email, URL url) {
@@ -24,4 +25,5 @@ public class Elevator {
     public int hashCode() {
         return email.hashCode();
     }
+
 }

@@ -1,12 +1,12 @@
 package elevator.server;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
 public class ElevatorGame {
+
     private final Elevator elevator;
     private Set<User> users;
 
@@ -38,4 +38,5 @@ public class ElevatorGame {
     public Set<User> users() {
         return unmodifiableSet(users);
     }
+
 }

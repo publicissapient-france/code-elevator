@@ -8,6 +8,7 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 
 public class ElevatorServer {
+
     public StartedElevatorServer start() {
         ResourceConfig resourceConfig = new PackagesResourceConfig("elevator");
         try {
@@ -18,4 +19,5 @@ public class ElevatorServer {
             throw new RuntimeException(e);
         }
     }
+
 }
