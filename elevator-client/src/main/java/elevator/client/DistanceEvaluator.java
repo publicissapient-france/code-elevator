@@ -32,4 +32,5 @@ public class DistanceEvaluator {
             return numberOfFloors + (maxFloor - command.floor);
         }
     }
+
 }

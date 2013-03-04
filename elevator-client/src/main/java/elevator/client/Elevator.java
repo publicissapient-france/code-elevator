@@ -12,9 +12,9 @@ import static elevator.Direction.UP;
 
 public class Elevator implements Observer, elevator.Elevator {
 
-    private static final Integer maxFloor = 5;
+    private static final Integer MAX_FLOOR = 5;
 
-    private final Commands commands = new Commands(0, maxFloor);
+    private final Commands commands = new Commands(0, MAX_FLOOR);
 
     private Integer floor = 0;
     private Door door = Door.CLOSE;

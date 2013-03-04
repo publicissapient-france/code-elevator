@@ -45,6 +45,6 @@ public class Command {
         } else {
             return Direction.UP;
         }
-
     }
+
 }
