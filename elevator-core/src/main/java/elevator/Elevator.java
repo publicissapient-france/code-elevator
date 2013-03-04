@@ -6,4 +6,6 @@ public interface Elevator {
 
     public Elevator go(Integer floorToGo);
 
+    public Command nextCommand();
+
 }

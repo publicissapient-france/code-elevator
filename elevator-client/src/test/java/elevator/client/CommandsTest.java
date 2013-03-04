@@ -6,7 +6,6 @@ import org.junit.Test;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.client.assertions.Assertions.assertThat;
-import static org.fest.assertions.Fail.fail;
 
 public class CommandsTest {
 
@@ -22,59 +21,35 @@ public class CommandsTest {
         assertThat(commands).isEmpty();
     }
 
-    @Test(expected = NullPointerException.class)
-    public void should_not_get_command_with_null_direction() throws Exception {
-        commands.get(0, null);
-        fail();
-    }
-
     @Test
     public void should_never_return_command_when_there_is_no_commands() throws Exception {
-        assertThat(commands.get(0)).isNull();
-        assertThat(commands.get(1, UP)).isNull();
-        assertThat(commands.get(2, DOWN)).isNull();
+        assertThat(commands.get(1)).isNull();
     }
 
     @Test
-    public void should_get_the_only_one_command_when_elevator_is_not_moving() throws Exception {
+    public void should_get_the_only_one_command() throws Exception {
         commands.add(new Command(3, UP));
 
         assertThat(commands.get(0)).isEqualTo("3 UP");
     }
 
     @Test
-    public void should_get_the_only_one_command_when_elevator_is_moving() throws Exception {
-        commands.add(new Command(3, UP));
-
-        assertThat(commands.get(1, DOWN)).isEqualTo("3 UP");
-    }
-
-    @Test
-    public void should_get_and_remove_when_command_matches_with_elevator_state() throws Exception {
+    public void should_get_and_remove_when_command_matches_with_elevator_floor() throws Exception {
         commands.add(new Command(4, DOWN))
                 .add(new Command(3, UP))
                 .add(new Command(5, DOWN));
 
-        assertThat(commands.get(3, UP)).isEqualTo("3 UP");
+        assertThat(commands.get(3)).isEqualTo("3 UP");
         assertThat(commands).excludes(new Command(3, UP));
     }
 
     @Test
-    public void should_get_closest_command_in_direction_to_first_command_when_elevator_is_not_moving() throws Exception {
+    public void should_get_closest_command_in_direction_to_first_command() throws Exception {
         commands.add(new Command(4, DOWN))
                 .add(new Command(3, UP))
                 .add(new Command(5, DOWN));
 
         assertThat(commands.get(1)).isEqualTo("3 UP");
-    }
-
-    @Test
-    public void should_get_closest_command_when_elevator_is_moving() throws Exception {
-        commands.add(new Command(4, DOWN))
-                .add(new Command(3, UP))
-                .add(new Command(5, DOWN));
-
-        assertThat(commands.get(2, DOWN)).isEqualTo("3 UP");
     }
 
 }

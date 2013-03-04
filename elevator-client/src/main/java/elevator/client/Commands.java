@@ -35,16 +35,7 @@ public class Commands {
         if (commands.isEmpty()) {
             return null;
         }
-        return get(floor, getDirection(floor));
-    }
-
-    public Command get(Integer floor, Direction direction) {
-        if (direction == null) {
-            throw new NullPointerException();
-        }
-        if (commands.isEmpty()) {
-            return null;
-        }
+        Direction direction = getDirection(floor);
         final Command commandFromElevator = new Command(floor, direction);
         if (commands.contains(commandFromElevator)) {
             commands.remove(commandFromElevator);

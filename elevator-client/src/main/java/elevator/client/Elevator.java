@@ -6,6 +6,7 @@ import elevator.Door;
 import java.util.Observable;
 import java.util.Observer;
 
+import static elevator.Command.*;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 
@@ -16,7 +17,6 @@ public class Elevator implements Observer, elevator.Elevator {
     private final Commands commands = new Commands(0, maxFloor);
 
     private Integer floor = 0;
-    private Direction direction;
     private Door door = Door.CLOSE;
 
     public Door door() {
@@ -46,46 +46,49 @@ public class Elevator implements Observer, elevator.Elevator {
     }
 
     @Override
-    public void update(Observable clock, Object arg) {
-        Command nextCommand;
-        if (direction == null) {
-            nextCommand = commands.get(floor);
-        } else {
-            nextCommand = commands.get(floor, direction);
-        }
+    public elevator.Command nextCommand() {
+        Command nextCommand = commands.get(floor);
         if (nextCommand == null) {
-            door = Door.CLOSE;
-            direction = null;
-            return;
+            if (door == Door.OPEN) {
+                return CLOSE;
+            }
+            return NOTHING;
         }
 
         if (door == Door.OPEN) {
+            return CLOSE;
+        }
+
+        Direction direction = nextCommand.getDirection(floor);
+
+        if (nextCommand.equals(new Command(floor, direction))
+                || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
+            return OPEN;
+        }
+
+        return commandFrom(direction);
+    }
+
+    @Override
+    public void update(Observable clock, Object arg) {
+        elevator.Command command = nextCommand();
+
+        if (command == CLOSE) {
             door = Door.CLOSE;
-            direction = null;
-            return;
-        }
-
-        direction = nextCommand.getDirection(floor);
-
-        if (nextCommand.equals(new Command(floor, direction)) || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
+        } else if (command == OPEN) {
             door = Door.OPEN;
-            direction = null;
-            return;
-        }
-
-        if (direction == UP) {
+        } else if (command == elevator.Command.UP) {
+            door = Door.CLOSE;
             floor++;
-            return;
-        }
-
-        if (direction == DOWN) {
+        } else if (command == elevator.Command.DOWN) {
+            door = Door.CLOSE;
             floor--;
         }
     }
 
     @Override
     public String toString() {
-        return "elevator " + (direction == null ? door : direction) + " " + floor;
+        return "elevator " + door + " " + floor;
     }
 
 }
