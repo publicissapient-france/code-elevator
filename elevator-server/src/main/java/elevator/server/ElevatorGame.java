@@ -1,5 +1,7 @@
 package elevator.server;
 
+import elevator.User;
+
 import java.util.HashSet;
 import java.util.Set;
 
