@@ -11,10 +11,10 @@ public class ElevatorGame {
 
     private static final Integer MAX_NUMBER_OF_USERS = 10;
 
-    private final Elevator elevator;
+    private final elevator.Elevator elevator;
     private Set<User> users;
 
-    public ElevatorGame(Elevator elevator) {
+    public ElevatorGame(elevator.Elevator elevator) {
         this.elevator = elevator;
         this.users = new HashSet<>();
     }

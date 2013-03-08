@@ -1,13 +1,30 @@
 package elevator.server;
 
 import java.net.URL;
+import elevator.Command;
+import elevator.Direction;
 
-public class Elevator {
+public class Elevator implements elevator.Elevator {
 
     final Email email;
 
     public Elevator(Email email, URL url) {
         this.email = email;
+    }
+
+    @Override
+    public elevator.Elevator call(Integer atFloor, Direction to) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public elevator.Elevator go(Integer floorToGo) {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public Command nextCommand() {
+        throw new RuntimeException();
     }
 
     @Override
