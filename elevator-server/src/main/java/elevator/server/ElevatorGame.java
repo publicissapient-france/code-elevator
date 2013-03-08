@@ -11,11 +11,13 @@ public class ElevatorGame {
 
     private static final Integer MAX_NUMBER_OF_USERS = 10;
 
+    private final Email email;
     private final elevator.Elevator elevator;
     private Set<User> users;
 
-    public ElevatorGame(elevator.Elevator elevator) {
-        this.elevator = elevator;
+    public ElevatorGame(Email email) {
+        this.email = email;
+        this.elevator = new Elevator();
         this.users = new HashSet<>();
     }
 
@@ -26,12 +28,12 @@ public class ElevatorGame {
 
         ElevatorGame elevatorGame = (ElevatorGame) o;
 
-        return elevator.equals(elevatorGame.elevator);
+        return email.equals(elevatorGame.email);
     }
 
     @Override
     public int hashCode() {
-        return elevator.hashCode();
+        return email.hashCode();
     }
 
     public ElevatorGame addUser() {

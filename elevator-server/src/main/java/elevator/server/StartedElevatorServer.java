@@ -9,10 +9,10 @@ class StartedElevatorServer {
 
     private Set<ElevatorGame> elevatorGames = new HashSet<>();
 
-    public StartedElevatorServer addElevatorGame(Elevator elevator) {
-        ElevatorGame elevatorGame = new ElevatorGame(elevator);
+    public StartedElevatorServer addElevatorGame(Email email) {
+        ElevatorGame elevatorGame = new ElevatorGame(email);
         if (elevatorGames.contains(elevatorGame)) {
-            throw new IllegalStateException("a game with email " + elevator.email + " has already have been added");
+            throw new IllegalStateException("a game with email " + email + " has already have been added");
         }
         elevatorGames.add(elevatorGame);
         return this;

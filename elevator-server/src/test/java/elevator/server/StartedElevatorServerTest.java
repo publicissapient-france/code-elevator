@@ -2,8 +2,6 @@ package elevator.server;
 
 import org.junit.Test;
 
-import java.net.URL;
-
 import static org.fest.assertions.Assertions.assertThat;
 import static org.fest.assertions.Fail.fail;
 
@@ -14,7 +12,7 @@ public class StartedElevatorServerTest {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
         startedElevatorServer.
-                addElevatorGame(new Elevator(new Email("email@provider.com"), new URL("http://127.0.0.1:8080")));
+                addElevatorGame(new Email("email@provider.com"));
 
         assertThat(startedElevatorServer.elevatorGames()).hasSize(1);
     }
@@ -24,8 +22,8 @@ public class StartedElevatorServerTest {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
         startedElevatorServer.
-                addElevatorGame(new Elevator(new Email("email@provider.com"), new URL("http://127.0.0.1:8080"))).
-                addElevatorGame(new Elevator(new Email("email@provider.com"), new URL("http://127.0.0.1:8081")));
+                addElevatorGame(new Email("email@provider.com")).
+                addElevatorGame(new Email("email@provider.com"));
 
         fail();
     }
