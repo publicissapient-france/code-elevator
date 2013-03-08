@@ -1,5 +1,6 @@
 package elevator.server;
 
+import elevator.Building;
 import elevator.User;
 
 import java.util.HashSet;
@@ -9,16 +10,12 @@ import static java.util.Collections.unmodifiableSet;
 
 public class ElevatorGame {
 
-    private static final Integer MAX_NUMBER_OF_USERS = 10;
-
     private final Email email;
-    private final elevator.Elevator elevator;
-    private Set<User> users;
+    private final Building building;
 
     public ElevatorGame(Email email) {
         this.email = email;
-        this.elevator = new Elevator();
-        this.users = new HashSet<>();
+        this.building = new Building(new Elevator());
     }
 
     @Override
@@ -34,18 +31,6 @@ public class ElevatorGame {
     @Override
     public int hashCode() {
         return email.hashCode();
-    }
-
-    public ElevatorGame addUser() {
-        if (users.size() >= 10) {
-            throw new IllegalStateException("can't add more than " + MAX_NUMBER_OF_USERS + " users");
-        }
-        users.add(new User());
-        return this;
-    }
-
-    public Set<User> users() {
-        return unmodifiableSet(users);
     }
 
 }
