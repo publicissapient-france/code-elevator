@@ -10,7 +10,7 @@ import java.io.IOException;
 public class ElevatorServer {
 
     public StartedElevatorServer start() {
-        ResourceConfig resourceConfig = new PackagesResourceConfig("elevator");
+        ResourceConfig resourceConfig = new PackagesResourceConfig("elevator.server");
         try {
             HttpServer httpServer = HttpServerFactory.create("http://localhost:" + new RandomPort().port + "/", resourceConfig);
             httpServer.start();
