@@ -50,12 +50,14 @@ public class Elevator implements Observer, elevator.Elevator {
         Command nextCommand = commands.get(floor);
         if (nextCommand == null) {
             if (door == Door.OPEN) {
+                door = Door.CLOSE;
                 return CLOSE;
             }
             return NOTHING;
         }
 
         if (door == Door.OPEN) {
+            door = Door.CLOSE;
             return CLOSE;
         }
 
@@ -63,27 +65,29 @@ public class Elevator implements Observer, elevator.Elevator {
 
         if (nextCommand.equals(new Command(floor, direction))
                 || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
+            door = Door.OPEN;
             return OPEN;
         }
 
-        return commandFrom(direction);
+        if (direction == Direction.UP) {
+            door = Door.CLOSE;
+            floor++;
+            return elevator.Command.UP;
+        }
+
+        if (direction == Direction.DOWN) {
+            door = Door.CLOSE;
+            floor--;
+            return elevator.Command.DOWN;
+        }
+
+        throw new IllegalArgumentException();
     }
 
     @Override
+    @Deprecated
     public void update(Observable clock, Object arg) {
-        elevator.Command command = nextCommand();
-
-        if (command == CLOSE) {
-            door = Door.CLOSE;
-        } else if (command == OPEN) {
-            door = Door.OPEN;
-        } else if (command == elevator.Command.UP) {
-            door = Door.CLOSE;
-            floor++;
-        } else if (command == elevator.Command.DOWN) {
-            door = Door.CLOSE;
-            floor--;
-        }
+        nextCommand();
     }
 
     @Override

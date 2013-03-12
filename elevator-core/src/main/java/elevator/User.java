@@ -6,17 +6,44 @@ import static java.lang.Math.random;
 
 public class User {
 
-    public final Integer floor;
-    public final Direction direction;
+    private final Elevator elevator;
+    private final Integer floor;
+    private final Integer floorToGo;
 
-    public User() {
+    private User.State state;
+
+    public User(Elevator elevator) {
+        this.elevator = elevator;
+        this.state = State.WAITING;
+
+        Direction direction;
         if (random() > .5) {
-            this.floor = new Double(random() * 5).intValue();
-            this.direction = random() > .5 ? UP : DOWN;
+            floor = new Double(random() * 5).intValue();
+            direction = random() > .5 ? UP : DOWN;
+            floorToGo = direction == UP ? 5 : 0;
         } else {
-            this.floor = 0;
-            this.direction = UP;
+            floor = 0;
+            direction = UP;
+            floorToGo = new Double(random() * 5).intValue();
         }
+
+        elevator.call(floor, direction);
+    }
+
+    public User elevatorIsOpen(Integer atFloor) {
+        if (state == State.WAITING && atFloor.equals(floor)) {
+            elevator.go(floorToGo);
+            state = State.TRAVELLING;
+            return this;
+        }
+        if (state == State.TRAVELLING && atFloor.equals(floorToGo)) {
+            state = State.DONE;
+        }
+        return this;
+    }
+
+    private enum State {
+        WAITING, TRAVELLING, DONE,;
     }
 
 }

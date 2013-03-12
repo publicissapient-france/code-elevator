@@ -1,5 +1,6 @@
 package elevator.client.ui;
 
+import elevator.Building;
 import elevator.Direction;
 import elevator.client.Elevator;
 
@@ -16,10 +17,10 @@ import static elevator.Door.OPEN;
 public class InteractionPanel extends JPanel {
 
     private final Deque<JLabel> elevatorStack;
-    private final Elevator elevator;
+    private final Building building;
 
-    InteractionPanel(Elevator elevator) {
-        this.elevator = elevator;
+    InteractionPanel(Building building, Elevator elevator) {
+        this.building = building;
         GridLayout layout = new GridLayout(0, 3);
         setLayout(layout);
 
@@ -48,8 +49,8 @@ public class InteractionPanel extends JPanel {
     public InteractionPanel update() {
         Integer i = 0;
         for (JLabel jLabel : elevatorStack) {
-            if (elevator.floor().equals(i)) {
-                jLabel.setText(elevator.door().equals(OPEN) ? "[| |]" : "[ | ]");
+            if (building.floor().equals(i)) {
+                jLabel.setText(building.door().equals(OPEN) ? "[| |]" : "[ | ]");
             } else {
                 jLabel.setText(i.toString());
             }

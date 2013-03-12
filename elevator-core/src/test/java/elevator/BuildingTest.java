@@ -10,22 +10,22 @@ public class BuildingTest {
 
     @Test
     public void should_add_user() throws Exception {
-        Building elevatorGame = new Building(new Elevator());
+        Building building = new Building(new Elevator());
 
-        elevatorGame.addUser();
+        building.addUser();
 
-        assertThat(elevatorGame.users()).hasSize(1);
+        assertThat(building.users()).hasSize(1);
     }
 
     @Test(expected = IllegalStateException.class)
     public void should_not_add_more_than_ten_users() throws Exception {
-        Building elevatorGame = new Building(new Elevator());
+        Building building = new Building(new Elevator());
         for (Integer i = 1; i <= 10; i++) {
-            elevatorGame.addUser();
+            building.addUser();
         }
 
-        assertThat(elevatorGame.users()).hasSize(10);
-        elevatorGame.addUser();
+        assertThat(building.users()).hasSize(10);
+        building.addUser();
         fail();
     }
 
