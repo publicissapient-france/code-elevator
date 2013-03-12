@@ -1,8 +1,5 @@
 package elevator.client;
 
-import elevator.client.Command;
-import elevator.client.Commands;
-
 import java.util.Set;
 
 public class CommandsAccessor {
@@ -16,4 +13,5 @@ public class CommandsAccessor {
     public Set<Command> commands() {
         return commands.commands();
     }
+
 }

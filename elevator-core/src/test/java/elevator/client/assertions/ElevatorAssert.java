@@ -16,6 +16,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
 
     private static final Pattern PATTERN = Pattern.compile("(OPEN|CLOSE)?(?: )*(\\d+)?");
+
     private Integer currentFloor;
     private Door currentState;
 
@@ -69,4 +70,5 @@ public class ElevatorAssert extends GenericAssert<ElevatorAssert, Elevator> {
             assertThat(actual.floor()).isEqualTo(currentFloor);
         }
     }
+
 }

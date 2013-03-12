@@ -8,6 +8,7 @@ import static java.util.Collections.unmodifiableSet;
 public class Building {
 
     private static final Integer MAX_NUMBER_OF_USERS = 10;
+
     private final HashSet<User> users;
 
     public Building(Elevator elevator) {
@@ -25,6 +26,5 @@ public class Building {
     public Set<User> users() {
         return unmodifiableSet(users);
     }
-
 
 }
