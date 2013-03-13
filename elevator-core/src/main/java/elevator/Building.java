@@ -10,14 +10,14 @@ public class Building implements ClockListener {
     private static final Integer MAX_NUMBER_OF_USERS = 10;
 
     private final HashSet<User> users;
-    private final Elevator elevator;
+    private final ElevatorEngine elevatorEngine;
 
     private Door door;
     private Integer floor;
 
-    public Building(Elevator elevator) {
+    public Building(ElevatorEngine elevatorEngine) {
         this.users = new HashSet<>();
-        this.elevator = elevator;
+        this.elevatorEngine = elevatorEngine;
         this.floor = 0;
         this.door = Door.CLOSE;
     }
@@ -27,7 +27,7 @@ public class Building implements ClockListener {
             throw new IllegalStateException("can't add more than " + MAX_NUMBER_OF_USERS + " users");
         }
 
-        User newUser = new User(elevator);
+        User newUser = new User(elevatorEngine);
         users.add(newUser);
         return this;
     }
@@ -46,7 +46,7 @@ public class Building implements ClockListener {
 
     @Override
     public ClockListener onTick() {
-        Command command = elevator.nextCommand();
+        Command command = elevatorEngine.nextCommand();
 
         switch (command) {
             case CLOSE:

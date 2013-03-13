@@ -2,16 +2,17 @@ package elevator.server;
 
 import elevator.Command;
 import elevator.Direction;
+import elevator.ElevatorEngine;
 
-public class Elevator implements elevator.Elevator {
+public class Elevator implements ElevatorEngine {
 
     @Override
-    public elevator.Elevator call(Integer atFloor, Direction to) {
+    public ElevatorEngine call(Integer atFloor, Direction to) {
         throw new RuntimeException();
     }
 
     @Override
-    public elevator.Elevator go(Integer floorToGo) {
+    public ElevatorEngine go(Integer floorToGo) {
         throw new RuntimeException();
     }
 

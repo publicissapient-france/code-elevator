@@ -2,15 +2,13 @@ package elevator.client;
 
 import elevator.Direction;
 import elevator.Door;
-
-import java.util.Observable;
-import java.util.Observer;
+import elevator.ElevatorEngine;
 
 import static elevator.Command.*;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 
-public class Elevator implements Observer, elevator.Elevator {
+public class Elevator implements ElevatorEngine {
 
     private static final Integer MAX_FLOOR = 5;
 
@@ -19,22 +17,14 @@ public class Elevator implements Observer, elevator.Elevator {
     private Integer floor = 0;
     private Door door = Door.CLOSE;
 
-    public Door door() {
-        return door;
-    }
-
-    public Integer floor() {
-        return floor;
-    }
-
     @Override
-    public elevator.Elevator call(Integer atFloor, Direction to) {
+    public ElevatorEngine call(Integer atFloor, Direction to) {
         commands.add(new Command(atFloor, to));
         return this;
     }
 
     @Override
-    public elevator.Elevator go(Integer floorToGo) {
+    public ElevatorEngine go(Integer floorToGo) {
         final Direction direction;
         if (floor > floorToGo) {
             direction = DOWN;
@@ -82,12 +72,6 @@ public class Elevator implements Observer, elevator.Elevator {
         }
 
         throw new IllegalArgumentException();
-    }
-
-    @Override
-    @Deprecated
-    public void update(Observable clock, Object arg) {
-        nextCommand();
     }
 
     @Override

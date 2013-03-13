@@ -4,19 +4,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static elevator.Direction.UP;
-import static elevator.client.assertions.Assertions.assertThat;
+import static elevator.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class ElevatorTest {
 
     private Elevator elevator;
-    private Clock clock;
 
     @Before
     public void createElevator() {
-        clock = new Clock();
         elevator = new Elevator();
-        clock.addObserver(elevator);
     }
 
     @Test
@@ -31,26 +28,25 @@ public class ElevatorTest {
 
     @Test
     public void should_does_nothing_when_nobody_call_elevator() {
-        assertThat(elevator).with(clock).
-                onTick("CLOSE 0");
+        assertThat(elevator).onTick("CLOSE 0");
     }
 
     @Test
     public void should_open_doors() {
-        assertThat(elevator).with(clock).call(0, UP).
+        assertThat(elevator).call(0, UP).
                 onTick("OPEN 0");
     }
 
     @Test
     public void should_close_doors_after_call() {
-        assertThat(elevator).with(clock).call(0, UP).
+        assertThat(elevator).call(0, UP).
                 onTick("OPEN  0").
                 onTick("CLOSE  ");
     }
 
     @Test
     public void should_call_elevator_and_open_doors() {
-        assertThat(elevator).with(clock).call(4, UP).
+        assertThat(elevator).call(4, UP).
                 onTick("      1").
                 onTick("      2").
                 onTick("      3").
@@ -61,7 +57,7 @@ public class ElevatorTest {
 
     @Test
     public void should_go_to_floor() {
-        assertThat(elevator).with(clock).call(0, UP).tick().go(4).
+        assertThat(elevator).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
                 onTick("      1").
                 onTick("      2").
@@ -73,7 +69,7 @@ public class ElevatorTest {
 
     @Test
     public void should_stop_at_two_floors() {
-        assertThat(elevator).with(clock).call(0, UP).tick().go(4).go(2).
+        assertThat(elevator).call(0, UP).tick().go(4).go(2).
                 onTick("CLOSE 0").
                 onTick("      1").
                 onTick("      2").
@@ -87,7 +83,7 @@ public class ElevatorTest {
 
     @Test
     public void should_go_at_same_floor_for_any_times() {
-        assertThat(elevator).with(clock).call(0, UP).tick().go(4).
+        assertThat(elevator).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
                 onTick("      1").
                 onTick("      2").go(4).
@@ -100,7 +96,7 @@ public class ElevatorTest {
 
     @Test
     public void should_go_to_first_direction_and_then_to_other() {
-        assertThat(elevator).with(clock).call(0, UP).tick().go(4).
+        assertThat(elevator).call(0, UP).tick().go(4).
                 onTick("CLOSE 0").
                 onTick("      1").
                 onTick("      2").

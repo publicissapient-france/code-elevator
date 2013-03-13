@@ -6,14 +6,14 @@ import static java.lang.Math.random;
 
 public class User {
 
-    private final Elevator elevator;
+    private final ElevatorEngine elevatorEngine;
     private final Integer floor;
     private final Integer floorToGo;
 
     private User.State state;
 
-    public User(Elevator elevator) {
-        this.elevator = elevator;
+    public User(ElevatorEngine elevatorEngine) {
+        this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
 
         Direction direction;
@@ -27,12 +27,12 @@ public class User {
             floorToGo = new Double(random() * 5).intValue();
         }
 
-        elevator.call(floor, direction);
+        elevatorEngine.call(floor, direction);
     }
 
     public User elevatorIsOpen(Integer atFloor) {
         if (state == State.WAITING && atFloor.equals(floor)) {
-            elevator.go(floorToGo);
+            elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
             return this;
         }
