@@ -1,6 +1,6 @@
 package elevator;
 
-import elevator.client.Elevator;
+import elevator.engine.scan.ScanElevator;
 import org.junit.Test;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -10,7 +10,7 @@ public class BuildingTest {
 
     @Test
     public void should_add_user() throws Exception {
-        Building building = new Building(new Elevator());
+        Building building = new Building(new ScanElevator());
 
         building.addUser();
 
@@ -19,7 +19,7 @@ public class BuildingTest {
 
     @Test(expected = IllegalStateException.class)
     public void should_not_add_more_than_ten_users() throws Exception {
-        Building building = new Building(new Elevator());
+        Building building = new Building(new ScanElevator());
         for (Integer i = 1; i <= 10; i++) {
             building.addUser();
         }

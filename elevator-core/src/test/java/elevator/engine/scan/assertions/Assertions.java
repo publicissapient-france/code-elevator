@@ -1,7 +1,7 @@
-package elevator.client.assertions;
+package elevator.engine.scan.assertions;
 
-import elevator.client.Command;
-import elevator.client.Commands;
+import elevator.engine.scan.Command;
+import elevator.engine.scan.Commands;
 
 public class Assertions {
 

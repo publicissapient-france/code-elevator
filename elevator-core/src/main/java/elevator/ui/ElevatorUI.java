@@ -1,8 +1,9 @@
-package elevator.client.ui;
+package elevator.ui;
 
 import elevator.Building;
 import elevator.Clock;
-import elevator.client.Elevator;
+import elevator.engine.ElevatorEngine;
+import elevator.engine.scan.ScanElevator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,11 +21,11 @@ public class ElevatorUI extends JFrame {
 
         setLayout(new BorderLayout());
 
-        Elevator elevator = new Elevator();
-        Building building = new Building(elevator);
+        ElevatorEngine elevatorEngine = new ScanElevator();
+        Building building = new Building(elevatorEngine);
         Clock clock = new Clock().addClockListener(building);
 
-        InteractionPanel interactionPanel = new InteractionPanel(building, elevator);
+        InteractionPanel interactionPanel = new InteractionPanel(building, elevatorEngine);
         add(interactionPanel, CENTER);
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();

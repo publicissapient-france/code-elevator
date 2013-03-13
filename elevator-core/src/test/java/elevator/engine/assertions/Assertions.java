@@ -1,6 +1,6 @@
-package elevator.assertions;
+package elevator.engine.assertions;
 
-import elevator.ElevatorEngine;
+import elevator.engine.ElevatorEngine;
 
 public class Assertions {
 

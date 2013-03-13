@@ -1,9 +1,9 @@
-package elevator.assertions;
+package elevator.engine.assertions;
 
 import elevator.Command;
 import elevator.Direction;
 import elevator.Door;
-import elevator.ElevatorEngine;
+import elevator.engine.ElevatorEngine;
 import org.fest.assertions.GenericAssert;
 
 import java.util.regex.Matcher;

@@ -1,4 +1,4 @@
-package elevator.client;
+package elevator.engine.scan;
 
 import org.junit.Test;
 

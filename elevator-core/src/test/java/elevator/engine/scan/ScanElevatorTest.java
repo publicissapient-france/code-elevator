@@ -1,19 +1,19 @@
-package elevator.client;
+package elevator.engine.scan;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static elevator.Direction.UP;
-import static elevator.assertions.Assertions.assertThat;
+import static elevator.engine.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
-public class ElevatorTest {
+public class ScanElevatorTest {
 
-    private Elevator elevator;
+    private ScanElevator elevator;
 
     @Before
     public void createElevator() {
-        elevator = new Elevator();
+        elevator = new ScanElevator();
     }
 
     @Test

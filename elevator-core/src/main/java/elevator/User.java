@@ -1,5 +1,7 @@
 package elevator;
 
+import elevator.engine.ElevatorEngine;
+
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static java.lang.Math.random;

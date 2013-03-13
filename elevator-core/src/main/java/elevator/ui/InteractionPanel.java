@@ -1,8 +1,8 @@
-package elevator.client.ui;
+package elevator.ui;
 
 import elevator.Building;
 import elevator.Direction;
-import elevator.client.Elevator;
+import elevator.engine.ElevatorEngine;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class InteractionPanel extends JPanel {
     private final Deque<JLabel> elevatorStack;
     private final Building building;
 
-    InteractionPanel(Building building, Elevator elevator) {
+    InteractionPanel(Building building, ElevatorEngine elevatorEngine) {
         this.building = building;
         GridLayout layout = new GridLayout(0, 3);
         setLayout(layout);
@@ -29,12 +29,12 @@ public class InteractionPanel extends JPanel {
 
         for (int i = maxLevel; i >= 0; i--) {
             if (i != maxLevel) {
-                add(new JButton(new CallElevatorAction(elevator, i, UP)));
+                add(new JButton(new CallElevatorAction(elevatorEngine, i, UP)));
             } else {
                 add(new JLabel());
             }
             if (i != 0) {
-                add(new JButton(new CallElevatorAction(elevator, i, DOWN)));
+                add(new JButton(new CallElevatorAction(elevatorEngine, i, DOWN)));
             } else {
                 add(new JLabel());
             }
@@ -61,12 +61,12 @@ public class InteractionPanel extends JPanel {
 
     private static class CallElevatorAction extends AbstractAction {
 
-        private final Elevator elevator;
+        private final ElevatorEngine elevatorEngine;
         private final int currentFloor;
         private final Direction direction;
 
-        public CallElevatorAction(Elevator elevator, int currentFloor, Direction direction) {
-            this.elevator = elevator;
+        public CallElevatorAction(ElevatorEngine elevatorEngine, int currentFloor, Direction direction) {
+            this.elevatorEngine = elevatorEngine;
             this.currentFloor = currentFloor;
             this.direction = direction;
             this.putValue(NAME, direction.toString());
@@ -74,7 +74,7 @@ public class InteractionPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            elevator.call(currentFloor, direction);
+            elevatorEngine.call(currentFloor, direction);
         }
 
     }

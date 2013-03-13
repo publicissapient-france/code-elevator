@@ -1,14 +1,14 @@
-package elevator.client;
+package elevator.engine.scan;
 
 import elevator.Direction;
 import elevator.Door;
-import elevator.ElevatorEngine;
+import elevator.engine.ElevatorEngine;
 
 import static elevator.Command.*;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 
-public class Elevator implements ElevatorEngine {
+public class ScanElevator implements ElevatorEngine {
 
     private static final Integer MAX_FLOOR = 5;
 

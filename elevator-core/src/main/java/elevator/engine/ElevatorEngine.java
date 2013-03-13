@@ -1,4 +1,7 @@
-package elevator;
+package elevator.engine;
+
+import elevator.Command;
+import elevator.Direction;
 
 public interface ElevatorEngine {
 

@@ -1,11 +1,11 @@
-package elevator.client;
+package elevator.engine.scan;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
-import static elevator.client.assertions.Assertions.assertThat;
+import static elevator.engine.scan.assertions.Assertions.assertThat;
 
 public class CommandsTest {
 

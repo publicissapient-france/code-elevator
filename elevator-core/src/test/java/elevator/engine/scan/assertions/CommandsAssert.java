@@ -1,8 +1,8 @@
-package elevator.client.assertions;
+package elevator.engine.scan.assertions;
 
-import elevator.client.Command;
-import elevator.client.Commands;
-import elevator.client.CommandsAccessor;
+import elevator.engine.scan.Command;
+import elevator.engine.scan.Commands;
+import elevator.engine.scan.CommandsAccessor;
 import org.fest.assertions.GenericAssert;
 
 import static org.fest.assertions.Assertions.assertThat;

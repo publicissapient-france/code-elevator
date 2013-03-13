@@ -2,7 +2,7 @@ package elevator.server;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.ElevatorEngine;
+import elevator.engine.ElevatorEngine;
 
 public class Elevator implements ElevatorEngine {
 
