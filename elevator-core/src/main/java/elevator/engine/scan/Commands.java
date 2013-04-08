@@ -44,7 +44,7 @@ public class Commands {
         if (commands.size() == 1) {
             return commands.iterator().next();
         }
-        SortedSet<Command> sortedCommands = new TreeSet<Command>((o1, o2) -> {
+        SortedSet<Command> sortedCommands = new TreeSet<>((o1, o2) -> {
             DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, minFloor, maxFloor);
             Integer distance1 = distanceEvaluator.getDistance(o1);
             Integer distance2 = distanceEvaluator.getDistance(o2);
