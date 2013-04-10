@@ -1,18 +1,21 @@
-function IndexCtrl($scope, $location, $cookies) {
-    if ($cookies.isLogged) {
+function IndexCtrl($scope, $location, $cookieStore) {
+    if ($cookieStore.get('isLogged') == 'true') {
         $location.path('/elevator');
     }
     $scope.login = function () {
-        console.log('login()');
-        $location.url('/elevator');
+        $cookieStore.put('isLogged', 'true');
+        $location.path('/elevator');
     };
 }
-IndexCtrl.$inject = ['$scope', '$location', '$cookies'];
+IndexCtrl.$inject = ['$scope', '$location', '$cookieStore'];
 
-function ElevatorCtrl($cookies, $location) {
+function ElevatorCtrl($scope, $location, $cookieStore) {
+    var elevator = new Elevator('elevator1');
+    elevator.drawNewUser(0, 0);
+    new Elevator('elevator2');
     $scope.disconnect = function () {
-        $cookies.isLogged = false;
-        $location.path('/login');
+        $cookieStore.remove('isLogged');
+        $location.path('/index.html');
     };
 }
-ElevatorCtrl.$inject = ['$cookies', '$location'];
+ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore'];
