@@ -73,9 +73,10 @@ public class ScanElevator implements ElevatorEngine {
     }
 
     @Override
-    public void reset() {
+    public ScanElevator reset() {
         door = Door.CLOSE;
         floor = LOWER_FLOOR;
+        return this;
     }
 
     @Override

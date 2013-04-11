@@ -34,8 +34,9 @@ class MockElevatorEngine implements ElevatorEngine {
     }
 
     @Override
-    public void reset() {
+    public ElevatorEngine reset() {
         resetCalled = TRUE;
+        return this;
     }
 
     Boolean resetCalled() {
