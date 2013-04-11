@@ -13,13 +13,13 @@ import static java.util.Collections.unmodifiableSet;
 public class Commands {
 
     private final Set<Command> commands;
-    private final Integer minFloor;
-    private final Integer maxFloor;
+    private final Integer lowerFloor;
+    private final Integer higherFloor;
 
-    public Commands(Integer minFloor, Integer maxFloor) {
-        this.minFloor = minFloor;
-        this.maxFloor = maxFloor;
-        commands = new LinkedHashSet<>(abs(maxFloor - minFloor) * 2);
+    public Commands(Integer lowerFloor, Integer higherFloor) {
+        this.lowerFloor = lowerFloor;
+        this.higherFloor = higherFloor;
+        commands = new LinkedHashSet<>(abs(higherFloor - lowerFloor) * 2);
     }
 
     Set<Command> commands() {
@@ -45,7 +45,7 @@ public class Commands {
             return commands.iterator().next();
         }
         SortedSet<Command> sortedCommands = new TreeSet<>((o1, o2) -> {
-            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, minFloor, maxFloor);
+            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, lowerFloor, higherFloor);
             Integer distance1 = distanceEvaluator.getDistance(o1);
             Integer distance2 = distanceEvaluator.getDistance(o2);
             return distance1 - distance2;

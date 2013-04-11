@@ -5,13 +5,13 @@ import static elevator.Direction.UP;
 public class DistanceEvaluator {
 
     private final Command reference;
-    private final Integer maxFloor;
+    private final Integer higherFloor;
     private final Integer numberOfFloors;
 
-    DistanceEvaluator(Command reference, Integer minFloor, Integer maxFloor) {
+    DistanceEvaluator(Command reference, Integer lowerFloor, Integer higherFloor) {
         this.reference = reference;
-        this.maxFloor = maxFloor;
-        this.numberOfFloors = maxFloor - minFloor;
+        this.higherFloor = higherFloor;
+        this.numberOfFloors = higherFloor - lowerFloor;
     }
 
     public Integer getDistance(Command command) {
@@ -29,7 +29,7 @@ public class DistanceEvaluator {
         if (command.direction == UP) {
             return command.floor;
         } else {
-            return numberOfFloors + (maxFloor - command.floor);
+            return numberOfFloors + (higherFloor - command.floor);
         }
     }
 

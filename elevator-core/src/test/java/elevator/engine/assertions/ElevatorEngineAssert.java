@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static elevator.Door.CLOSE;
+import static elevator.Door.OPEN;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
 import static org.fest.assertions.Assertions.assertThat;
@@ -20,7 +22,7 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
 
     private Integer expectedFloor;
     private Door expectedDoor;
-    private Integer actualFloor = 0;
+    private Integer actualFloor = LOWER_FLOOR;
     private Door actualDoor = CLOSE;
 
     ElevatorEngineAssert(ElevatorEngine actual) {
@@ -85,7 +87,7 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
                 actualDoor = CLOSE;
                 break;
             case OPEN:
-                actualDoor = Door.OPEN;
+                actualDoor = OPEN;
                 break;
             case UP:
                 actualDoor = CLOSE;

@@ -4,6 +4,8 @@ import elevator.engine.ElevatorEngine;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
+import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Math.random;
 
 public class User {
@@ -19,14 +21,14 @@ public class User {
         this.state = State.WAITING;
 
         Direction direction;
-        if (random() > .5) {
-            floor = new Double(random() * 5).intValue();
-            direction = random() > .5 ? UP : DOWN;
-            floorToGo = direction == UP ? 5 : 0;
+        if (randomBoolean()) {
+            floor = randomFloor();
+            direction = randomDirection();
+            floorToGo = direction == UP ? HIGHER_FLOOR : LOWER_FLOOR;
         } else {
-            floor = 0;
+            floor = LOWER_FLOOR;
             direction = UP;
-            floorToGo = new Double(random() * 5).intValue();
+            floorToGo = randomFloor();
         }
 
         elevatorEngine.call(floor, direction);
@@ -44,8 +46,20 @@ public class User {
         return this;
     }
 
+    private Integer randomFloor() {
+        return new Double(random() * HIGHER_FLOOR).intValue();
+    }
+
+    private Direction randomDirection() {
+        return randomBoolean() ? UP : DOWN;
+    }
+
+    private Boolean randomBoolean() {
+        return random() > .5;
+    }
+
     private enum State {
-        WAITING, TRAVELLING, DONE,;
+        WAITING, TRAVELLING, DONE, REJECTED,;
     }
 
 }

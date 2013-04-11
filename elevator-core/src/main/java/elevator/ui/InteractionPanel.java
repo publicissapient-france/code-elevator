@@ -13,6 +13,8 @@ import java.util.Deque;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.Door.OPEN;
+import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 
 public class InteractionPanel extends JPanel {
 
@@ -24,23 +26,22 @@ public class InteractionPanel extends JPanel {
         GridLayout layout = new GridLayout(0, 3);
         setLayout(layout);
 
-        int maxLevel = 5;
-        elevatorStack = new ArrayDeque<>(maxLevel);
+        elevatorStack = new ArrayDeque<>(HIGHER_FLOOR);
 
-        for (int i = maxLevel; i >= 0; i--) {
-            if (i != maxLevel) {
+        for (int i = HIGHER_FLOOR; i >= LOWER_FLOOR; i--) {
+            if (i != HIGHER_FLOOR) {
                 add(new JButton(new CallElevatorAction(elevatorEngine, i, UP)));
             } else {
                 add(new JLabel());
             }
-            if (i != 0) {
+            if (i != LOWER_FLOOR) {
                 add(new JButton(new CallElevatorAction(elevatorEngine, i, DOWN)));
             } else {
                 add(new JLabel());
             }
             elevatorStack.addFirst(new JLabel(String.valueOf(i)));
             add(elevatorStack.getFirst());
-            if (i == 0) {
+            if (i == LOWER_FLOOR) {
                 elevatorStack.getFirst().setText("[ | ]");
             }
         }

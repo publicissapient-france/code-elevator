@@ -10,11 +10,9 @@ import static elevator.Direction.UP;
 
 public class ScanElevator implements ElevatorEngine {
 
-    private static final Integer MAX_FLOOR = 5;
+    private final Commands commands = new Commands(LOWER_FLOOR, HIGHER_FLOOR);
 
-    private final Commands commands = new Commands(0, MAX_FLOOR);
-
-    private Integer floor = 0;
+    private Integer floor = LOWER_FLOOR;
     private Door door = Door.CLOSE;
 
     @Override
@@ -77,7 +75,7 @@ public class ScanElevator implements ElevatorEngine {
     @Override
     public void reset() {
         door = Door.CLOSE;
-        floor = 0;
+        floor = LOWER_FLOOR;
     }
 
     @Override

@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
+import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.scan.assertions.Assertions.assertThat;
 
 public class CommandsTest {
@@ -13,7 +15,7 @@ public class CommandsTest {
 
     @Before
     public void initCommands() throws Exception {
-        commands = new Commands(0, 5);
+        commands = new Commands(LOWER_FLOOR, HIGHER_FLOOR);
     }
 
     @Test

@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static elevator.Building.MAX_NUMBER_OF_USERS;
 import static elevator.Command.*;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -33,7 +34,7 @@ public class BuildingTest {
     public void should_have_an_initial_state() throws Exception {
         Building building = new Building(new MockElevatorEngine());
 
-        assertThat(building).doorIs(Door.CLOSE).floorIs(0);
+        assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR);
     }
 
     @Test
@@ -48,7 +49,7 @@ public class BuildingTest {
         building.onTick();
 
         assertThat(elevator.resetCalled()).isTrue();
-        assertThat(building).doorIs(Door.CLOSE).floorIs(0).users().isEmpty();
+        assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
     }
 
     @Test

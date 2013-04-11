@@ -7,14 +7,14 @@ import java.util.Set;
 
 import static elevator.Door.CLOSE;
 import static elevator.Door.OPEN;
+import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableSet;
 
 public class Building implements ClockListener {
 
     static final Integer MAX_NUMBER_OF_USERS = 10;
-    static final Integer FIRST_FLOOR = 0;
-    static final Integer LAST_FLOOR = 5;
 
     private final HashSet<User> users;
     private final ElevatorEngine elevatorEngine;
@@ -71,16 +71,16 @@ public class Building implements ClockListener {
             case OPEN:
                 return door == CLOSE;
             case DOWN:
-                return door == CLOSE && floor > FIRST_FLOOR;
+                return door == CLOSE && floor > LOWER_FLOOR;
             case UP:
-                return door == CLOSE && floor < LAST_FLOOR;
+                return door == CLOSE && floor < HIGHER_FLOOR;
             default:
                 return TRUE;
         }
     }
 
     private void reset() {
-        floor = FIRST_FLOOR;
+        floor = LOWER_FLOOR;
         door = CLOSE;
         users.clear();
     }

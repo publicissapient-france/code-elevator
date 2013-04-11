@@ -1,12 +1,6 @@
 package elevator.server;
 
 import elevator.Building;
-import elevator.User;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import static java.util.Collections.unmodifiableSet;
 
 public class ElevatorGame {
 
