@@ -11,4 +11,6 @@ public interface ElevatorEngine {
 
     public Command nextCommand();
 
+    public void reset();
+
 }

@@ -21,4 +21,9 @@ public class Elevator implements ElevatorEngine {
         throw new RuntimeException();
     }
 
+    @Override
+    public void reset() {
+        throw new RuntimeException();
+    }
+
 }

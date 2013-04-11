@@ -5,11 +5,16 @@ import elevator.engine.ElevatorEngine;
 import java.util.HashSet;
 import java.util.Set;
 
+import static elevator.Door.CLOSE;
+import static elevator.Door.OPEN;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableSet;
 
 public class Building implements ClockListener {
 
-    private static final Integer MAX_NUMBER_OF_USERS = 10;
+    static final Integer MAX_NUMBER_OF_USERS = 10;
+    static final Integer FIRST_FLOOR = 0;
+    static final Integer LAST_FLOOR = 5;
 
     private final HashSet<User> users;
     private final ElevatorEngine elevatorEngine;
@@ -20,12 +25,11 @@ public class Building implements ClockListener {
     public Building(ElevatorEngine elevatorEngine) {
         this.users = new HashSet<>();
         this.elevatorEngine = elevatorEngine;
-        this.floor = 0;
-        this.door = Door.CLOSE;
+        reset();
     }
 
     public Building addUser() {
-        if (users.size() >= 10) {
+        if (users.size() >= MAX_NUMBER_OF_USERS) {
             throw new IllegalStateException("can't add more than " + MAX_NUMBER_OF_USERS + " users");
         }
 
@@ -50,26 +54,55 @@ public class Building implements ClockListener {
     public ClockListener onTick() {
         Command command = elevatorEngine.nextCommand();
 
+        if (!isValidCommand(command)) {
+            elevatorEngine.reset();
+            reset();
+        } else {
+            applyCommand(command);
+        }
+
+        return this;
+    }
+
+    private Boolean isValidCommand(Command command) {
         switch (command) {
             case CLOSE:
-                door = Door.CLOSE;
+                return door == OPEN;
+            case OPEN:
+                return door == CLOSE;
+            case DOWN:
+                return door == CLOSE && floor > FIRST_FLOOR;
+            case UP:
+                return door == CLOSE && floor < LAST_FLOOR;
+            default:
+                return TRUE;
+        }
+    }
+
+    private void reset() {
+        floor = FIRST_FLOOR;
+        door = CLOSE;
+        users.clear();
+    }
+
+    private void applyCommand(Command command) {
+        switch (command) {
+            case CLOSE:
+                door = CLOSE;
                 break;
             case OPEN:
-                door = Door.OPEN;
+                door = OPEN;
                 for (User user : users) {
                     user.elevatorIsOpen(floor);
                 }
                 break;
             case UP:
-                door = Door.CLOSE;
                 floor++;
                 break;
             case DOWN:
-                door = Door.CLOSE;
                 floor--;
                 break;
         }
-        return this;
     }
 
 }
