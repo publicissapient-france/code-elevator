@@ -3,10 +3,14 @@ package elevator.ui;
 import elevator.Building;
 import elevator.Clock;
 import elevator.engine.ElevatorEngine;
+import elevator.engine.naive.NaiveElevator;
+import elevator.engine.queue.QueueElevator;
 import elevator.engine.scan.ScanElevator;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -21,11 +25,27 @@ public class ElevatorUI extends JFrame {
 
         setLayout(new BorderLayout());
 
-        ElevatorEngine elevatorEngine = new ScanElevator();
-        Building building = new Building(elevatorEngine);
-        Clock clock = new Clock().addClockListener(building);
+        List<BuildingAndElevator> buildings = new ArrayList<>();
+        Clock clock = new Clock();
+        ElevatorEngine elevator;
+        Building building;
 
-        InteractionPanel interactionPanel = new InteractionPanel(building, elevatorEngine);
+        elevator = new NaiveElevator();
+        building = new Building(elevator);
+        clock.addClockListener(building);
+        buildings.add(new BuildingAndElevator(building, elevator));
+
+        elevator = new QueueElevator();
+        building = new Building(elevator);
+        clock.addClockListener(building);
+        buildings.add(new BuildingAndElevator(building, elevator));
+
+        elevator = new ScanElevator();
+        building = new Building(elevator);
+        clock.addClockListener(building);
+        buildings.add(new BuildingAndElevator(building, elevator));
+
+        InteractionPanel interactionPanel = new InteractionPanel(buildings);
         add(interactionPanel, CENTER);
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();

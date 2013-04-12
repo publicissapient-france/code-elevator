@@ -1,14 +1,12 @@
 package elevator.ui;
 
-import elevator.Building;
 import elevator.Direction;
-import elevator.engine.ElevatorEngine;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.*;
+import java.util.List;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
@@ -18,56 +16,67 @@ import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 
 public class InteractionPanel extends JPanel {
 
-    private final Deque<JLabel> elevatorStack;
-    private final Building building;
+    private final Map<BuildingAndElevator, Deque<JLabel>> buildings;
 
-    InteractionPanel(Building building, ElevatorEngine elevatorEngine) {
-        this.building = building;
-        GridLayout layout = new GridLayout(0, 3);
+    InteractionPanel(List<BuildingAndElevator> buildings) {
+        this.buildings = new HashMap<>();
+        GridLayout layout = new GridLayout(0, 2 + buildings.size());
         setLayout(layout);
 
-        elevatorStack = new ArrayDeque<>(HIGHER_FLOOR);
+        add(new JLabel());
+        add(new JLabel());
+        for (BuildingAndElevator building : buildings) {
+            ArrayDeque<JLabel> elevatorStack = new ArrayDeque<>(HIGHER_FLOOR);
+            this.buildings.put(building, elevatorStack);
+            add(new JLabel(building.elevator.getClass().getSimpleName()));
+        }
 
         for (int i = HIGHER_FLOOR; i >= LOWER_FLOOR; i--) {
             if (i != HIGHER_FLOOR) {
-                add(new JButton(new CallElevatorAction(elevatorEngine, i, UP)));
+                add(new JButton(new CallElevatorAction(buildings, i, UP)));
             } else {
                 add(new JLabel());
             }
             if (i != LOWER_FLOOR) {
-                add(new JButton(new CallElevatorAction(elevatorEngine, i, DOWN)));
+                add(new JButton(new CallElevatorAction(buildings, i, DOWN)));
             } else {
                 add(new JLabel());
             }
-            elevatorStack.addFirst(new JLabel(String.valueOf(i)));
-            add(elevatorStack.getFirst());
-            if (i == LOWER_FLOOR) {
-                elevatorStack.getFirst().setText("[ | ]");
+
+            for (BuildingAndElevator building : buildings) {
+                this.buildings.get(building).addFirst(new JLabel(String.valueOf(i)));
+                add(this.buildings.get(building).getFirst());
+                if (i == LOWER_FLOOR) {
+                    this.buildings.get(building).getFirst().setText("[ | ]");
+                }
             }
         }
     }
 
     public InteractionPanel update() {
-        Integer i = 0;
-        for (JLabel jLabel : elevatorStack) {
-            if (building.floor().equals(i)) {
-                jLabel.setText(building.door().equals(OPEN) ? "[| |]" : "[ | ]");
-            } else {
-                jLabel.setText(i.toString());
+        for (Map.Entry<BuildingAndElevator, Deque<JLabel>> building : buildings.entrySet()) {
+            Integer i = 0;
+
+            for (JLabel jLabel : building.getValue()) {
+                if (building.getKey().building.floor().equals(i)) {
+                    jLabel.setText(building.getKey().building.door().equals(OPEN) ? "[| |]" : "[ | ]");
+                } else {
+                    jLabel.setText(i.toString());
+                }
+                i++;
             }
-            i++;
         }
         return this;
     }
 
     private static class CallElevatorAction extends AbstractAction {
 
-        private final ElevatorEngine elevatorEngine;
+        private final List<BuildingAndElevator> buildings;
         private final int currentFloor;
         private final Direction direction;
 
-        public CallElevatorAction(ElevatorEngine elevatorEngine, int currentFloor, Direction direction) {
-            this.elevatorEngine = elevatorEngine;
+        public CallElevatorAction(List<BuildingAndElevator> buildings, int currentFloor, Direction direction) {
+            this.buildings = buildings;
             this.currentFloor = currentFloor;
             this.direction = direction;
             this.putValue(NAME, direction.toString());
@@ -75,7 +84,9 @@ public class InteractionPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            elevatorEngine.call(currentFloor, direction);
+            for (BuildingAndElevator building : buildings) {
+                building.elevator.call(currentFloor, direction);
+            }
         }
 
     }
