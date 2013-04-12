@@ -22,7 +22,7 @@ public class Elevator implements ElevatorEngine {
     }
 
     @Override
-    public void reset() {
+    public ElevatorEngine reset() {
         throw new RuntimeException();
     }
 
