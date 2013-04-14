@@ -1,5 +1,7 @@
 package elevator.server;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,8 +11,8 @@ class StartedElevatorServer {
 
     private Set<ElevatorGame> elevatorGames = new HashSet<>();
 
-    public StartedElevatorServer addElevatorGame(Email email) {
-        ElevatorGame elevatorGame = new ElevatorGame(email);
+    public StartedElevatorServer addElevatorGame(Email email, URL server) throws MalformedURLException {
+        ElevatorGame elevatorGame = new ElevatorGame(email, server);
         if (elevatorGames.contains(elevatorGame)) {
             throw new IllegalStateException("a game with email " + email + " has already have been added");
         }

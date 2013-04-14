@@ -2,14 +2,22 @@ package elevator.server;
 
 import elevator.Building;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public class ElevatorGame {
+
+    private static final String HTTP = "http";
 
     private final Email email;
     private final Building building;
 
-    public ElevatorGame(Email email) {
+    public ElevatorGame(Email email, URL url) throws MalformedURLException {
+        if (!HTTP.equals(url.getProtocol())) {
+            throw new IllegalArgumentException("http is the only supported protocol");
+        }
         this.email = email;
-        this.building = new Building(new Elevator());
+        this.building = new Building(new HTTPElevator(url));
     }
 
     @Override
