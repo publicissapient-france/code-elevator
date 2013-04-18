@@ -16,7 +16,7 @@ public class Building implements ClockListener {
 
     static final Integer MAX_NUMBER_OF_USERS = 10;
 
-    private final HashSet<User> users;
+    private final Set<User> users;
     private final ElevatorEngine elevatorEngine;
 
     private Door door;
