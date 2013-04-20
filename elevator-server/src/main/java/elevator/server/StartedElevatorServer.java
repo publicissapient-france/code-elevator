@@ -7,7 +7,7 @@ import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-class StartedElevatorServer {
+public class StartedElevatorServer {
 
     private Set<ElevatorGame> elevatorGames = new HashSet<>();
 
@@ -20,8 +20,12 @@ class StartedElevatorServer {
         return this;
     }
 
-    public Set<ElevatorGame> elevatorGames() {
-        return unmodifiableSet(elevatorGames);
+    public Set<Email> emails() {
+        Set<Email> emails = new HashSet<>(elevatorGames.size());
+        for (ElevatorGame elevatorGame : elevatorGames) {
+            emails.add(elevatorGame.email);
+        }
+        return unmodifiableSet(emails);
     }
 
 }

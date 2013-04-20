@@ -11,11 +11,12 @@ public class StartedElevatorServerTest {
 
     @Test
     public void should_add_elevator_game() throws Exception {
+        Email email = new Email("email@provider.com");
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
-        startedElevatorServer.addElevatorGame(new Email("email@provider.com"), new URL("http://127.0.0.1"));
+        startedElevatorServer.addElevatorGame(email, new URL("http://127.0.0.1"));
 
-        assertThat(startedElevatorServer.elevatorGames()).hasSize(1);
+        assertThat(startedElevatorServer.emails()).hasSize(1).containsOnly(email);
     }
 
     @Test(expected = IllegalArgumentException.class)

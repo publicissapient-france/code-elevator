@@ -1,13 +1,15 @@
-function IndexCtrl($scope, $location, $cookieStore) {
+function IndexCtrl($scope, $location, $cookieStore, $http) {
     if ($cookieStore.get('isLogged') == 'true') {
         $location.path('/elevator');
     }
     $scope.login = function () {
-        $cookieStore.put('isLogged', 'true');
-        $location.path('/elevator');
+        $http.post('/new-participant?email=' + $scope.email + "&serverURL=" + $scope.serverURL).success(function () {
+            $cookieStore.put('isLogged', 'true');
+            $location.path('/elevator');
+        });
     };
 }
-IndexCtrl.$inject = ['$scope', '$location', '$cookieStore'];
+IndexCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
 
 function ElevatorCtrl($scope, $location, $cookieStore) {
     var elevator = new Elevator('elevator1');

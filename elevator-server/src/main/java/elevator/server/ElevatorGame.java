@@ -9,7 +9,8 @@ public class ElevatorGame {
 
     private static final String HTTP = "http";
 
-    private final Email email;
+    public final Email email;
+
     private final Building building;
 
     public ElevatorGame(Email email, URL url) throws MalformedURLException {

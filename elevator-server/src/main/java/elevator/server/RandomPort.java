@@ -11,4 +11,8 @@ class RandomPort {
         this.port = (int) round(random() * 10000) + 1024;
     }
 
+    @Override
+    public String toString() {
+        return Integer.toString(port);
+    }
 }
