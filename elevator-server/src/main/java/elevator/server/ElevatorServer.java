@@ -4,28 +4,30 @@ import com.sun.jersey.api.container.httpserver.HttpServerFactory;
 import com.sun.jersey.api.core.DefaultResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.net.httpserver.HttpServer;
+import elevator.server.port.Port;
+import elevator.server.port.PortFactory;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 import java.io.IOException;
 
 public class ElevatorServer {
 
-    public RandomPort start() {
-        RandomPort randomPort = new RandomPort();
+    public Port start() {
+        Port port = PortFactory.newPort();
         ResourceConfig resourceConfig = new DefaultResourceConfig();
         resourceConfig.getClasses().add(JacksonJsonProvider.class);
         resourceConfig.getSingletons().add(new WebResource(new StartedElevatorServer()));
         try {
-            HttpServer httpServer = HttpServerFactory.create("http://localhost:" + randomPort.port + "/", resourceConfig);
+            HttpServer httpServer = HttpServerFactory.create("http://localhost:" + port.port() + "/", resourceConfig);
             httpServer.start();
-            return randomPort;
+            return port;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     public static void main(String... args) {
-        RandomPort port = new ElevatorServer().start();
+        Port port = new ElevatorServer().start();
         System.out.println("elevator server started on port " + port);
     }
 
