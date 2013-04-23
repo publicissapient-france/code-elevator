@@ -17,6 +17,11 @@
             <artifactId>elevator-core</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.0.1.v20130408</version>
+        </dependency>
     </dependencies>
 
 </project>
