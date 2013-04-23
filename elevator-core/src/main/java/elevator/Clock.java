@@ -2,8 +2,12 @@ package elevator;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Clock {
+
+    public final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
     private final Set<ClockListener> clockListeners = new HashSet<>();
 
@@ -12,9 +16,14 @@ public class Clock {
         return this;
     }
 
+    public Clock removeClockListener(ClockListener clockListener) {
+        clockListeners.remove(clockListener);
+        return this;
+    }
+
     public void tick() {
         for (ClockListener clockListener : clockListeners) {
-            clockListener.onTick();
+            EXECUTOR_SERVICE.execute(clockListener::onTick);
         }
     }
 

@@ -1,22 +1,32 @@
 package elevator.server;
 
+import elevator.Clock;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import static java.util.Collections.unmodifiableSet;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class StartedElevatorServer {
 
     private Set<ElevatorGame> elevatorGames = new HashSet<>();
+    private final Clock clock = new Clock();
+
+    public StartedElevatorServer() {
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
+    }
 
     public StartedElevatorServer addElevatorGame(Email email, URL server) throws MalformedURLException {
-        ElevatorGame elevatorGame = new ElevatorGame(email, server);
+        ElevatorGame elevatorGame = new ElevatorGame(email, server, clock);
         if (elevatorGames.contains(elevatorGame)) {
             throw new IllegalStateException("a game with email " + email + " has already have been added");
         }
         elevatorGames.add(elevatorGame);
+        elevatorGame.start();
         return this;
     }
 
@@ -28,4 +38,13 @@ public class StartedElevatorServer {
         return unmodifiableSet(emails);
     }
 
+    public StartedElevatorServer removeElevatorGame(Email email) throws MalformedURLException {
+        for (ElevatorGame elevatorGame : elevatorGames) {
+            if (elevatorGame.email.equals(email)) {
+                elevatorGame.stop();
+                elevatorGames.remove(elevatorGame);
+            }
+        }
+        return this;
+    }
 }

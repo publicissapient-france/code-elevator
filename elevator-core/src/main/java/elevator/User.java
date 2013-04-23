@@ -36,14 +36,20 @@ public class User {
 
     public User elevatorIsOpen(Integer atFloor) {
         if (state == State.WAITING && atFloor.equals(floor)) {
+            // elevatorEngine.userHasEntered();
             elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
             return this;
         }
         if (state == State.TRAVELLING && atFloor.equals(floorToGo)) {
+            // elevatorEngine.userHasExited();
             state = State.DONE;
         }
         return this;
+    }
+
+    public Boolean done() {
+        return state == State.DONE;
     }
 
     private Integer randomFloor() {

@@ -11,24 +11,24 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-
-import static java.util.concurrent.Executors.newCachedThreadPool;
+import java.util.concurrent.Future;
 
 public class HTTPElevator implements ElevatorEngine {
 
-    private static final ExecutorService EXECUTOR = newCachedThreadPool();
-
+    private final ExecutorService executor;
     private final URLStreamHandler urlStreamHandler;
     private final URL server;
     private final URL nextCommand;
     private final URL reset;
 
-    HTTPElevator(URL server) throws MalformedURLException {
-        this(server, null);
+    HTTPElevator(URL server, ExecutorService executor) throws MalformedURLException {
+        this(server, executor, null);
     }
 
-    HTTPElevator(URL server, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+    HTTPElevator(URL server, ExecutorService executor, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+        this.executor = executor;
         this.urlStreamHandler = urlStreamHandler;
         this.server = new URL(server, "", urlStreamHandler);
         this.nextCommand = new URL(server, "nextCommand", urlStreamHandler);
@@ -71,7 +71,7 @@ public class HTTPElevator implements ElevatorEngine {
     }
 
     private void httpGet(URL url) {
-        EXECUTOR.execute(() -> {
+        executor.execute(() -> {
             try (InputStream in = url.openConnection().getInputStream()) {
             } catch (IOException e) {
                 throw new RuntimeException(e);

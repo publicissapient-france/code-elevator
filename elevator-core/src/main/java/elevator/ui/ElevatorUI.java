@@ -2,6 +2,7 @@ package elevator.ui;
 
 import elevator.Building;
 import elevator.Clock;
+import elevator.ClockListener;
 import elevator.engine.ElevatorEngine;
 import elevator.engine.naive.NaiveElevator;
 import elevator.engine.queue.QueueElevator;
@@ -28,22 +29,39 @@ public class ElevatorUI extends JFrame {
         List<BuildingAndElevator> buildings = new ArrayList<>();
         Clock clock = new Clock();
         ElevatorEngine elevator;
-        Building building;
 
         elevator = new NaiveElevator();
-        building = new Building(elevator);
-        clock.addClockListener(building);
-        buildings.add(new BuildingAndElevator(building, elevator));
+        final Building naiveBuilding = new Building(elevator);
+        clock.addClockListener(new ClockListener() {
+            @Override
+            public ClockListener onTick() {
+                naiveBuilding.updateBuildingState();
+                return this;
+            }
+        });
+        buildings.add(new BuildingAndElevator(naiveBuilding, elevator));
 
         elevator = new QueueElevator();
-        building = new Building(elevator);
-        clock.addClockListener(building);
-        buildings.add(new BuildingAndElevator(building, elevator));
+        final Building queueBuilding = new Building(elevator);
+        clock.addClockListener(new ClockListener() {
+            @Override
+            public ClockListener onTick() {
+                queueBuilding.updateBuildingState();
+                return this;
+            }
+        });
+        buildings.add(new BuildingAndElevator(queueBuilding, elevator));
 
         elevator = new ScanElevator();
-        building = new Building(elevator);
-        clock.addClockListener(building);
-        buildings.add(new BuildingAndElevator(building, elevator));
+        final Building scanElevator = new Building(elevator);
+        clock.addClockListener(new ClockListener() {
+            @Override
+            public ClockListener onTick() {
+                scanElevator.updateBuildingState();
+                return this;
+            }
+        });
+        buildings.add(new BuildingAndElevator(scanElevator, elevator));
 
         InteractionPanel interactionPanel = new InteractionPanel(buildings);
         add(interactionPanel, CENTER);

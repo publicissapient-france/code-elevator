@@ -10,9 +10,10 @@ import static elevator.Door.OPEN;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Boolean.TRUE;
+import static java.lang.Boolean.FALSE;
 import static java.util.Collections.unmodifiableSet;
 
-public class Building implements ClockListener {
+public class Building {
 
     static final Integer MAX_NUMBER_OF_USERS = 10;
 
@@ -30,7 +31,7 @@ public class Building implements ClockListener {
 
     public Building addUser() {
         if (users.size() >= MAX_NUMBER_OF_USERS) {
-            throw new IllegalStateException("can't add more than " + MAX_NUMBER_OF_USERS + " users");
+            return this;
         }
 
         User newUser = new User(elevatorEngine);
@@ -50,8 +51,7 @@ public class Building implements ClockListener {
         return door;
     }
 
-    @Override
-    public ClockListener onTick() {
+    public Building updateBuildingState() {
         Command command = elevatorEngine.nextCommand();
 
         if (!isValidCommand(command)) {
@@ -74,8 +74,10 @@ public class Building implements ClockListener {
                 return door == CLOSE && floor > LOWER_FLOOR;
             case UP:
                 return door == CLOSE && floor < HIGHER_FLOOR;
-            default:
+            case NOTHING:
                 return TRUE;
+            default:
+                return FALSE;
         }
     }
 
@@ -92,9 +94,14 @@ public class Building implements ClockListener {
                 break;
             case OPEN:
                 door = OPEN;
+                Set<User> usersToDelete = new HashSet<>();
                 for (User user : users) {
                     user.elevatorIsOpen(floor);
+                    if (user.done()) {
+                        usersToDelete.add(user);
+                    }
                 }
+                users.removeAll(usersToDelete);
                 break;
             case UP:
                 floor++;

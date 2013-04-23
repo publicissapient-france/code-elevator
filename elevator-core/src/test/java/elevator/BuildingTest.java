@@ -19,7 +19,7 @@ public class BuildingTest {
         assertThat(building).users().hasSize(1);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void should_not_add_more_than_max_number_of_users() {
         Building building = new Building(new MockElevatorEngine());
         for (Integer i = 1; i <= MAX_NUMBER_OF_USERS; i++) {
@@ -28,6 +28,8 @@ public class BuildingTest {
         assertThat(building).users().hasSize(MAX_NUMBER_OF_USERS);
 
         building.addUser();
+
+        assertThat(building).users().hasSize(MAX_NUMBER_OF_USERS);
     }
 
     @Test
@@ -41,12 +43,12 @@ public class BuildingTest {
     public void should_restore_initial_state_if_reseted() throws Exception {
         MockElevatorEngine elevator = new MockElevatorEngine(UP, UP, OPEN, OPEN);
         Building building = new Building(elevator);
-        building.onTick().onTick().onTick();
+        building.updateBuildingState().updateBuildingState().updateBuildingState();
         building.addUser();
         assertThat(elevator.resetCalled()).isFalse();
         assertThat(building).doorIs(Door.OPEN).floorIs(2).users().hasSize(1);
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
@@ -57,7 +59,7 @@ public class BuildingTest {
         MockElevatorEngine elevator = new MockElevatorEngine(NOTHING);
         Building building = new Building(elevator);
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isFalse();
     }
@@ -67,7 +69,7 @@ public class BuildingTest {
         MockElevatorEngine elevator = new MockElevatorEngine(CLOSE);
         Building building = new Building(elevator);
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }
@@ -76,10 +78,10 @@ public class BuildingTest {
     public void should_reset_if_elevator_opens_doors_but_doors_are_already_open() {
         MockElevatorEngine elevator = new MockElevatorEngine(OPEN, OPEN);
         Building building = new Building(elevator);
-        building.onTick();
+        building.updateBuildingState();
         assertThat(elevator.resetCalled()).isFalse();
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }
@@ -90,7 +92,7 @@ public class BuildingTest {
         Building building = new Building(elevator);
         assertThat(elevator.resetCalled()).isFalse();
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }
@@ -99,10 +101,10 @@ public class BuildingTest {
     public void should_reset_if_elevator_goes_down_but_doors_are_open() {
         MockElevatorEngine elevator = new MockElevatorEngine(UP, Command.OPEN, DOWN);
         Building building = new Building(elevator);
-        building.onTick().onTick();
+        building.updateBuildingState().updateBuildingState();
         assertThat(elevator.resetCalled()).isFalse();
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }
@@ -111,10 +113,10 @@ public class BuildingTest {
     public void should_reset_if_elevator_goes_up_but_is_already_at_higher_floor() {
         MockElevatorEngine elevator = new MockElevatorEngine(UP, UP, UP, UP, UP, UP);
         Building building = new Building(elevator);
-        building.onTick().onTick().onTick().onTick().onTick();
+        building.updateBuildingState().updateBuildingState().updateBuildingState().updateBuildingState().updateBuildingState();
         assertThat(elevator.resetCalled()).isFalse();
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }
@@ -123,10 +125,10 @@ public class BuildingTest {
     public void should_reset_if_elevator_goes_up_but_doors_are_open() {
         MockElevatorEngine elevator = new MockElevatorEngine(Command.OPEN, UP);
         Building building = new Building(elevator);
-        building.onTick();
+        building.updateBuildingState();
         assertThat(elevator.resetCalled()).isFalse();
 
-        building.onTick();
+        building.updateBuildingState();
 
         assertThat(elevator.resetCalled()).isTrue();
     }

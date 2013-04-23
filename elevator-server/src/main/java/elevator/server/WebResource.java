@@ -27,9 +27,9 @@ public class WebResource {
     }
 
     @POST
-    @Path("/new-participant2")
-    public void newParticipant(@QueryParam("email") Email email, @QueryParam("serverURL") URL serverURL) throws MalformedURLException {
-        server.addElevatorGame(email, serverURL);
+    @Path("/unregister-participant")
+    public void unregisterNewParticipant(@QueryParam("serverURL") String email) throws MalformedURLException {
+        server.removeElevatorGame(new Email(email));
     }
 
     @GET
