@@ -58,7 +58,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
     }
 
@@ -79,7 +79,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
     @Test
@@ -91,7 +91,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
     @Test
@@ -102,7 +102,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
     @Test
@@ -114,7 +114,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
     @Test
@@ -126,7 +126,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
     @Test
@@ -138,7 +138,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        verify(elevator, times(1)).reset();
+        verify(elevator).reset();
     }
 
 }
