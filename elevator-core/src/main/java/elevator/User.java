@@ -36,13 +36,13 @@ public class User {
 
     public User elevatorIsOpen(Integer atFloor) {
         if (state == State.WAITING && atFloor.equals(floor)) {
-            // elevatorEngine.userHasEntered();
+            elevatorEngine.userHasEntered();
             elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
             return this;
         }
         if (state == State.TRAVELLING && atFloor.equals(floorToGo)) {
-            // elevatorEngine.userHasExited();
+            elevatorEngine.userHasExited();
             state = State.DONE;
         }
         return this;

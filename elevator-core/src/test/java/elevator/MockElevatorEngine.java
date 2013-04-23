@@ -34,6 +34,16 @@ class MockElevatorEngine implements ElevatorEngine {
     }
 
     @Override
+    public ElevatorEngine userHasEntered() {
+        return this;
+    }
+
+    @Override
+    public ElevatorEngine userHasExited() {
+        return this;
+    }
+
+    @Override
     public ElevatorEngine reset() {
         resetCalled = TRUE;
         return this;

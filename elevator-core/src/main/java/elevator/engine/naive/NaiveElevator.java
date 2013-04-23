@@ -38,20 +38,23 @@ public class NaiveElevator implements ElevatorEngine {
             case MOVE:
                 state = State.OPEN;
                 if (Direction.UP.equals(direction)) {
-                    floor++;
-                    if (HIGHER_FLOOR.equals(floor)) {
-                        direction = Direction.DOWN;
-                    }
-                    return UP;
+                    return goesUp();
+                } else {
+                    return goesDown();
                 }
-                floor--;
-                if (LOWER_FLOOR.equals(floor)) {
-                    direction = Direction.UP;
-                }
-                return DOWN;
             default:
                 return NOTHING;
         }
+    }
+
+    @Override
+    public ElevatorEngine userHasEntered() {
+        return this;
+    }
+
+    @Override
+    public ElevatorEngine userHasExited() {
+        return this;
     }
 
     @Override
@@ -60,6 +63,22 @@ public class NaiveElevator implements ElevatorEngine {
         direction = Direction.UP;
         state = State.CLOSE;
         return this;
+    }
+
+    private Command goesUp() {
+        floor++;
+        if (HIGHER_FLOOR.equals(floor)) {
+            direction = Direction.DOWN;
+        }
+        return UP;
+    }
+
+    private Command goesDown() {
+        floor--;
+        if (LOWER_FLOOR.equals(floor)) {
+            direction = Direction.UP;
+        }
+        return DOWN;
     }
 
 }

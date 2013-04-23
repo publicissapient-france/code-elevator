@@ -52,6 +52,16 @@ public class QueueElevator implements ElevatorEngine {
     }
 
     @Override
+    public ElevatorEngine userHasEntered() {
+        return this;
+    }
+
+    @Override
+    public ElevatorEngine userHasExited() {
+        return this;
+    }
+
+    @Override
     public ElevatorEngine reset() {
         floor = LOWER_FLOOR;
         door = Door.CLOSE;

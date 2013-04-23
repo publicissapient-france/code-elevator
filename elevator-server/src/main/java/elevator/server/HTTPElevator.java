@@ -57,6 +57,18 @@ public class HTTPElevator implements ElevatorEngine {
     }
 
     @Override
+    public ElevatorEngine userHasEntered() {
+        httpGet("userHasEntered");
+        return this;
+    }
+
+    @Override
+    public ElevatorEngine userHasExited() {
+        httpGet("userHasExited");
+        return this;
+    }
+
+    @Override
     public ElevatorEngine reset() {
         httpGet(reset);
         return this;
