@@ -1,18 +1,26 @@
 package elevator;
 
+import elevator.engine.ElevatorEngine;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static elevator.Building.MAX_NUMBER_OF_USERS;
 import static elevator.Command.*;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class BuildingTest {
+
+    @Mock
+    public ElevatorEngine elevator;
 
     @Test
     public void should_add_user() {
-        Building building = new Building(new MockElevatorEngine());
+        Building building = new Building(elevator);
 
         building.addUser();
 
@@ -21,7 +29,7 @@ public class BuildingTest {
 
     @Test
     public void should_not_add_more_than_max_number_of_users() {
-        Building building = new Building(new MockElevatorEngine());
+        Building building = new Building(elevator);
         for (Integer i = 1; i <= MAX_NUMBER_OF_USERS; i++) {
             building.addUser();
         }
@@ -34,103 +42,103 @@ public class BuildingTest {
 
     @Test
     public void should_have_an_initial_state() throws Exception {
-        Building building = new Building(new MockElevatorEngine());
+        Building building = new Building(elevator);
 
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR);
     }
 
     @Test
     public void should_restore_initial_state_if_reseted() throws Exception {
-        MockElevatorEngine elevator = new MockElevatorEngine(UP, UP, OPEN, OPEN);
+        when(elevator.nextCommand()).thenReturn(UP, UP, OPEN, OPEN);
         Building building = new Building(elevator);
         building.updateBuildingState().updateBuildingState().updateBuildingState();
         building.addUser();
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
         assertThat(building).doorIs(Door.OPEN).floorIs(2).users().hasSize(1);
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
     }
 
     @Test
     public void should_does_nothing_if_elevator_does_nothing() {
-        MockElevatorEngine elevator = new MockElevatorEngine(NOTHING);
+        when(elevator.nextCommand()).thenReturn(NOTHING);
         Building building = new Building(elevator);
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
     }
 
     @Test
     public void should_reset_if_elevator_closes_doors_but_doors_are_already_closed() {
-        MockElevatorEngine elevator = new MockElevatorEngine(CLOSE);
+        when(elevator.nextCommand()).thenReturn(CLOSE);
         Building building = new Building(elevator);
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
     @Test
     public void should_reset_if_elevator_opens_doors_but_doors_are_already_open() {
-        MockElevatorEngine elevator = new MockElevatorEngine(OPEN, OPEN);
+        when(elevator.nextCommand()).thenReturn(OPEN, OPEN);
         Building building = new Building(elevator);
         building.updateBuildingState();
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
     @Test
     public void should_reset_if_elevator_goes_down_but_is_already_at_lower_floor() {
-        MockElevatorEngine elevator = new MockElevatorEngine(DOWN);
+        when(elevator.nextCommand()).thenReturn(DOWN);
         Building building = new Building(elevator);
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
     @Test
     public void should_reset_if_elevator_goes_down_but_doors_are_open() {
-        MockElevatorEngine elevator = new MockElevatorEngine(UP, Command.OPEN, DOWN);
+        when(elevator.nextCommand()).thenReturn(UP, Command.OPEN, DOWN);
         Building building = new Building(elevator);
         building.updateBuildingState().updateBuildingState();
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
     @Test
     public void should_reset_if_elevator_goes_up_but_is_already_at_higher_floor() {
-        MockElevatorEngine elevator = new MockElevatorEngine(UP, UP, UP, UP, UP, UP);
+        when(elevator.nextCommand()).thenReturn(UP, UP, UP, UP, UP, UP);
         Building building = new Building(elevator);
         building.updateBuildingState().updateBuildingState().updateBuildingState().updateBuildingState().updateBuildingState();
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
     @Test
     public void should_reset_if_elevator_goes_up_but_doors_are_open() {
-        MockElevatorEngine elevator = new MockElevatorEngine(Command.OPEN, UP);
+        when(elevator.nextCommand()).thenReturn(Command.OPEN, UP);
         Building building = new Building(elevator);
         building.updateBuildingState();
-        assertThat(elevator.resetCalled()).isFalse();
+        verify(elevator, never()).reset();
 
         building.updateBuildingState();
 
-        assertThat(elevator.resetCalled()).isTrue();
+        verify(elevator, times(1)).reset();
     }
 
 }
