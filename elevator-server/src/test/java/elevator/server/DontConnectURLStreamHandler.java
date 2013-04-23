@@ -7,20 +7,20 @@ import java.net.URLStreamHandler;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-class MockURLStreamHandler extends URLStreamHandler {
+class DontConnectURLStreamHandler extends URLStreamHandler {
 
-    private final URLConnection mock;
+    private final URLConnection urlConnection;
     private final String expectedURL;
 
-    MockURLStreamHandler(String expectedURL, URLConnection mock) {
+    DontConnectURLStreamHandler(String expectedURL, URLConnection urlConnection) {
         this.expectedURL = expectedURL;
-        this.mock = mock;
+        this.urlConnection = urlConnection;
     }
 
     @Override
     protected URLConnection openConnection(URL actualURL) throws IOException {
         assertThat(actualURL.toExternalForm()).isEqualTo(expectedURL);
-        return mock;
+        return urlConnection;
     }
 
 }

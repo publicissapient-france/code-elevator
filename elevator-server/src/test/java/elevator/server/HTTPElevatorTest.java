@@ -11,22 +11,18 @@ import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
-import static java.lang.Thread.sleep;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HTTPElevatorTest {
 
     @Mock
-    private URLConnection mock;
+    private URLConnection urlConnection;
 
     @Mock
     private ExecutorService executorService;
@@ -36,47 +32,44 @@ public class HTTPElevatorTest {
         doAnswer((invocationOnMock) -> {
             ((Runnable) invocationOnMock.getArguments()[0]).run();
             return null;
-        }).when(executorService).execute(any(Runnable.class));
+        }).when(executorService).execute(any());
     }
 
     @Test
     public void should_call_server_with_call() throws Exception {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080"), executorService,
-                new MockURLStreamHandler("http://localhost:8080/call?atFloor=4&to=UP", mock));
+                new DontConnectURLStreamHandler("http://localhost:8080/call?atFloor=4&to=UP", urlConnection));
 
         httpElevator.call(4, UP);
 
-        // sleep(30);
-        verify(mock).getInputStream();
+        verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_go() throws Exception {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new MockURLStreamHandler("http://127.0.0.1/go?floorToGo=3", mock));
+                new DontConnectURLStreamHandler("http://127.0.0.1/go?floorToGo=3", urlConnection));
 
         httpElevator.go(3);
 
-        // sleep(30);
-        verify(mock).getInputStream();
+        verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_reset() throws Exception {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
-                new MockURLStreamHandler("http://10.0.0.1/myApp/reset", mock));
+                new DontConnectURLStreamHandler("http://10.0.0.1/myApp/reset", urlConnection));
 
         httpElevator.reset();
 
-        // sleep(30);
-        verify(mock).getInputStream();
+        verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_nextCommand() throws Exception {
-        when(mock.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new MockURLStreamHandler("http://127.0.0.1/nextCommand", mock));
+                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         Command nextCommand = httpElevator.nextCommand();
 
@@ -85,9 +78,9 @@ public class HTTPElevatorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_exception_when_server_send_illegal_command() throws Exception {
-        when(mock.getInputStream()).thenReturn(new ByteArrayInputStream("_down".getBytes()));
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("_down".getBytes()));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new MockURLStreamHandler("http://127.0.0.1/nextCommand", mock));
+                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         httpElevator.nextCommand();
     }
