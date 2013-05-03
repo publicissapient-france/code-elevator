@@ -1,10 +1,10 @@
 package elevator.server;
 
-public class Email {
+class Email {
 
-    public final String email;
+    final String email;
 
-    public Email(String email) {
+    Email(String email) {
         this.email = email;
     }
 

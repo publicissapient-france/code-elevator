@@ -11,12 +11,12 @@ import java.util.concurrent.Executors;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-public class StartedElevatorServer {
+class StartedElevatorServer {
 
     private Set<ElevatorGame> elevatorGames = new HashSet<>();
     private final Clock clock = new Clock();
 
-    public StartedElevatorServer() {
+    StartedElevatorServer() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
     }
 

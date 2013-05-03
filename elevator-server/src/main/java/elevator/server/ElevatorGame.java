@@ -7,17 +7,17 @@ import elevator.ClockListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ElevatorGame implements ClockListener {
+class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
 
     public final Email email;
 
-    private final Building building;
     private final Clock clock;
     private final HTTPElevator elevatorEngine;
+    private final Building building;
 
-    public ElevatorGame(Email email, URL url, Clock clock) throws MalformedURLException {
+    ElevatorGame(Email email, URL url, Clock clock) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }

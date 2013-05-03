@@ -13,13 +13,14 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.concurrent.ExecutorService;
 
-public class HTTPElevator implements ElevatorEngine {
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
+class HTTPElevator implements ElevatorEngine {
+
+    private final URL server;
     private final ExecutorService executor;
     private final URLStreamHandler urlStreamHandler;
-    private final URL server;
     private final URL nextCommand;
     private final URL reset;
 
