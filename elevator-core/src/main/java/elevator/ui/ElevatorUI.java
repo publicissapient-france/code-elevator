@@ -4,14 +4,12 @@ import elevator.Building;
 import elevator.Clock;
 import elevator.ClockListener;
 import elevator.engine.ElevatorEngine;
-import elevator.engine.naive.NaiveElevator;
-import elevator.engine.queue.QueueElevator;
-import elevator.engine.scan.ScanElevator;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -28,40 +26,18 @@ public class ElevatorUI extends JFrame {
 
         List<BuildingAndElevator> buildings = new ArrayList<>();
         Clock clock = new Clock();
-        ElevatorEngine elevator;
 
-        elevator = new NaiveElevator();
-        final Building naiveBuilding = new Building(elevator);
-        clock.addClockListener(new ClockListener() {
-            @Override
-            public ClockListener onTick() {
-                naiveBuilding.updateBuildingState();
-                return this;
-            }
-        });
-        buildings.add(new BuildingAndElevator(naiveBuilding, elevator));
-
-        elevator = new QueueElevator();
-        final Building queueBuilding = new Building(elevator);
-        clock.addClockListener(new ClockListener() {
-            @Override
-            public ClockListener onTick() {
-                queueBuilding.updateBuildingState();
-                return this;
-            }
-        });
-        buildings.add(new BuildingAndElevator(queueBuilding, elevator));
-
-        elevator = new ScanElevator();
-        final Building scanElevator = new Building(elevator);
-        clock.addClockListener(new ClockListener() {
-            @Override
-            public ClockListener onTick() {
-                scanElevator.updateBuildingState();
-                return this;
-            }
-        });
-        buildings.add(new BuildingAndElevator(scanElevator, elevator));
+        for (ElevatorEngine elevatorEngine : ServiceLoader.load(ElevatorEngine.class)) {
+            final Building building = new Building(elevatorEngine);
+            clock.addClockListener(new ClockListener() {
+                @Override
+                public ClockListener onTick() {
+                    building.updateBuildingState();
+                    return this;
+                }
+            });
+            buildings.add(new BuildingAndElevator(building, elevatorEngine));
+        }
 
         InteractionPanel interactionPanel = new InteractionPanel(buildings);
         add(interactionPanel, CENTER);
