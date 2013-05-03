@@ -9,8 +9,8 @@ import static elevator.Door.CLOSE;
 import static elevator.Door.OPEN;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
-import static java.lang.Boolean.TRUE;
 import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableSet;
 
 public class Building {
@@ -65,6 +65,9 @@ public class Building {
     }
 
     private Boolean isValidCommand(Command command) {
+        if (command == null) {
+            return FALSE;
+        }
         switch (command) {
             case CLOSE:
                 return door == OPEN;

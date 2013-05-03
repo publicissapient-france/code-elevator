@@ -15,13 +15,15 @@ public class ElevatorGame implements ClockListener {
 
     private final Building building;
     private final Clock clock;
+    private final HTTPElevator elevatorEngine;
 
     public ElevatorGame(Email email, URL url, Clock clock) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
         this.email = email;
-        this.building = new Building(new HTTPElevator(url, clock.EXECUTOR_SERVICE));
+        this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
+        this.building = new Building(elevatorEngine);
         this.clock = clock;
     }
 
@@ -52,6 +54,10 @@ public class ElevatorGame implements ClockListener {
 
     @Override
     public ClockListener onTick() {
+        if (elevatorEngine.hasTransportError()) {
+            stop();
+            return this;
+        }
         building.addUser();
         building.updateBuildingState();
         return this;
