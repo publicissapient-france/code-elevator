@@ -20,6 +20,11 @@ public class WebResource {
         this.server = server;
     }
 
+    @GET
+    public File home() throws URISyntaxException {
+        return html("/index.html");
+    }
+
     @POST
     @Path("/new-participant")
     public void newParticipant(@QueryParam("email") String email, @QueryParam("serverURL") String serverURL) throws MalformedURLException {

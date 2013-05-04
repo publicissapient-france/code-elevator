@@ -12,12 +12,9 @@ function IndexCtrl($scope, $location, $cookieStore, $http) {
 IndexCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
 
 function ElevatorCtrl($scope, $location, $cookieStore) {
-    var elevator = new Elevator('elevator1');
-    elevator.drawNewUser(0, 0);
-    new Elevator('elevator2');
     $scope.disconnect = function () {
         $cookieStore.remove('isLogged');
-        $location.path('/index.html');
+        $location.path('/');
     };
 }
 ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore'];
