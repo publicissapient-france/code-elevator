@@ -4,12 +4,16 @@ import com.sun.jersey.api.NotFoundException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
+
+import static javax.ws.rs.core.Response.seeOther;
 
 @Path("/")
 public class WebResource {
@@ -21,8 +25,8 @@ public class WebResource {
     }
 
     @GET
-    public File home() throws URISyntaxException {
-        return html("/index.html");
+    public Response home() throws URISyntaxException {
+        return seeOther(new URI("/index.html")).build();
     }
 
     @POST
