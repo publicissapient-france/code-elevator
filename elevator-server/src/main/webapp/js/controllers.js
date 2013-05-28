@@ -11,10 +11,14 @@ function IndexCtrl($scope, $location, $cookieStore, $http) {
 }
 IndexCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
 
-function ElevatorCtrl($scope, $location, $cookieStore) {
+function ElevatorCtrl($scope, $location, $cookieStore, $http) {
+    $http.get('/emails').success(function (data) {
+        console.log(data)
+        $scope.emails = data;
+    });
     $scope.disconnect = function () {
         $cookieStore.remove('isLogged');
-        $location.path('/');
+        $location.path('/index.html');
     };
 }
-ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore'];
+ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
