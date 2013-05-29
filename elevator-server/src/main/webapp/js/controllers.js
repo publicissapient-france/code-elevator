@@ -3,7 +3,7 @@ function IndexCtrl($scope, $location, $cookieStore, $http) {
         $location.path('/elevator');
     }
     $scope.login = function () {
-        $http.post('/new-participant?email=' + $scope.email + "&serverURL=" + $scope.serverURL).success(function () {
+        $http.post('/resources/new-participant?email=' + $scope.email + "&serverURL=" + $scope.serverURL).success(function () {
             $cookieStore.put('isLogged', 'true');
             $location.path('/elevator');
         });
@@ -12,7 +12,7 @@ function IndexCtrl($scope, $location, $cookieStore, $http) {
 IndexCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
 
 function ElevatorCtrl($scope, $location, $cookieStore, $http) {
-    $http.get('/emails').success(function (data) {
+    $http.get('/resources/emails').success(function (data) {
         console.log(data)
         $scope.emails = data;
     });

@@ -25,8 +25,13 @@
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey-json</artifactId>
+            <artifactId>jersey-core</artifactId>
             <version>1.17.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-jaxrs</artifactId>
+            <version>1.9.2</version>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -53,5 +58,17 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-maven-plugin</artifactId>
+                    <version>9.0.3.v20130506</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>

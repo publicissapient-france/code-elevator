@@ -14,11 +14,8 @@ public class ElevatorServer {
 
     public Port start() {
         Port port = PortFactory.newPort();
-        ResourceConfig resourceConfig = new DefaultResourceConfig();
-        resourceConfig.getClasses().add(JacksonJsonProvider.class);
-        resourceConfig.getSingletons().add(new WebResource(new StartedElevatorServer()));
         try {
-            HttpServer httpServer = HttpServerFactory.create("http://localhost:" + port.port() + "/", resourceConfig);
+            HttpServer httpServer = HttpServerFactory.create("http://localhost:" + port.port() + "/", new ElevatorApplication());
             httpServer.start();
             return port;
         } catch (IOException e) {
