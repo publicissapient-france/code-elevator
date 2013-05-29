@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import static javax.ws.rs.core.Response.seeOther;
@@ -46,6 +48,17 @@ public class WebResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Set<Email> emails() {
         return server.emails();
+    }
+
+    @GET
+    @Path("/leaderboard")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Collection<PlayerInfo> leaderboard() {
+        Collection<PlayerInfo> players = new ArrayList<>();
+        for (ElevatorGame game: server.getUnmodifiableElevatorGames()) {
+            players.add(new PlayerInfo(game));
+        }
+        return players;
     }
 
     @GET
