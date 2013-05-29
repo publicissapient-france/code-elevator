@@ -29,6 +29,7 @@ class ElevatorGame implements ClockListener {
 
     ElevatorGame start() {
         clock.addClockListener(this);
+        elevatorEngine.reset();
         return this;
     }
 
