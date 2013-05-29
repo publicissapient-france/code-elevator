@@ -55,8 +55,8 @@ public class WebResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Collection<PlayerInfo> leaderboard() {
         Collection<PlayerInfo> players = new ArrayList<>();
-        for (ElevatorGame game: server.getUnmodifiableElevatorGames()) {
-            players.add(new PlayerInfo(game));
+        for (ElevatorGame game : server.getUnmodifiableElevatorGames()) {
+            players.add(game.playerInfo);
         }
         return players;
     }

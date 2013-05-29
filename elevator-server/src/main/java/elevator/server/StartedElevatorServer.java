@@ -35,14 +35,14 @@ class StartedElevatorServer {
     public Set<Email> emails() {
         Set<Email> emails = new HashSet<>(elevatorGames.size());
         for (ElevatorGame elevatorGame : elevatorGames) {
-            emails.add(elevatorGame.email);
+            emails.add(elevatorGame.email());
         }
         return unmodifiableSet(emails);
     }
 
     public StartedElevatorServer removeElevatorGame(Email email) throws MalformedURLException {
         for (ElevatorGame elevatorGame : elevatorGames) {
-            if (elevatorGame.email.equals(email)) {
+            if (elevatorGame.email().equals(email)) {
                 elevatorGame.stop();
                 elevatorGames.remove(elevatorGame);
             }

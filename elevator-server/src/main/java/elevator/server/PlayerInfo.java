@@ -8,21 +8,64 @@ public class PlayerInfo {
 
     //TODO: optional ? private String name;
 
-    public final String email;
+    public transient final Email email;
 
-    public final int score;
+    private int score;
 
-    public final int[] peopleWaitingTheElevator;
+    private int[] peopleWaitingTheElevator;
 
-    public final int elevatorAtFloor;
+    private int elevatorAtFloor;
 
-    public final int peopleInTheElevator;
+    private int peopleInTheElevator;
 
-    public PlayerInfo(ElevatorGame game) {
-        email = game.email.email;
+    public PlayerInfo(Email email) {
+        this.email = email;
         score = 0;
         peopleWaitingTheElevator = new int[]{0, 0, 0, 0};
         elevatorAtFloor = 0;
         peopleInTheElevator = 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlayerInfo that = (PlayerInfo) o;
+
+        return email.equals(that.email);
+    }
+
+    public String getEmail() {
+        return email.toString();
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int[] getPeopleWaitingTheElevator() {
+        return peopleWaitingTheElevator;
+    }
+
+    public int getElevatorAtFloor() {
+        return elevatorAtFloor;
+    }
+
+    public int getPeopleInTheElevator() {
+        return peopleInTheElevator;
+    }
+
+    public void loose() {
+        this.score -= 1000;
+    }
+
+    public void onepoint() {
+        this.score++;
+    }
+
+    @Override
+    public int hashCode() {
+        return email.hashCode();
     }
 }
