@@ -16,7 +16,6 @@ import java.util.concurrent.ExecutorService;
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.fest.assertions.Fail.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
