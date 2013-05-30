@@ -91,6 +91,13 @@ public class Building {
     }
 
     private void applyCommand(Command command) {
+        for (User user : users) {
+            user.elevatorIsOpen(floor);
+            if (user.done()) {
+                user.onTick();
+            }
+        }
+
         switch (command) {
             case CLOSE:
                 door = CLOSE;

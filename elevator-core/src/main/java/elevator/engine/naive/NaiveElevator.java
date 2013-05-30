@@ -2,6 +2,7 @@ package elevator.engine.naive;
 
 import elevator.Command;
 import elevator.Direction;
+import elevator.User;
 import elevator.engine.ElevatorEngine;
 
 import static elevator.Command.*;
@@ -48,12 +49,12 @@ public class NaiveElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine userHasEntered() {
+    public ElevatorEngine userHasEntered(User user) {
         return this;
     }
 
     @Override
-    public ElevatorEngine userHasExited() {
+    public ElevatorEngine userHasExited(User user) {
         return this;
     }
 

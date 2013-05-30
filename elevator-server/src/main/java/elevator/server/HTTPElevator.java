@@ -2,6 +2,7 @@ package elevator.server;
 
 import elevator.Command;
 import elevator.Direction;
+import elevator.User;
 import elevator.engine.ElevatorEngine;
 
 import java.io.BufferedReader;
@@ -23,6 +24,7 @@ class HTTPElevator implements ElevatorEngine {
     private final URLStreamHandler urlStreamHandler;
     private final URL nextCommand;
     private final URL reset;
+    private Score score;
 
     private Boolean transportError;
 
@@ -37,6 +39,7 @@ class HTTPElevator implements ElevatorEngine {
         this.nextCommand = new URL(server, "nextCommand", urlStreamHandler);
         this.reset = new URL(server, "reset", urlStreamHandler);
         this.transportError = FALSE;
+        this.score = new Score();
     }
 
     @Override
@@ -57,29 +60,37 @@ class HTTPElevator implements ElevatorEngine {
         try (InputStream in = nextCommand.openConnection().getInputStream()) {
             return Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
         } catch (IllegalArgumentException e) {
+            score = score.loose();
             return null;
         } catch (IOException e) {
+            score = score.loose();
             transportError = TRUE;
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public ElevatorEngine userHasEntered() {
+    public ElevatorEngine userHasEntered(User user) {
         httpGet("userHasEntered");
         return this;
     }
 
     @Override
-    public ElevatorEngine userHasExited() {
+    public ElevatorEngine userHasExited(User user) {
         httpGet("userHasExited");
+        score = score.success(user);
         return this;
     }
 
     @Override
     public ElevatorEngine reset() {
+        score = score.reset();
         httpGet(reset);
         return this;
+    }
+
+    Score getScore() {
+        return score;
     }
 
     Boolean hasTransportError() {
@@ -106,6 +117,7 @@ class HTTPElevator implements ElevatorEngine {
             try (InputStream in = url.openConnection().getInputStream()) {
             } catch (IOException e) {
                 transportError = TRUE;
+                score = score.loose();
                 throw new RuntimeException(e);
             }
         });

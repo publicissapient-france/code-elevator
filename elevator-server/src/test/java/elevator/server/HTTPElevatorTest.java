@@ -1,6 +1,7 @@
 package elevator.server;
 
 import elevator.Command;
+import elevator.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,7 +72,7 @@ public class HTTPElevatorTest {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasEntered", urlConnection));
 
-        httpElevator.userHasEntered();
+        httpElevator.userHasEntered(any(User.class));
 
         verify(urlConnection).getInputStream();
     }
@@ -81,7 +82,10 @@ public class HTTPElevatorTest {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasExited", urlConnection));
 
-        httpElevator.userHasExited();
+        User user = mock(User.class);
+        doReturn(0).when(user).getFloor();
+        doReturn(1).when(user).getFloorToGo();
+        httpElevator.userHasExited(user);
 
         verify(urlConnection).getInputStream();
     }

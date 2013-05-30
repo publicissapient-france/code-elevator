@@ -2,6 +2,7 @@ package elevator.engine.scan;
 
 import elevator.Direction;
 import elevator.Door;
+import elevator.User;
 import elevator.engine.ElevatorEngine;
 
 import static elevator.Command.*;
@@ -73,12 +74,12 @@ public class ScanElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine userHasEntered() {
+    public ElevatorEngine userHasEntered(User user) {
         return this;
     }
 
     @Override
-    public ElevatorEngine userHasExited() {
+    public ElevatorEngine userHasExited(User user) {
         return this;
     }
 

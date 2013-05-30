@@ -1,71 +1,31 @@
 package elevator.server;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:ygrenzinger@xebia.fr">Yannick Grenzinger</a>
  *         Date: 5/29/13
  */
-public class PlayerInfo {
+public class PlayerInfo implements Serializable {
+    private static final long serialVersionUID = -6875006554350182431L;
 
     //TODO: optional ? private String name;
 
-    public transient final Email email;
+    public final String email;
 
-    private int score;
+    public final int score;
 
-    private int[] peopleWaitingTheElevator;
+    public final int[] peopleWaitingTheElevator;
 
-    private int elevatorAtFloor;
+    public final int elevatorAtFloor;
 
-    private int peopleInTheElevator;
+    public final int peopleInTheElevator;
 
-    public PlayerInfo(Email email) {
-        this.email = email;
-        score = 0;
+    public PlayerInfo(ElevatorGame game) {
+        email = game.email.email;
+        score = game.score().score;
         peopleWaitingTheElevator = new int[]{0, 0, 0, 0};
-        elevatorAtFloor = 0;
+        elevatorAtFloor = game.floor();
         peopleInTheElevator = 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PlayerInfo that = (PlayerInfo) o;
-
-        return email.equals(that.email);
-    }
-
-    public String getEmail() {
-        return email.toString();
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public int[] getPeopleWaitingTheElevator() {
-        return peopleWaitingTheElevator;
-    }
-
-    public int getElevatorAtFloor() {
-        return elevatorAtFloor;
-    }
-
-    public int getPeopleInTheElevator() {
-        return peopleInTheElevator;
-    }
-
-    public void loose() {
-        this.score -= 1000;
-    }
-
-    public void onepoint() {
-        this.score++;
-    }
-
-    @Override
-    public int hashCode() {
-        return email.hashCode();
     }
 }

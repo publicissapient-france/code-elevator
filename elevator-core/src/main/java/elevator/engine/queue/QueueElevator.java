@@ -3,6 +3,7 @@ package elevator.engine.queue;
 import elevator.Command;
 import elevator.Direction;
 import elevator.Door;
+import elevator.User;
 import elevator.engine.ElevatorEngine;
 
 import java.util.ArrayDeque;
@@ -52,12 +53,12 @@ public class QueueElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine userHasEntered() {
+    public ElevatorEngine userHasEntered(User user) {
         return this;
     }
 
     @Override
-    public ElevatorEngine userHasExited() {
+    public ElevatorEngine userHasExited(User user) {
         return this;
     }
 

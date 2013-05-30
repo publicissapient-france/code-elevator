@@ -2,6 +2,7 @@ package elevator.engine;
 
 import elevator.Command;
 import elevator.Direction;
+import elevator.User;
 
 public interface ElevatorEngine {
 
@@ -14,9 +15,9 @@ public interface ElevatorEngine {
 
     public Command nextCommand();
 
-    public ElevatorEngine userHasEntered();
+    public ElevatorEngine userHasEntered(User user);
 
-    public ElevatorEngine userHasExited();
+    public ElevatorEngine userHasExited(User user);
 
     public ElevatorEngine reset();
 

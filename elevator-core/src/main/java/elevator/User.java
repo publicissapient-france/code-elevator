@@ -8,17 +8,19 @@ import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Math.random;
 
-public class User {
+public class User implements ClockListener {
 
     private final ElevatorEngine elevatorEngine;
     private final Integer floor;
     private final Integer floorToGo;
+    private Integer tickToGo;
 
     private User.State state;
 
     public User(ElevatorEngine elevatorEngine) {
         this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
+        this.tickToGo = 0;
 
         Direction direction;
         if (randomBoolean()) {
@@ -34,18 +36,23 @@ public class User {
         elevatorEngine.call(floor, direction);
     }
 
+
     public User elevatorIsOpen(Integer atFloor) {
         if (state == State.WAITING && atFloor.equals(floor)) {
-            elevatorEngine.userHasEntered();
+            elevatorEngine.userHasEntered(this);
             elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
             return this;
         }
-        if (state == State.TRAVELLING && atFloor.equals(floorToGo)) {
-            elevatorEngine.userHasExited();
+        if (traveling() && atFloor.equals(floorToGo)) {
+            elevatorEngine.userHasExited(this);
             state = State.DONE;
         }
         return this;
+    }
+
+    private Boolean traveling() {
+        return state == State.TRAVELLING;
     }
 
     public Boolean done() {
@@ -62,6 +69,26 @@ public class User {
 
     private Boolean randomBoolean() {
         return random() > .5;
+    }
+
+    public Integer getTickToGo() {
+        return tickToGo;
+    }
+
+    public Integer getFloor() {
+        return floor;
+    }
+
+    public Integer getFloorToGo() {
+        return floorToGo;
+    }
+
+    @Override
+    public ClockListener onTick() {
+        if (traveling()) {
+            tickToGo++;
+        }
+        return this;
     }
 
     private enum State {

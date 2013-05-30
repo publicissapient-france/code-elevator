@@ -56,7 +56,7 @@ public class WebResource {
     public Collection<PlayerInfo> leaderboard() {
         Collection<PlayerInfo> players = new ArrayList<>();
         for (ElevatorGame game : server.getUnmodifiableElevatorGames()) {
-            players.add(game.playerInfo);
+            players.add(new PlayerInfo(game));
         }
         return players;
     }

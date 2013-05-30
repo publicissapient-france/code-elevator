@@ -11,7 +11,7 @@ class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
 
-    public final PlayerInfo playerInfo;
+    final Email email;
 
     private final Clock clock;
     private final HTTPElevator elevatorEngine;
@@ -21,7 +21,7 @@ class ElevatorGame implements ClockListener {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
-        this.playerInfo = new PlayerInfo(email);
+        this.email = email;
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
         this.building = new Building(elevatorEngine);
         this.clock = clock;
@@ -38,8 +38,23 @@ class ElevatorGame implements ClockListener {
         return this;
     }
 
-    public Email email() {
-        return playerInfo.email;
+    int floor() {
+        return building.floor();
+    }
+
+    Score score() {
+        return elevatorEngine.getScore();
+    }
+
+    @Override
+    public ClockListener onTick() {
+        if (elevatorEngine.hasTransportError()) {
+            stop();
+            return this;
+        }
+        building.addUser();
+        building.updateBuildingState();
+        return this;
     }
 
     @Override
@@ -49,24 +64,12 @@ class ElevatorGame implements ClockListener {
 
         ElevatorGame elevatorGame = (ElevatorGame) o;
 
-        return playerInfo.equals(elevatorGame.playerInfo);
+        return email.equals(elevatorGame.email);
     }
 
     @Override
     public int hashCode() {
-        return playerInfo.hashCode();
+        return email.hashCode();
     }
 
-    @Override
-    public ClockListener onTick() {
-        if (elevatorEngine.hasTransportError()) {
-            stop();
-            playerInfo.loose();
-            return this;
-        }
-        building.addUser();
-        building.updateBuildingState();
-        playerInfo.onepoint();
-        return this;
-    }
 }
