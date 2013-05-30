@@ -3,9 +3,11 @@ package elevator.server;
 class Email {
 
     final String email;
+    final String name;
 
-    Email(String email) {
+    Email(String email, String name) {
         this.email = email;
+        this.name = name;
     }
 
     @Override

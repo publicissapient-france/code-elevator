@@ -6,8 +6,8 @@ import elevator.User;
 
 public interface ElevatorEngine {
 
-    public final Integer LOWER_FLOOR = 0;
-    public final Integer HIGHER_FLOOR = 5;
+    public final static Integer LOWER_FLOOR = 0;
+    public final static Integer HIGHER_FLOOR = 5;
 
     public ElevatorEngine call(Integer atFloor, Direction to);
 

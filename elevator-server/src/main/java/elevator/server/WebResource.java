@@ -33,14 +33,14 @@ public class WebResource {
 
     @POST
     @Path("/new-participant")
-    public void newParticipant(@QueryParam("email") String email, @QueryParam("serverURL") String serverURL) throws MalformedURLException {
-        server.addElevatorGame(new Email(email), new URL(serverURL));
+    public void newParticipant(@QueryParam("email") String email, @QueryParam("name") String name, @QueryParam("serverURL") String serverURL) throws MalformedURLException {
+        server.addElevatorGame(new Email(email,name), new URL(serverURL));
     }
 
     @POST
     @Path("/unregister-participant")
-    public void unregisterNewParticipant(@QueryParam("serverURL") String email) throws MalformedURLException {
-        server.removeElevatorGame(new Email(email));
+    public void unregisterNewParticipant(@QueryParam("serverURL") String email, @QueryParam("name") String name) throws MalformedURLException {
+        server.removeElevatorGame(new Email(email,name));
     }
 
     @GET
