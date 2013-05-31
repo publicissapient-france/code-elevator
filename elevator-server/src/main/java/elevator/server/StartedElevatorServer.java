@@ -22,27 +22,27 @@ class StartedElevatorServer {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
     }
 
-    public StartedElevatorServer addElevatorGame(Email email, URL server) throws MalformedURLException {
-        ElevatorGame elevatorGame = new ElevatorGame(email, server, clock);
+    public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
         if (elevatorGames.contains(elevatorGame)) {
-            throw new IllegalStateException("a game with email " + email + " has already have been added");
+            throw new IllegalStateException("a game with player " + player + " has already have been added");
         }
         elevatorGames.add(elevatorGame);
         elevatorGame.start();
         return this;
     }
 
-    public Set<Email> emails() {
-        Set<Email> emails = new HashSet<>(elevatorGames.size());
+    public Set<Player> emails() {
+        Set<Player> emails = new HashSet<>(elevatorGames.size());
         for (ElevatorGame elevatorGame : elevatorGames) {
-            emails.add(elevatorGame.email);
+            emails.add(elevatorGame.player);
         }
         return unmodifiableSet(emails);
     }
 
-    public StartedElevatorServer removeElevatorGame(Email email) throws MalformedURLException {
+    public StartedElevatorServer removeElevatorGame(Player email) throws MalformedURLException {
         for (ElevatorGame elevatorGame : elevatorGames) {
-            if (elevatorGame.email.equals(email)) {
+            if (elevatorGame.player.equals(email)) {
                 elevatorGame.stop();
                 elevatorGames.remove(elevatorGame);
             }

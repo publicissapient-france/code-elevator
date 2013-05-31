@@ -1,7 +1,6 @@
 'use strict';
 
-angular.module('elevatorApp')
-    .controller('ElevatorCtrl', function ($scope, $timeout) {
+function LeaderboardCtrl($scope, $timeout) {
         $scope.players = [];
         $scope.numberOfFloors = 5;
 
@@ -31,7 +30,10 @@ angular.module('elevatorApp')
         },3000);
 
 
-    });
+    };
+
+LeaderboardCtrl.$inject = ['$scope', '$timeout'];
+
 
 function randomizeScore($scope, $timeout) {
     (function randomize() {

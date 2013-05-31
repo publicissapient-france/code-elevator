@@ -11,7 +11,7 @@ public class StartedElevatorServerTest {
 
     @Test
     public void should_add_elevator_game() throws Exception {
-        Email email = new Email("email@provider.com", "name");
+        Player email = new Player("player@provider.com", "pseudo");
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
         startedElevatorServer.addElevatorGame(email, new URL("http://127.0.0.1"));
@@ -23,7 +23,7 @@ public class StartedElevatorServerTest {
     public void should_not_add_elevator_game_if_protocol_is_not_http() throws Exception {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
-        startedElevatorServer.addElevatorGame(new Email("email@provider.com", "name"), new URL("https://127.0.0.1"));
+        startedElevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("https://127.0.0.1"));
 
         fail();
     }
@@ -33,8 +33,8 @@ public class StartedElevatorServerTest {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
         startedElevatorServer.
-                addElevatorGame(new Email("email@provider.com", "name"), new URL("http://127.0.0.1")).
-                addElevatorGame(new Email("email@provider.com", "name"), new URL("http://127.0.0.1:8080/myApp"));
+                addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1")).
+                addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080/myApp"));
 
         fail();
     }

@@ -1,5 +1,8 @@
 package elevator.server;
 
+import elevator.Door;
+import elevator.engine.ElevatorEngine;
+
 import java.io.Serializable;
 
 /**
@@ -9,23 +12,24 @@ import java.io.Serializable;
 public class PlayerInfo implements Serializable {
     private static final long serialVersionUID = -6875006554350182431L;
 
-    //TODO: optional ? private String name;
+    public String pseudo = "";
 
-    public final String email;
+    public String email = "";
 
-    public final int score;
+    public int score = 0;
 
-    public final int[] peopleWaitingTheElevator;
+    public int[] peopleWaitingTheElevator = new int[ElevatorEngine.HIGHER_FLOOR+1];
 
-    public final int elevatorAtFloor;
+    public int elevatorAtFloor = 0;
 
-    public final int peopleInTheElevator;
+    public int peopleInTheElevator = 0;
 
-    public PlayerInfo(ElevatorGame game) {
-        email = game.email.email;
-        score = game.score().score;
-        peopleWaitingTheElevator = new int[]{0, 0, 0, 0};
-        elevatorAtFloor = game.floor();
-        peopleInTheElevator = 0;
+    public Door door = Door.CLOSE;
+
+    public PlayerInfo() {
+        for (int i = 0; i < peopleWaitingTheElevator.length; i++) {
+            peopleWaitingTheElevator[i] = 0;
+        }
     }
+
 }

@@ -1,13 +1,17 @@
 package elevator.server;
 
-class Email {
+class Player {
 
     final String email;
-    final String name;
+    String pseudo;
 
-    Email(String email, String name) {
+    Player(String email, String pseudo) {
         this.email = email;
-        this.name = name;
+        this.pseudo = pseudo;
+    }
+
+    Player(String email) {
+        this.email = email;
     }
 
     @Override
@@ -15,7 +19,7 @@ class Email {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Email email = (Email) o;
+        Player email = (Player) o;
 
         return this.email.equals(email.email);
 

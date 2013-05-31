@@ -91,7 +91,11 @@ public class User implements ClockListener {
         return this;
     }
 
-    private enum State {
+    public State state() {
+       return state;
+    }
+
+    public enum State {
         WAITING, TRAVELLING, DONE, REJECTED,;
     }
 

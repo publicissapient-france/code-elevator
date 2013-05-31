@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+<div class="container-fluid">
+    <div class="well" style="margin: 5px; display: inline-block" ng-repeat="player in players | orderBy:'score':true">
+        <h3 style="text-align: center;">{{player.name}}</h3>
+        <h5 style="text-align: center;">{{player.score}} points</h5>
+        <building player="player"></building>
+    </div>
 
-</body>
-</html>
+</div>
