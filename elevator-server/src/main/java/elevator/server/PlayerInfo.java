@@ -12,24 +12,25 @@ import java.io.Serializable;
 public class PlayerInfo implements Serializable {
     private static final long serialVersionUID = -6875006554350182431L;
 
-    public String pseudo = "";
+    public final String pseudo;
 
-    public String email = "";
+    public final String email;
 
-    public int score = 0;
+    public final int score;
 
-    public int[] peopleWaitingTheElevator = new int[ElevatorEngine.HIGHER_FLOOR+1];
+    public final int[] peopleWaitingTheElevator;
 
-    public int elevatorAtFloor = 0;
+    public final int elevatorAtFloor;
 
-    public int peopleInTheElevator = 0;
+    public final int peopleInTheElevator;
 
-    public Door door = Door.CLOSE;
-
-    public PlayerInfo() {
-        for (int i = 0; i < peopleWaitingTheElevator.length; i++) {
-            peopleWaitingTheElevator[i] = 0;
-        }
+    public PlayerInfo(ElevatorGame game, Player player) {
+        email = player.email;
+        pseudo = player.pseudo;
+        score = game.score().score;
+        peopleWaitingTheElevator = game.waitingUsersByFloors();
+        elevatorAtFloor = game.floor();
+        peopleInTheElevator = game.travelingUsers();
     }
 
 }

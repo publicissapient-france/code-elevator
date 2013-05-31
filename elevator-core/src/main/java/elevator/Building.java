@@ -47,6 +47,33 @@ public class Building {
         return floor;
     }
 
+    public int travelingUsers() {
+        int count = 0;
+
+        for (User user : users) {
+            if (user.traveling()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int[] waitingUsersByFloors() {
+        int[] count = new int[ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1];
+
+        for (int i = ElevatorEngine.LOWER_FLOOR; i <= ElevatorEngine.HIGHER_FLOOR; i++) {
+            count[i] = 0;
+            for (User user : users) {
+                if (user.waiting() && user.at(i)) {
+                    count[i]++;
+                }
+            }
+        }
+
+        return count;
+    }
+
     public Door door() {
         return door;
     }

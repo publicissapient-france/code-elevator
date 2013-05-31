@@ -44,6 +44,14 @@ class ElevatorGame implements ClockListener {
         return elevatorEngine.getScore();
     }
 
+    public int travelingUsers() {
+        return building.travelingUsers();
+    }
+
+    public int[] waitingUsersByFloors() {
+        return building.waitingUsersByFloors();
+    }
+
     @Override
     public ClockListener onTick() {
         if (elevatorEngine.hasTransportError()) {
@@ -71,22 +79,7 @@ class ElevatorGame implements ClockListener {
     }
 
     public PlayerInfo getPlayerInfo() {
-        PlayerInfo playerInfo = new PlayerInfo();
-
-        playerInfo.email = player.email;
-        playerInfo.pseudo = player.pseudo;
-        playerInfo.score = score().score;
-        for (User user: building.users()) {
-            if (user.state() == User.State.WAITING) {
-                playerInfo.peopleWaitingTheElevator[user.getFloor()] = playerInfo.peopleWaitingTheElevator[user.getFloor()] + 1;
-            }
-            if (user.state() == User.State.TRAVELLING) {
-                playerInfo.peopleInTheElevator++;
-            }
-        }
-        playerInfo.elevatorAtFloor = building.floor();
-        playerInfo.door = building.door();
-        return playerInfo;
+        return new PlayerInfo(this,player);
     }
 
 }

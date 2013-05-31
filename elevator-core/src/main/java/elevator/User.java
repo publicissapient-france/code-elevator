@@ -37,26 +37,34 @@ public class User implements ClockListener {
     }
 
 
-    public User elevatorIsOpen(Integer atFloor) {
-        if (state == State.WAITING && atFloor.equals(floor)) {
+    public User elevatorIsOpen(Integer floor) {
+        if (waiting() && at(floor)) {
             elevatorEngine.userHasEntered(this);
             elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
             return this;
         }
-        if (traveling() && atFloor.equals(floorToGo)) {
+        if (traveling() && at(floorToGo)) {
             elevatorEngine.userHasExited(this);
             state = State.DONE;
         }
         return this;
     }
 
-    private Boolean traveling() {
+    public boolean waiting() {
+        return state == State.WAITING;
+    }
+
+    public Boolean traveling() {
         return state == State.TRAVELLING;
     }
 
     public Boolean done() {
         return state == State.DONE;
+    }
+
+    public Boolean at(int floor) {
+        return this.floor == floor;
     }
 
     private Integer randomFloor() {
@@ -91,12 +99,8 @@ public class User implements ClockListener {
         return this;
     }
 
-    public State state() {
-       return state;
-    }
-
-    public enum State {
-        WAITING, TRAVELLING, DONE, REJECTED,;
+    private enum State {
+        WAITING, TRAVELLING, DONE,;
     }
 
 }
