@@ -1,6 +1,7 @@
 package elevator.server;
 
 import elevator.User;
+import elevator.engine.ElevatorEngine;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -8,6 +9,7 @@ import static java.lang.Math.max;
 public class Score {
     private static final int EFFORT_TO_OPEN_AND_CLOSE_DOORS = 2;
     private static final int SCORE_COEF = 2;
+    private static final int WAITING_TOP_SCORE = 2 * (ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR);
     public final int score;
 
     public Score() {
@@ -32,7 +34,7 @@ public class Score {
     }
 
     int score(User user) {
-        return max(0, bestEffort(user) - effectiveEffort(user));
+        return max(0, bestEffort(user) - effectiveEffort(user)) + waitingScore(user);
     }
 
     int bestEffort(User user) {
@@ -41,6 +43,10 @@ public class Score {
 
     private int effectiveEffort(User user) {
         return user.getTickToGo();
+    }
+
+    int waitingScore(User user) {
+        return max(0, WAITING_TOP_SCORE - user.getTickToWait());
     }
 
     @Override

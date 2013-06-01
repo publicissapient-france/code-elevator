@@ -2,6 +2,8 @@ package elevator;
 
 import elevator.engine.ElevatorEngine;
 
+import java.math.BigDecimal;
+
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
@@ -16,11 +18,13 @@ public class User implements ClockListener {
     private Integer tickToGo;
 
     private User.State state;
+    private Integer tickToWait;
 
     public User(ElevatorEngine elevatorEngine) {
         this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
         this.tickToGo = 0;
+        this.tickToWait = 0;
 
         Direction direction;
         if (randomBoolean()) {
@@ -96,7 +100,14 @@ public class User implements ClockListener {
         if (traveling()) {
             tickToGo++;
         }
+        if (waiting()) {
+            tickToWait++;
+        }
         return this;
+    }
+
+    public Integer getTickToWait() {
+        return tickToWait;
     }
 
     private enum State {
