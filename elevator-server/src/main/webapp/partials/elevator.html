@@ -1,13 +1,21 @@
-<div class="hero-unit">
+<div ng-hidden="isLogged" class="jumbotron">
+    <h1>Code Elevator</h1>
+
+    <h2>From the ground to the highest level</h2>
+    <img src="img/elevator.jpg" class="img-rounded">
+    <hr/>
     <form>
         <input ng-model="pseudo" type="text" placeholder="Pseudo" required/>
         <input ng-model="player" type="text" placeholder="Email" required/>
         <input ng-model="serverURL" type="text" placeholder="Server URL" required/>
-        <button ng-click="login()" type="button">I want to participate</button>
+
+        <div class="control-group">
+            <button class="btn btn-large btn-success" ng-click="login()" type="button">I want to participate</button>
+        </div>
     </form>
 </div>
 
-<div>
+<div ng-show="isLogged">
     Vous êtes bien loggué !
     <button ng-click="disconnect()">disconnect</button>
 </div>
