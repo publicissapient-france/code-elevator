@@ -1,14 +1,12 @@
 package elevator.server;
 
-import com.sun.jersey.api.core.DefaultResourceConfig;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
-import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationPath("/resources")
-public class ElevatorApplication extends DefaultResourceConfig {
+public class ElevatorApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
