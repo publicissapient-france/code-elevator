@@ -4,10 +4,7 @@ import elevator.Clock;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 import static java.util.Collections.unmodifiableSet;
@@ -15,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 class StartedElevatorServer {
 
-    private Set<ElevatorGame> elevatorGames = new HashSet<>();
+    private Map<String, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
     StartedElevatorServer() {
@@ -23,34 +20,46 @@ class StartedElevatorServer {
     }
 
     public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
-        ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
-        if (elevatorGames.contains(elevatorGame)) {
-            throw new IllegalStateException("a game with player " + player + " has already have been added");
-        }
-        elevatorGames.add(elevatorGame);
-        elevatorGame.start();
-        return this;
-    }
+        try {
+            ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
 
-    public Set<Player> emails() {
-        Set<Player> emails = new HashSet<>(elevatorGames.size());
-        for (ElevatorGame elevatorGame : elevatorGames) {
-            emails.add(elevatorGame.player);
-        }
-        return unmodifiableSet(emails);
-    }
-
-    public StartedElevatorServer removeElevatorGame(Player email) throws MalformedURLException {
-        for (ElevatorGame elevatorGame : elevatorGames) {
-            if (elevatorGame.player.equals(email)) {
-                elevatorGame.stop();
-                elevatorGames.remove(elevatorGame);
+            if (elevatorGames.containsKey(player.email)) {
+                throw new IllegalStateException("a game with player " + player + " has already have been added");
             }
+            //elevatorGame.start();
+            elevatorGames.put(player.email, elevatorGame);
+            return this;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Set<Player> players() {
+        Set<Player> players = new HashSet<>(elevatorGames.size());
+        for (ElevatorGame elevatorGame : elevatorGames.values()) {
+            players.add(elevatorGame.player);
+        }
+        return unmodifiableSet(players);
+    }
+
+    public StartedElevatorServer removeElevatorGame(String email) throws MalformedURLException {
+        if (elevatorGames.containsKey(email)) {
+            ElevatorGame game = elevatorGames.get(email);
+            game.stop();
+            elevatorGames.remove(email);
         }
         return this;
+    }
+
+    public PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
+
+        if (!elevatorGames.containsKey(email)) {
+             throw new PlayerNotFoundException("Player not found");
+        }
+        return elevatorGames.get(email).getPlayerInfo();
     }
 
     public Collection<ElevatorGame> getUnmodifiableElevatorGames() {
-        return Collections.unmodifiableCollection(elevatorGames);
+        return Collections.unmodifiableCollection(elevatorGames.values());
     }
 }

@@ -6,13 +6,19 @@ var module = angular
         return {
             restrict:'E',
             link:function (scope, element, attrs) {
+
+                var scale = 1;
+                if (attrs.scale) {
+                    scale = attrs.scale;
+                }
+
                 var elevatorAtFloor = 0;
 
                 var numberOfFloors = 10;
-                var width = 120;
-                var heightOfFloor = 40;
-                var widthOfFloor = 100;
-                var heightOfRoof = 20;
+                var width = 120 * scale;
+                var heightOfFloor = 40 * scale;
+                var widthOfFloor = 100 * scale;
+                var heightOfRoof = 20 * scale;
                 var height = numberOfFloors * heightOfFloor + heightOfRoof;
 
 

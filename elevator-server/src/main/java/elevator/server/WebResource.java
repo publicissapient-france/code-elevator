@@ -17,23 +17,30 @@ public class WebResource {
         this.server = server;
     }
 
-    @POST
+    @GET
     @Path("/new-participant")
-    public void newParticipant(@QueryParam("player") String email, @QueryParam("pseudo") String pseudo, @QueryParam("serverURL") String serverURL) throws MalformedURLException {
+    public void newParticipant(@QueryParam("email") String email, @QueryParam("pseudo") String pseudo, @QueryParam("serverURL") String serverURL) throws MalformedURLException {
         server.addElevatorGame(new Player(email,pseudo), new URL(serverURL));
     }
 
-    @POST
+    @GET
     @Path("/unregister-participant")
-    public void unregisterNewParticipant(@QueryParam("serverURL") String email) throws MalformedURLException {
-        server.removeElevatorGame(new Player(email));
+    public void unregisterNewParticipant(@QueryParam("email") String email) throws MalformedURLException {
+        server.removeElevatorGame(email);
     }
 
     @GET
-    @Path("/emails")
+    @Path("/players")
     @Produces(MediaType.APPLICATION_JSON)
-    public Set<Player> emails() {
-        return server.emails();
+    public Set<Player> players() {
+        return server.players();
+    }
+
+    @GET
+    @Path("/playerinfo/")
+    @Produces(MediaType.APPLICATION_JSON)
+    public PlayerInfo infoForPlayer(@QueryParam("email") String email) {
+        return server.getPlayerInfo(email);
     }
 
     @GET

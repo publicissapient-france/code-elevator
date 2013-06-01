@@ -16,7 +16,7 @@ public class StartedElevatorServerTest {
 
         startedElevatorServer.addElevatorGame(email, new URL("http://127.0.0.1"));
 
-        assertThat(startedElevatorServer.emails()).hasSize(1).containsOnly(email);
+        assertThat(startedElevatorServer.players()).hasSize(1).containsOnly(email);
     }
 
     @Test(expected = IllegalArgumentException.class)

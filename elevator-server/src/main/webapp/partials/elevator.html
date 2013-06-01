@@ -1,21 +1,33 @@
-<div ng-hidden="isLogged" class="jumbotron">
+email: {{player.email}}
+<div ng-hide="loggedIn" class="jumbotron">
     <h1>Code Elevator</h1>
 
     <h2>From the ground to the highest level</h2>
     <img src="img/elevator.jpg" class="img-rounded">
     <hr/>
-    <form>
-        <input ng-model="pseudo" type="text" placeholder="Pseudo" required/>
-        <input ng-model="player" type="text" placeholder="Email" required/>
-        <input ng-model="serverURL" type="text" placeholder="Server URL" required/>
+    <form name="form" novalidate>
+        <input ng-model="player.pseudo" type="text" placeholder="Pseudo" required/>
+        <input ng-model="player.email" type="email" placeholder="Email" required/>
+        <input ng-model="player.serverURL" type="url" placeholder="Server URL" required/>
 
         <div class="control-group">
-            <button class="btn btn-large btn-success" ng-click="login()" type="button">I want to participate</button>
+            <button class="btn btn-large btn-success"
+                    ng-click="login()" type="button">I want to participate</button>
         </div>
     </form>
 </div>
 
-<div ng-show="isLogged">
-    Vous êtes bien loggué !
-    <button ng-click="disconnect()">disconnect</button>
+<div ng-show="loggedIn" class="jumbotron">
+
+    <div class="well" style="vertical-align: middle;">
+        <gravatar-image data-email="player.email" data-size="120" data-rating="pg" data-default="404" data-secure="true"></gravatar-image>
+        <h3 style="text-align: center;">{{player.pseudo}}</h3>
+        <h5 style="text-align: center;">{{player.score}} points</h5>
+        <building player="player" scale="2"></building>
+    </div>
+
+    <div style="vertical-align: middle;">
+
+        <button class="btn btn-large btn-warning" ng-click="disconnect()">disconnect</button>
+    </div>
 </div>
