@@ -20,6 +20,9 @@ class StartedElevatorServer {
     }
 
     public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
+        if (elevatorGames.containsKey(player.email)) {
+            throw new IllegalStateException("a game with player " + player + " has already have been added");
+        }
         ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
         elevatorGame.start();
         elevatorGames.put(player.email, elevatorGame);

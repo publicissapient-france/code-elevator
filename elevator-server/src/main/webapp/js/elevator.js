@@ -1,13 +1,29 @@
 'use strict';
 
-function ElevatorCtrl($scope, $location, $cookieStore, $http) {
+function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
+    $scope.playerInfo = {};
     $scope.player = {
         email: $cookieStore.get('isLogged')
     }
+
     if ($cookieStore.get('isLogged')) {
         $scope.loggedIn = true;
         $scope.player.email = $cookieStore.get('isLogged');
     }
+
+
+    function fetchPlayerInfo($scope, $http, $timeout) {
+        (function fetch() {
+            if ($scope.loggedIn) {
+                $http.get('/resources/player/info?email=' + $scope.player.email)
+                    .success(function (data) {
+                        $scope.playerInfo = data;
+                    });
+                $timeout(fetch, 1000);
+            }
+        })();
+    }
+    fetchPlayerInfo($scope, $http, $timeout);
 
     $scope.login = function () {
         $http.get('/resources/player/register?email=' + $scope.player.email
@@ -15,11 +31,7 @@ function ElevatorCtrl($scope, $location, $cookieStore, $http) {
                 + "&serverURL=" + $scope.player.serverURL).success(function () {
                 $cookieStore.put('isLogged', $scope.player.email);
                 $scope.loggedIn = true;
-                $http.get('/resources/player/info?email=' + $scope.player.email)
-                    .success(function (data) {
-                           //TODO !!!!
-                        console.log(data);
-                    });
+                fetchPlayerInfo($scope, $http, $timeout);
         });
     };
 
@@ -31,4 +43,4 @@ function ElevatorCtrl($scope, $location, $cookieStore, $http) {
             });
     };
 }
-ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
+ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
