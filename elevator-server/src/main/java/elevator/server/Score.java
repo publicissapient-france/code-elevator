@@ -7,9 +7,11 @@ import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 public class Score {
+
     private static final int EFFORT_TO_OPEN_AND_CLOSE_DOORS = 2;
     private static final int SCORE_COEF = 2;
     private static final int WAITING_TOP_SCORE = 2 * (ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR);
+
     public final int score;
 
     public Score() {
@@ -63,4 +65,5 @@ public class Score {
     public int hashCode() {
         return score;
     }
+
 }

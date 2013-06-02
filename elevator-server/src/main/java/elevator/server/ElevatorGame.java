@@ -1,6 +1,8 @@
 package elevator.server;
 
-import elevator.*;
+import elevator.Building;
+import elevator.Clock;
+import elevator.ClockListener;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -79,7 +81,7 @@ class ElevatorGame implements ClockListener {
     }
 
     public PlayerInfo getPlayerInfo() {
-        return new PlayerInfo(this,player);
+        return new PlayerInfo(this, player);
     }
 
 }

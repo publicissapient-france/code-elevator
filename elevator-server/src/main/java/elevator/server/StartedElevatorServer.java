@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 class StartedElevatorServer {
 
-    private Map<String, ElevatorGame> elevatorGames = new TreeMap<>();
+    private final Map<String, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
     StartedElevatorServer() {
@@ -57,4 +57,5 @@ class StartedElevatorServer {
     public Collection<ElevatorGame> getUnmodifiableElevatorGames() {
         return Collections.unmodifiableCollection(elevatorGames.values());
     }
+
 }
