@@ -3,7 +3,6 @@ package elevator.participant;
 import elevator.Command;
 import elevator.Direction;
 import elevator.engine.ElevatorEngine;
-import elevator.engine.scan.ScanElevator;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -12,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 import static java.util.logging.Logger.getLogger;
@@ -22,8 +22,8 @@ public class ParticipantServer extends AbstractHandler {
 
     private final ElevatorEngine elevator;
 
-    public ParticipantServer() {
-        this.elevator = new ScanElevator();
+    public ParticipantServer(ElevatorEngine elevator) {
+        this.elevator = elevator;
     }
 
     @Override
@@ -69,10 +69,34 @@ public class ParticipantServer extends AbstractHandler {
     }
 
     public static void main(String... args) throws Exception {
-        Server server = new Server(1981);
-        server.setHandler(new ParticipantServer());
+        Integer port = 1981;
+        ElevatorEngine elevator = ServiceLoader.load(ElevatorEngine.class).iterator().next();
+
+        if (args.length == 2) {
+            port = readPort(args, port);
+            elevator = readElevatorEngine(args, elevator);
+        }
+
+        Server server = new Server(port);
+        server.setHandler(new ParticipantServer(elevator));
         server.start();
         server.join();
+    }
+
+    private static Integer readPort(String[] args, Integer defaultPort) {
+        try {
+            return Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            return defaultPort;
+        }
+    }
+
+    private static ElevatorEngine readElevatorEngine(String[] args, ElevatorEngine defaultElevator) throws IllegalAccessException {
+        try {
+            return (ElevatorEngine) Class.forName(args[1]).newInstance();
+        } catch (ClassNotFoundException | InstantiationException | ExceptionInInitializerError e) {
+            return defaultElevator;
+        }
     }
 
 }
