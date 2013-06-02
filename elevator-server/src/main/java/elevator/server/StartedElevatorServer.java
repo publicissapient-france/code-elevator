@@ -20,18 +20,10 @@ class StartedElevatorServer {
     }
 
     public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
-        try {
-            ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
-
-            if (elevatorGames.containsKey(player.email)) {
-                throw new IllegalStateException("a game with player " + player + " has already have been added");
-            }
-            elevatorGame.start();
-            elevatorGames.put(player.email, elevatorGame);
-            return this;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
+        elevatorGame.start();
+        elevatorGames.put(player.email, elevatorGame);
+        return this;
     }
 
     public Set<Player> players() {
@@ -54,7 +46,7 @@ class StartedElevatorServer {
     public PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
 
         if (!elevatorGames.containsKey(email)) {
-             throw new PlayerNotFoundException("Player not found");
+            throw new PlayerNotFoundException("Player not found");
         }
         return elevatorGames.get(email).getPlayerInfo();
     }
