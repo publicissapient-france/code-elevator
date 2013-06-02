@@ -18,14 +18,14 @@ public class WebResource {
     }
 
     @GET
-    @Path("/new-participant")
+    @Path("/player/register")
     public void newParticipant(@QueryParam("email") String email, @QueryParam("pseudo") String pseudo, @QueryParam("serverURL") String serverURL) throws MalformedURLException {
         server.addElevatorGame(new Player(email,pseudo), new URL(serverURL));
     }
 
     @GET
-    @Path("/unregister-participant")
-    public void unregisterNewParticipant(@QueryParam("email") String email) throws MalformedURLException {
+    @Path("/player/unregister")
+    public void unregisterNewParticipant(@QueryParam("email") String email) {
         server.removeElevatorGame(email);
     }
 
@@ -37,7 +37,7 @@ public class WebResource {
     }
 
     @GET
-    @Path("/playerinfo/")
+    @Path("/player/info/")
     @Produces(MediaType.APPLICATION_JSON)
     public PlayerInfo infoForPlayer(@QueryParam("email") String email) {
         return server.getPlayerInfo(email);

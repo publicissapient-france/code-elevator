@@ -26,7 +26,7 @@ class StartedElevatorServer {
             if (elevatorGames.containsKey(player.email)) {
                 throw new IllegalStateException("a game with player " + player + " has already have been added");
             }
-            //elevatorGame.start();
+            elevatorGame.start();
             elevatorGames.put(player.email, elevatorGame);
             return this;
         } catch (Exception e) {
@@ -42,7 +42,7 @@ class StartedElevatorServer {
         return unmodifiableSet(players);
     }
 
-    public StartedElevatorServer removeElevatorGame(String email) throws MalformedURLException {
+    public StartedElevatorServer removeElevatorGame(String email) {
         if (elevatorGames.containsKey(email)) {
             ElevatorGame game = elevatorGames.get(email);
             game.stop();

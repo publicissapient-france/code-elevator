@@ -10,22 +10,25 @@ function ElevatorCtrl($scope, $location, $cookieStore, $http) {
     }
 
     $scope.login = function () {
-        $http.get('/resources/new-participant?email=' + $scope.player.email
+        $http.get('/resources/player/register?email=' + $scope.player.email
                 + "&pseudo=" + $scope.player.pseudo
                 + "&serverURL=" + $scope.player.serverURL).success(function () {
-
-                $http.get('/resources/playerinfo?email=' + $scope.player.email)
+                $cookieStore.put('isLogged', $scope.player.email);
+                $scope.loggedIn = true;
+                $http.get('/resources/player/info?email=' + $scope.player.email)
                     .success(function (data) {
                            //TODO !!!!
+                        console.log(data);
                     });
         });
-        $cookieStore.put('isLogged', $scope.player.email);
-        $scope.loggedIn = true;
     };
 
     $scope.disconnect = function () {
-        $cookieStore.remove('isLogged');
-        $scope.loggedIn = false;
+        $http.get('/resources/player/unregister?email=' + $scope.player.email)
+            .success(function (data) {
+                $cookieStore.remove('isLogged');
+                $scope.loggedIn = false;
+            });
     };
 }
 ElevatorCtrl.$inject = ['$scope', '$location', '$cookieStore', '$http'];
