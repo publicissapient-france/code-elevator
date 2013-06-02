@@ -26,7 +26,6 @@ public class ElevatorServer {
 
         try {
             server.start();
-            server.join();
             return port;
         } catch (Exception e) {
             throw new RuntimeException(e);

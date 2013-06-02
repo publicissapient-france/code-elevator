@@ -24,7 +24,7 @@ public class ElevatorServerTest {
 
         Port port = elevatorServer.start();
 
-        try (InputStream in = new URL("http", "localhost", port.port(), "/emails").openConnection().getInputStream()) {
+        try (InputStream in = new URL("http", "localhost", port.port(), "/resources/players").openConnection().getInputStream()) {
             BufferedReader content = new BufferedReader(new InputStreamReader(in));
             assertThat(content.readLine()).isEqualTo("[]");
         }
