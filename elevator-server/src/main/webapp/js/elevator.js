@@ -2,9 +2,6 @@
 
 function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     $scope.playerInfo = {};
-    $scope.player = {
-        email: $cookieStore.get('isLogged')
-    }
 
     if ($cookieStore.get('isLogged')) {
         $scope.loggedIn = true;
@@ -26,7 +23,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     fetchPlayerInfo($scope, $http, $timeout);
 
     $scope.login = function () {
-        $http.get('/resources/player/register?email=' + $scope.player.email
+        $http.post('/resources/player/register?email=' + $scope.player.email
                 + "&pseudo=" + $scope.player.pseudo
                 + "&serverURL=" + $scope.player.serverURL).success(function () {
                 $cookieStore.put('isLogged', $scope.player.email);
@@ -36,7 +33,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     };
 
     $scope.disconnect = function () {
-        $http.get('/resources/player/unregister?email=' + $scope.player.email)
+        $http.post('/resources/player/unregister?email=' + $scope.player.email)
             .success(function (data) {
                 $cookieStore.remove('isLogged');
                 $scope.loggedIn = false;

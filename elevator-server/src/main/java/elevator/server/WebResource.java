@@ -1,9 +1,6 @@
 package elevator.server;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,14 +17,14 @@ public class WebResource {
         this.server = server;
     }
 
-    @GET
+    @POST
     @Path("/player/register")
     public void newParticipant(@QueryParam("email") String email, @QueryParam("pseudo") String pseudo,
                                @QueryParam("serverURL") String serverURL) throws MalformedURLException {
         server.addElevatorGame(new Player(email, pseudo), new URL(serverURL));
     }
 
-    @GET
+    @POST
     @Path("/player/unregister")
     public void unregisterNewParticipant(@QueryParam("email") String email) {
         server.removeElevatorGame(email);
