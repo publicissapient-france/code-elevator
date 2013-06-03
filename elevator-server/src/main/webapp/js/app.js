@@ -15,7 +15,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                 var heightOfFloor = 40;
                 var widthOfFloor = 110;
                 var heightOfRoof = 2;
-                var height = numberOfFloors * heightOfFloor + heightOfRoof;
+                var height = (numberOfFloors + 1) * heightOfFloor + heightOfRoof;
 
                 var stage = new Kinetic.Stage({
                     container: element[0],
@@ -28,7 +28,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                     if (player) {
                         var layer = new Kinetic.Layer();
 
-                        for (var i = 0; i < numberOfFloors; i++) {
+                        for (var i = 0; i <= numberOfFloors; i++) {
                             var y = heightOfRoof + (i * heightOfFloor);
 
                             var floor = new Kinetic.Rect({
@@ -66,7 +66,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
 
                         }
 
-                        var yElevator = heightOfRoof + ((numberOfFloors - 1 - player.elevatorAtFloor) * heightOfFloor);
+                        var yElevator = heightOfRoof + ((numberOfFloors - player.elevatorAtFloor) * heightOfFloor);
                         var elevator = new Kinetic.Rect({
                             x: width - 40,
                             y: yElevator,
