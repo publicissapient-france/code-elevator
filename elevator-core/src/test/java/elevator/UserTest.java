@@ -18,7 +18,7 @@ public class UserTest {
     public void should_not_count_tick_to_go_when_not_traveling() {
         User user = new User(mockElevatorEngine);
 
-        user.onTick();
+        user.tick();
 
         assertThat(user.getTickToGo()).isEqualTo(0);
     }
@@ -28,9 +28,9 @@ public class UserTest {
         User user = new User(mockElevatorEngine);
 
         //Make the user entering the elevator=> traveling
-        user.elevatorIsOpen(user.getFloor());
+        user.elevatorIsOpen(user.getInitialFloor());
 
-        user.onTick();
+        user.tick();
 
         assertThat(user.getTickToGo()).isEqualTo(1);
     }
@@ -40,9 +40,9 @@ public class UserTest {
         User user = new User(mockElevatorEngine);
 
         //Make the user entering the elevator=> traveling
-        user.elevatorIsOpen(user.getFloor());
+        user.elevatorIsOpen(user.getInitialFloor());
 
-        user.onTick();
+        user.tick();
 
         assertThat(user.getTickToWait()).isEqualTo(0);
     }
@@ -51,7 +51,7 @@ public class UserTest {
     public void should_count_tick_to_wait_when_waiting() {
         User user = new User(mockElevatorEngine);
 
-        user.onTick();
+        user.tick();
 
         assertThat(user.getTickToWait()).isEqualTo(1);
     }

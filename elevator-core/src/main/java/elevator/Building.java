@@ -118,13 +118,7 @@ public class Building {
     }
 
     private void applyCommand(Command command) {
-        for (User user : users) {
-            user.elevatorIsOpen(floor);
-            if (user.done()) {
-                user.onTick();
-            }
-        }
-
+        notifyUsers();
         switch (command) {
             case CLOSE:
                 door = CLOSE;
@@ -142,10 +136,26 @@ public class Building {
                 break;
             case UP:
                 floor++;
+                notifyUsers(floor);
                 break;
             case DOWN:
                 floor--;
+                notifyUsers(floor);
                 break;
+        }
+    }
+
+    private void notifyUsers() {
+        for (User user : users) {
+            user.tick();
+        }
+    }
+
+    private void notifyUsers(Integer floor) {
+        for (User user : users) {
+            if (user.traveling()) {
+                user.setCurrentFloor(floor);
+            }
         }
     }
 

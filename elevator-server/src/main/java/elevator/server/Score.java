@@ -40,7 +40,7 @@ public class Score {
     }
 
     int bestEffort(User user) {
-        return abs(user.getFloorToGo() - user.getFloor()) * SCORE_COEF + EFFORT_TO_OPEN_AND_CLOSE_DOORS;
+        return abs(user.getFloorToGo() - user.getInitialFloor()) * SCORE_COEF + EFFORT_TO_OPEN_AND_CLOSE_DOORS;
     }
 
     private int effectiveEffort(User user) {

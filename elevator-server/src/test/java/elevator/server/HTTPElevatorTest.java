@@ -83,7 +83,7 @@ public class HTTPElevatorTest {
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasExited", urlConnection));
 
         User user = mock(User.class);
-        doReturn(0).when(user).getFloor();
+        doReturn(0).when(user).getInitialFloor();
         doReturn(1).when(user).getFloorToGo();
         httpElevator.userHasExited(user);
 

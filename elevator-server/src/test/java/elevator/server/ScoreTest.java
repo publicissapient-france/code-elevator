@@ -47,7 +47,7 @@ public class ScoreTest {
 
     private User user(int floor, int floorToGo, int tickToGo, int tickToWait) {
         User user = Mockito.mock(User.class);
-        doReturn(floor).when(user).getFloor();
+        doReturn(floor).when(user).getInitialFloor();
         doReturn(floorToGo).when(user).getFloorToGo();
         doReturn(tickToGo).when(user).getTickToGo();
         doReturn(tickToWait).when(user).getTickToWait();

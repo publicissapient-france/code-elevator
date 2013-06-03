@@ -9,11 +9,12 @@ import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.lang.Math.max;
 import static java.lang.Math.random;
 
-public class User implements ClockListener {
+public class User {
 
     private final ElevatorEngine elevatorEngine;
     private final Integer initialFloor;
     private final Integer floorToGo;
+    private Integer currentFloor;
     private Integer tickToGo;
 
     private User.State state;
@@ -41,23 +42,21 @@ public class User implements ClockListener {
             direction = UP;
             floorToGo = max(randomFloor(), LOWER_FLOOR + 1);
         }
+        currentFloor = initialFloor;
 
         elevatorEngine.call(initialFloor, direction);
     }
 
 
-    public User elevatorIsOpen(Integer floor) {
+    public void elevatorIsOpen(Integer floor) {
         if (waiting() && at(floor)) {
             elevatorEngine.userHasEntered(this);
             elevatorEngine.go(floorToGo);
             state = State.TRAVELLING;
-            return this;
-        }
-        if (traveling() && at(floorToGo)) {
+        } else if (traveling() && at(floorToGo)) {
             elevatorEngine.userHasExited(this);
             state = State.DONE;
         }
-        return this;
     }
 
     public boolean waiting() {
@@ -73,7 +72,7 @@ public class User implements ClockListener {
     }
 
     public Boolean at(int floor) {
-        return this.initialFloor == floor;
+        return this.currentFloor == floor;
     }
 
     private Integer randomFloor() {
@@ -92,7 +91,7 @@ public class User implements ClockListener {
         return tickToGo;
     }
 
-    public Integer getFloor() {
+    public Integer getInitialFloor() {
         return initialFloor;
     }
 
@@ -100,19 +99,21 @@ public class User implements ClockListener {
         return floorToGo;
     }
 
-    @Override
-    public ClockListener onTick() {
+    void tick() {
         if (traveling()) {
             tickToGo++;
         }
         if (waiting()) {
             tickToWait++;
         }
-        return this;
     }
 
     public Integer getTickToWait() {
         return tickToWait;
+    }
+
+    void setCurrentFloor(Integer currentFloor) {
+        this.currentFloor = currentFloor;
     }
 
     private enum State {
