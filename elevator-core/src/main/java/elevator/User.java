@@ -2,18 +2,17 @@ package elevator;
 
 import elevator.engine.ElevatorEngine;
 
-import java.math.BigDecimal;
-
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
+import static java.lang.Math.max;
 import static java.lang.Math.random;
 
 public class User implements ClockListener {
 
     private final ElevatorEngine elevatorEngine;
-    private final Integer floor;
+    private final Integer initialFloor;
     private final Integer floorToGo;
     private Integer tickToGo;
 
@@ -28,16 +27,22 @@ public class User implements ClockListener {
 
         Direction direction;
         if (randomBoolean()) {
-            floor = randomFloor();
+            initialFloor = randomFloor();
             direction = randomDirection();
+            if (LOWER_FLOOR.equals(initialFloor)) {
+                direction = UP;
+            }
+            if (HIGHER_FLOOR.equals(initialFloor)) {
+                direction = DOWN;
+            }
             floorToGo = direction == UP ? HIGHER_FLOOR : LOWER_FLOOR;
         } else {
-            floor = LOWER_FLOOR;
+            initialFloor = LOWER_FLOOR;
             direction = UP;
-            floorToGo = randomFloor();
+            floorToGo = max(randomFloor(), LOWER_FLOOR + 1);
         }
 
-        elevatorEngine.call(floor, direction);
+        elevatorEngine.call(initialFloor, direction);
     }
 
 
@@ -68,7 +73,7 @@ public class User implements ClockListener {
     }
 
     public Boolean at(int floor) {
-        return this.floor == floor;
+        return this.initialFloor == floor;
     }
 
     private Integer randomFloor() {
@@ -88,7 +93,7 @@ public class User implements ClockListener {
     }
 
     public Integer getFloor() {
-        return floor;
+        return initialFloor;
     }
 
     public Integer getFloorToGo() {
