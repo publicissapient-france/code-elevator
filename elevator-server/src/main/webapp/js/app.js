@@ -57,7 +57,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                             var peopleWaitingTheElevator = new Kinetic.Text({
                                 x: width - 60,
                                 y: y + 5,
-                                text: player.peopleWaitingTheElevator[i],
+                                text: player.peopleWaitingTheElevator[numberOfFloors - i],
                                 fontSize: 30,
                                 fontFamily: 'Calibri',
                                 fill: 'red'
