@@ -7,8 +7,8 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
     }])
     .directive('building', function () {
         return {
-            restrict:'E',
-            link:function (scope, element, attrs) {
+            restrict: 'E',
+            link: function (scope, element, attrs) {
 
                 var numberOfFloors = 5;
                 var width = 120;
@@ -41,18 +41,6 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                                 strokeWidth: 4
                             });
                             layer.add(floor);
-
-                            for (var j = 0; j < 1; j++) {
-                                var roundWindow = new Kinetic.Circle({
-                                    x: 30 + (j * 30),
-                                    y: y + 20,
-                                    radius: 8,
-                                    fill: 'blue',
-                                    stroke: 'black',
-                                    strokeWidth: 2
-                                });
-                                layer.add(roundWindow);
-                            }
 
                             var peopleWaitingTheElevator = new Kinetic.Text({
                                 x: width - 60,
