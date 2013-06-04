@@ -72,9 +72,9 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                             y: yElevator,
                             width: 40,
                             height: heightOfFloor,
-                            fill: 'lightgrey',
+                            fill: player.doorIsOpen ? 'lightgrey' : 'darkgrey',
                             stroke: 'black',
-                            strokeWidth: 2
+                            strokeWidth: player.doorIsOpen ? 0 : 4
                         });
                         layer.add(elevator);
 

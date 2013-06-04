@@ -3,6 +3,7 @@ package elevator.server;
 import elevator.Building;
 import elevator.Clock;
 import elevator.ClockListener;
+import elevator.Door;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -52,6 +53,10 @@ class ElevatorGame implements ClockListener {
 
     public int[] waitingUsersByFloors() {
         return building.waitingUsersByFloors();
+    }
+
+    Boolean doorIsOpen() {
+        return Door.OPEN.equals(building.door());
     }
 
     @Override
