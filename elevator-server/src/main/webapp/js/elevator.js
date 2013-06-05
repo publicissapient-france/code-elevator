@@ -1,7 +1,9 @@
 'use strict';
 
 function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
-    $scope.playerInfo = {};
+    $scope.playerInfo = {
+        peopleWaitingTheElevator: []
+    };
 
     if ($cookieStore.get('isLogged')) {
         $scope.loggedIn = true;
