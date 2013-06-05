@@ -23,7 +23,7 @@ public class Score {
     }
 
     public Score loose() {
-        return new Score(this.score - 1000);
+        return new Score(this.score - 50);
     }
 
     public Score reset() {
