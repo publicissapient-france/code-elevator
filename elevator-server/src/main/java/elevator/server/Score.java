@@ -12,27 +12,20 @@ public class Score {
     private static final int SCORE_COEF = 2;
     private static final int WAITING_TOP_SCORE = 2 * (ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR);
 
-    public final int score;
+    public int score;
 
     public Score() {
         score = 0;
     }
 
-    private Score(int score) {
-        this.score = score;
-    }
-
     public Score loose() {
-        return new Score(this.score - 50);
-    }
-
-    public Score reset() {
-        return new Score();
+        score -= 50;
+        return this;
     }
 
     public Score success(User user) {
-        System.out.println(String.format("Best effort:%d, effective:%d", bestEffort(user), effectiveEffort(user)));
-        return new Score(score + score(user));
+        score += score(user);
+        return this;
     }
 
     int score(User user) {

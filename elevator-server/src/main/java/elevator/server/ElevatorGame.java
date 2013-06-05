@@ -62,7 +62,7 @@ class ElevatorGame implements ClockListener {
     @Override
     public ClockListener onTick() {
         if (elevatorEngine.hasTransportError()) {
-            stop();
+            elevatorEngine.reset();
             return this;
         }
         building.addUser();

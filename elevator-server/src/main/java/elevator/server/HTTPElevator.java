@@ -24,7 +24,7 @@ class HTTPElevator implements ElevatorEngine {
     private final URLStreamHandler urlStreamHandler;
     private final URL nextCommand;
     private final URL reset;
-    private Score score;
+    private final Score score;
 
     private Boolean transportError;
 
@@ -60,10 +60,10 @@ class HTTPElevator implements ElevatorEngine {
         try (InputStream in = nextCommand.openConnection().getInputStream()) {
             return Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
         } catch (IllegalArgumentException e) {
-            score = score.loose();
+            score.loose();
             return null;
         } catch (IOException e) {
-            score = score.loose();
+            score.loose();
             transportError = TRUE;
             throw new RuntimeException(e);
         }
@@ -78,14 +78,21 @@ class HTTPElevator implements ElevatorEngine {
     @Override
     public ElevatorEngine userHasExited(User user) {
         httpGet("userHasExited");
-        score = score.success(user);
+        score.success(user);
         return this;
     }
 
     @Override
     public ElevatorEngine reset() {
-        score = score.reset();
-        httpGet(reset);
+        executor.execute(() -> {
+            try (InputStream in = reset.openConnection().getInputStream()) {
+                transportError = FALSE;
+            } catch (IOException e) {
+                score.loose();
+                transportError = TRUE;
+                throw new RuntimeException(e);
+            }
+        });
         return this;
     }
 
