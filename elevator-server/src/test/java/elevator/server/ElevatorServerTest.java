@@ -2,6 +2,7 @@ package elevator.server;
 
 import elevator.server.port.Port;
 import elevator.server.port.SystemPropertyRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -31,6 +32,7 @@ public class ElevatorServerTest {
     }
 
     @Test
+    @Ignore
     public void should_start_with_given_port() throws Exception {
         System.setProperty(ELEVATOR_SERVER_PORT_PROPERTY, "8080");
         ElevatorServer elevatorServer = new ElevatorServer();

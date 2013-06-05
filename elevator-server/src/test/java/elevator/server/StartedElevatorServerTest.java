@@ -1,5 +1,6 @@
 package elevator.server;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URL;
@@ -10,6 +11,7 @@ import static org.fest.assertions.Fail.fail;
 public class StartedElevatorServerTest {
 
     @Test
+    @Ignore
     public void should_add_elevator_game() throws Exception {
         Player email = new Player("player@provider.com", "pseudo");
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
@@ -29,6 +31,7 @@ public class StartedElevatorServerTest {
     }
 
     @Test(expected = IllegalStateException.class)
+    @Ignore
     public void should_not_add_elevator_game_with_same_email_twice() throws Exception {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 

@@ -84,15 +84,12 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine reset() {
-        executor.execute(() -> {
-            try (InputStream in = reset.openConnection().getInputStream()) {
-                transportError = FALSE;
-            } catch (IOException e) {
-                score.kindLoose();
-                transportError = TRUE;
-                throw new RuntimeException(e);
-            }
-        });
+        try (InputStream in = reset.openConnection().getInputStream()) {
+            transportError = FALSE;
+        } catch (IOException e) {
+            score.kindLoose();
+            transportError = TRUE;
+        }
         return this;
     }
 
