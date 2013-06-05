@@ -1,8 +1,15 @@
 'use strict';
 
 function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
+    $scope.player = {}
+
     $scope.playerInfo = {
-        peopleWaitingTheElevator: []
+        email: "",
+        score: 0,
+        peopleWaitingTheElevator: Array.apply(null, new Array(6)).map(Number.prototype.valueOf,0),
+        elevatorAtFloor: 0,
+        peopleInTheElevator: 0,
+        doorIsOpen: false
     };
 
     if ($cookieStore.get('isLogged')) {

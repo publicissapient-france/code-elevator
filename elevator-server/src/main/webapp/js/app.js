@@ -17,6 +17,9 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                 var heightOfRoof = 2;
                 var height = (numberOfFloors + 1) * heightOfFloor + heightOfRoof;
 
+                var imageObj = new Image();
+                imageObj.src = '/img/man.png'
+
                 var stage = new Kinetic.Stage({
                     container: element[0],
                     width: width,
@@ -29,10 +32,11 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                         var layer = new Kinetic.Layer();
 
                         for (var i = 0; i <= numberOfFloors; i++) {
+
                             var y = heightOfRoof + (i * heightOfFloor);
 
                             var floor = new Kinetic.Rect({
-                                x: 10,
+                                x: 0,
                                 y: y,
                                 width: widthOfFloor,
                                 height: heightOfFloor,
@@ -42,8 +46,17 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                             });
                             layer.add(floor);
 
+                            var image = new Kinetic.Image({
+                                x: 5,
+                                y: y+5,
+                                image: imageObj,
+                                width: 32,
+                                height: 32
+                            });
+                            layer.add(image);
+
                             var peopleWaitingTheElevator = new Kinetic.Text({
-                                x: width - 60,
+                                x: 40,
                                 y: y + 5,
                                 text: player.peopleWaitingTheElevator[numberOfFloors - i],
                                 fontSize: 30,
@@ -56,7 +69,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
 
                         var yElevator = heightOfRoof + ((numberOfFloors - player.elevatorAtFloor) * heightOfFloor);
                         var elevator = new Kinetic.Rect({
-                            x: width - 40,
+                            x: width - 50,
                             y: yElevator,
                             width: 40,
                             height: heightOfFloor,
@@ -67,7 +80,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
                         layer.add(elevator);
 
                         var peopleInTheElevator = new Kinetic.Text({
-                            x: width - 32,
+                            x: width - 42,
                             y: yElevator + 5,
                             text: player.peopleInTheElevator,
                             fontSize: 30,
@@ -83,3 +96,5 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
             }
         };
     });
+
+
