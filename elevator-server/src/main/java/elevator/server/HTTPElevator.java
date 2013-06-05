@@ -88,7 +88,7 @@ class HTTPElevator implements ElevatorEngine {
             try (InputStream in = reset.openConnection().getInputStream()) {
                 transportError = FALSE;
             } catch (IOException e) {
-                score.loose();
+                score.kindLoose();
                 transportError = TRUE;
                 throw new RuntimeException(e);
             }

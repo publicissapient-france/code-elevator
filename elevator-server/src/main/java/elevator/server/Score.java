@@ -23,6 +23,11 @@ public class Score {
         return this;
     }
 
+    public Score kindLoose() {
+        score -= 10;
+        return this;
+    }
+
     public Score success(User user) {
         score += score(user);
         return this;
