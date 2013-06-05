@@ -112,39 +112,4 @@ public class HTTPElevatorTest {
         assertThat(nextCommand).isNull();
     }
 
-    @Test(expected = RuntimeException.class)
-    public void should_handle_transport_error() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
-
-        httpElevator.nextCommand();
-    }
-
-    @Test
-    public void should_tell_that_a_transport_error_has_occured() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
-        try {
-            httpElevator.call(4, UP);
-        } catch (RuntimeException e) {
-        }
-
-        assertThat(httpElevator.hasTransportError()).isTrue();
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void should_handle_transport_error_twice() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
-        try {
-            httpElevator.call(4, UP);
-        } catch (RuntimeException e) {
-        }
-
-        httpElevator.call(4, UP);
-    }
-
 }

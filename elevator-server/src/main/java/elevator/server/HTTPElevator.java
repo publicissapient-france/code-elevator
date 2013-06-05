@@ -26,8 +26,6 @@ class HTTPElevator implements ElevatorEngine {
     private final URL reset;
     private Score score;
 
-    private Boolean transportError;
-
     HTTPElevator(URL server, ExecutorService executor) throws MalformedURLException {
         this(server, executor, null);
     }
@@ -38,7 +36,6 @@ class HTTPElevator implements ElevatorEngine {
         this.server = new URL(server, "", urlStreamHandler);
         this.nextCommand = new URL(server, "nextCommand", urlStreamHandler);
         this.reset = new URL(server, "reset", urlStreamHandler);
-        this.transportError = FALSE;
         this.score = new Score();
     }
 
@@ -56,16 +53,13 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public Command nextCommand() {
-        checkTransportError();
         try (InputStream in = nextCommand.openConnection().getInputStream()) {
-            return Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
-        } catch (IllegalArgumentException e) {
+            Command command = Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
+            LOGGER.info(format("%s %s", nextCommand.toString(), command));
+            return command;
+        } catch (IllegalArgumentException | IOException e) {
             score = score.loose();
             return null;
-        } catch (IOException e) {
-            score = score.loose();
-            transportError = TRUE;
-            throw new RuntimeException(e);
         }
     }
 
@@ -93,16 +87,6 @@ class HTTPElevator implements ElevatorEngine {
         return score;
     }
 
-    Boolean hasTransportError() {
-        return transportError;
-    }
-
-    private void checkTransportError() {
-        if (transportError) {
-            throw new RuntimeException();
-        }
-    }
-
     private void httpGet(String parameters) {
         try {
             httpGet(new URL(server, parameters, urlStreamHandler));
@@ -112,7 +96,6 @@ class HTTPElevator implements ElevatorEngine {
     }
 
     private void httpGet(URL url) {
-        checkTransportError();
         executor.execute(() -> {
             try (InputStream in = url.openConnection().getInputStream()) {
             } catch (IOException e) {
