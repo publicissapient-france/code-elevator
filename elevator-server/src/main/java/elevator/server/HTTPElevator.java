@@ -96,14 +96,14 @@ class HTTPElevator implements ElevatorEngine {
     }
 
     private void httpGet(URL url) {
-        executor.execute(() -> {
-            try (InputStream in = url.openConnection().getInputStream()) {
-            } catch (IOException e) {
-                transportError = TRUE;
-                score = score.loose();
-                throw new RuntimeException(e);
-            }
-        });
+        synchronized (score) {
+            executor.execute(() -> {
+                try (InputStream in = url.openConnection().getInputStream()) {
+                } catch (IOException e) {
+                    score = score.loose();
+                }
+            });
+        }
     }
 
 }
