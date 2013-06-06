@@ -44,12 +44,14 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) {
+        System.out.println(server.toString() + "/call?atFloor=" + atFloor + "&to=" + to.toString());
         httpGet("call?atFloor=" + atFloor + "&to=" + to);
         return this;
     }
 
     @Override
     public ElevatorEngine go(Integer floorToGo) {
+        System.out.println(server.toString() + "/go?floorToGo=" + floorToGo);
         httpGet("go?floorToGo=" + floorToGo);
         return this;
     }
@@ -58,7 +60,9 @@ class HTTPElevator implements ElevatorEngine {
     public Command nextCommand() {
         checkTransportError();
         try (InputStream in = nextCommand.openConnection().getInputStream()) {
-            return Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
+            Command command = Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
+            System.out.println(nextCommand.toString() + " " + command);
+            return command;
         } catch (IllegalArgumentException e) {
             score.loose();
             return null;
@@ -71,12 +75,14 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine userHasEntered(User user) {
+        System.out.println(server + "/userHasEntered");
         httpGet("userHasEntered");
         return this;
     }
 
     @Override
     public ElevatorEngine userHasExited(User user) {
+        System.out.println(server + "/userHasExited");
         httpGet("userHasExited");
         score.success(user);
         return this;
@@ -84,6 +90,7 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine reset() {
+        System.out.println(reset);
         try (InputStream in = reset.openConnection().getInputStream()) {
             transportError = FALSE;
         } catch (IOException e) {
