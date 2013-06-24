@@ -19,4 +19,8 @@
         <module>elevator-client</module>
     </modules>
 
+    <scm>
+        <developerConnection>git@github.com:xebia-france/code-elevator.git</developerConnection>
+    </scm>
+
 </project>
