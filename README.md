@@ -27,20 +27,16 @@ Prerequisites
 
 Here is what you need to build and run a code elevator session :
 
-- JDK 1.8
+- JDK 1.7
 - maven
 
 Steps
 -----
 
-These steps are described for a Mac Os X machine but can adapted to any operating system.
-
-If you don't have jdk8 installed on your machine get `jdk-8-ea-bin-b92-macosx-x86_64-30_may_2013.dmg` from
-[jdk8.java.net](http://jdk8.java.net/download.html). Double-click on downloaded dmg file and follow instructions.
+These steps are described for a Mac Os X machine but can be adapted to any operating system.
 
     $ git clone git@github.com:xebia-france/code-elevator.git
     $ cd code-elevator
-    $ export JAVA_HOME=`/usr/libexec/java_home -version 1.8`
     $ mvn clean install
     $ cd elevator-server
     $ mvn jetty:run

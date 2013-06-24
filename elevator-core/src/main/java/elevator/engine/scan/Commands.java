@@ -2,10 +2,7 @@ package elevator.engine.scan;
 
 import elevator.Direction;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.lang.Math.abs;
 import static java.util.Collections.unmodifiableSet;
@@ -44,11 +41,14 @@ public class Commands {
         if (commands.size() == 1) {
             return commands.iterator().next();
         }
-        SortedSet<Command> sortedCommands = new TreeSet<>((o1, o2) -> {
-            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, lowerFloor, higherFloor);
-            Integer distance1 = distanceEvaluator.getDistance(o1);
-            Integer distance2 = distanceEvaluator.getDistance(o2);
-            return distance1 - distance2;
+        SortedSet<Command> sortedCommands = new TreeSet<>(new Comparator<Command>() {
+            @Override
+            public int compare(Command o1, Command o2) {
+                DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, lowerFloor, higherFloor);
+                Integer distance1 = distanceEvaluator.getDistance(o1);
+                Integer distance2 = distanceEvaluator.getDistance(o2);
+                return distance1 - distance2;
+            }
         });
         sortedCommands.addAll(commands);
         return sortedCommands.first();

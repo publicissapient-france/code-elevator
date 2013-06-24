@@ -25,7 +25,7 @@ public class ElevatorUI extends JFrame {
         setLayout(new BorderLayout());
 
         List<BuildingAndElevator> buildings = new ArrayList<>();
-        Clock clock = new Clock();
+        final Clock clock = new Clock();
 
         for (ElevatorEngine elevatorEngine : ServiceLoader.load(ElevatorEngine.class)) {
             final Building building = new Building(elevatorEngine);
@@ -39,14 +39,18 @@ public class ElevatorUI extends JFrame {
             buildings.add(new BuildingAndElevator(building, elevatorEngine));
         }
 
-        InteractionPanel interactionPanel = new InteractionPanel(buildings);
+        final InteractionPanel interactionPanel = new InteractionPanel(buildings);
         add(interactionPanel, CENTER);
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-        Runnable periodicTask = () -> {
-            clock.tick();
-            interactionPanel.update();
+        Runnable periodicTask = new Runnable() {
+            @Override
+            public void run() {
+                clock.tick();
+                interactionPanel.update();
+            }
+
         };
 
         executor.scheduleAtFixedRate(periodicTask, 0, 1, SECONDS);
@@ -56,7 +60,12 @@ public class ElevatorUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        invokeLater(ElevatorUI::new);
+        invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new ElevatorUI();
+            }
+        });
     }
 
 }

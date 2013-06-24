@@ -22,8 +22,13 @@ public class Clock {
     }
 
     public void tick() {
-        for (ClockListener clockListener : clockListeners) {
-            EXECUTOR_SERVICE.execute(clockListener::onTick);
+        for (final ClockListener clockListener : clockListeners) {
+            EXECUTOR_SERVICE.execute(new Runnable() {
+                @Override
+                public void run() {
+                    clockListener.onTick();
+                }
+            });
         }
     }
 

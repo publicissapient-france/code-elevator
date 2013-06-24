@@ -16,7 +16,12 @@ class StartedElevatorServer {
     private final Clock clock = new Clock();
 
     StartedElevatorServer() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                clock.tick();
+            }
+        }, 0, 1, SECONDS);
     }
 
     public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
