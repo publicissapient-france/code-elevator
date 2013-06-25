@@ -59,8 +59,8 @@ class HTTPElevator implements ElevatorEngine {
     @Override
     public Command nextCommand() {
         checkTransportError();
-        try (InputStream in = nextCommand.openConnection().getInputStream()) {
-            Command command = Command.valueOf(new BufferedReader(new InputStreamReader(in)).readLine());
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(nextCommand.openConnection().getInputStream()))) {
+            Command command = Command.valueOf(in.readLine());
             System.out.println(nextCommand.toString() + " " + command);
             return command;
         } catch (IllegalArgumentException e) {
