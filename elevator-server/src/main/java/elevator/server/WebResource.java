@@ -2,11 +2,14 @@ package elevator.server;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/")
 public class WebResource {
@@ -21,7 +24,11 @@ public class WebResource {
     @Path("/player/register")
     public void newParticipant(@QueryParam("email") String email, @QueryParam("pseudo") String pseudo,
                                @QueryParam("serverURL") String serverURL) throws MalformedURLException {
-        server.addElevatorGame(new Player(email, pseudo), new URL(serverURL));
+        try {
+            server.addElevatorGame(new Player(email, pseudo), new URL(serverURL));
+        } catch (IllegalStateException e) {
+            throw new WebApplicationException(e, Response.status(FORBIDDEN).entity(e.getMessage()).build());
+        }
     }
 
     @POST
