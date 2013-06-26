@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
@@ -69,13 +70,15 @@ public class ParticipantServer extends AbstractHandler {
     }
 
     public static void main(String... args) throws Exception {
-        Integer port = 1981;
-        ElevatorEngine elevator = ServiceLoader.load(ElevatorEngine.class).iterator().next();
+        Iterator<ElevatorEngine> elevatorEngines = ServiceLoader.load(ElevatorEngine.class).iterator();
 
+        Integer port = 1981;
+        String elevatorEngineClassName = null;
         if (args.length == 2) {
             port = readPort(args, port);
-            elevator = readElevatorEngine(args, elevator);
+            elevatorEngineClassName = args[1];
         }
+        ElevatorEngine elevator = readElevatorEngine(elevatorEngineClassName, elevatorEngines);
 
         Server server = new Server(port);
         server.setHandler(new ParticipantServer(elevator));
@@ -91,12 +94,24 @@ public class ParticipantServer extends AbstractHandler {
         }
     }
 
-    private static ElevatorEngine readElevatorEngine(String[] args, ElevatorEngine defaultElevator) throws IllegalAccessException {
-        try {
-            return (ElevatorEngine) Class.forName(args[1]).newInstance();
-        } catch (ClassNotFoundException | InstantiationException | ExceptionInInitializerError e) {
-            return defaultElevator;
+    private static ElevatorEngine readElevatorEngine(String elevatorEngineClassName, Iterator<ElevatorEngine> elevatorEngines) {
+        if (!elevatorEngines.hasNext()) {
+            throw new IllegalArgumentException("ServiceLoader has no implementation of class ElevatorEngine");
         }
+        ElevatorEngine defaultElevator = null;
+        while (elevatorEngines.hasNext()) {
+            ElevatorEngine elevatorEngine = elevatorEngines.next();
+            if (defaultElevator == null) {
+                defaultElevator = elevatorEngine;
+            }
+            if (elevatorEngineClassName == null) {
+                return defaultElevator;
+            }
+            if (elevatorEngine.getClass().getName().equals(elevatorEngineClassName)) {
+                return elevatorEngine;
+            }
+        }
+        return defaultElevator;
     }
 
 }
