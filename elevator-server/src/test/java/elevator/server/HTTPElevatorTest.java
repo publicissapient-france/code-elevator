@@ -2,8 +2,11 @@ package elevator.server;
 
 import elevator.Command;
 import elevator.User;
+import elevator.exception.ElevatorIsBrokenException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -19,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,6 +34,9 @@ public class HTTPElevatorTest {
 
     @Mock
     private ExecutorService executorService;
+
+    @Rule
+    public ExpectedException expectedException = none();
 
     @Before
     public void initExecutorServiceToRunInCurrentThread() {
@@ -107,48 +114,50 @@ public class HTTPElevatorTest {
     }
 
     @Test
-    public void should_return_null_when_server_send_illegal_command() throws Exception {
+    public void should_throws_exception_when_server_send_illegal_command() throws Exception {
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("_down".getBytes()));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
-        Command nextCommand = httpElevator.nextCommand();
-
-        assertThat(nextCommand).isNull();
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("Command \"_down\" is not a valid command; valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive");
+        httpElevator.nextCommand();
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void should_handle_transport_error() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
+        when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("connection failed");
         httpElevator.nextCommand();
     }
 
     @Test
     public void should_tell_that_a_transport_error_has_occured() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
+        when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
-        try {
-            httpElevator.call(4, UP);
-        } catch (RuntimeException e) {
-        }
 
-        assertThat(httpElevator.hasTransportError()).isTrue();
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("connection failed");
+        httpElevator.call(4, UP);
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void should_handle_transport_error_twice() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException());
+        when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
         try {
             httpElevator.call(4, UP);
-        } catch (RuntimeException e) {
+        } catch (ElevatorIsBrokenException e) {
         }
 
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("connection failed");
         httpElevator.call(4, UP);
     }
 

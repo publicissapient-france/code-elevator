@@ -1,18 +1,18 @@
 package elevator.server;
 
-import elevator.Building;
-import elevator.Clock;
-import elevator.ClockListener;
-import elevator.Door;
+import elevator.*;
+import elevator.exception.ElevatorIsBrokenException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
 
     final Player player;
+    final Score score;
 
     private final Clock clock;
     private final HTTPElevator elevatorEngine;
@@ -26,11 +26,12 @@ class ElevatorGame implements ClockListener {
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
         this.building = new Building(elevatorEngine);
         this.clock = clock;
+        this.score = new Score();
     }
 
     ElevatorGame start() {
         clock.addClockListener(this);
-        elevatorEngine.reset();
+        reset();
         return this;
     }
 
@@ -41,10 +42,6 @@ class ElevatorGame implements ClockListener {
 
     int floor() {
         return building.floor();
-    }
-
-    Score score() {
-        return elevatorEngine.getScore();
     }
 
     public int travelingUsers() {
@@ -61,12 +58,16 @@ class ElevatorGame implements ClockListener {
 
     @Override
     public ClockListener onTick() {
-        if (elevatorEngine.hasTransportError()) {
-            elevatorEngine.reset();
-            return this;
+        try {
+            building.addUser();
+            Set<User> doneUsers = building.updateBuildingState();
+            for (User doneUser : doneUsers) {
+                score.success(doneUser);
+            }
+        } catch (ElevatorIsBrokenException e) {
+            score.loose();
+            reset();
         }
-        building.addUser();
-        building.updateBuildingState();
         return this;
     }
 
@@ -87,6 +88,14 @@ class ElevatorGame implements ClockListener {
 
     public PlayerInfo getPlayerInfo() {
         return new PlayerInfo(this, player);
+    }
+
+    private void reset() {
+        try {
+            elevatorEngine.reset();
+        } catch (ElevatorIsBrokenException e) {
+            score.loose();
+        }
     }
 
 }

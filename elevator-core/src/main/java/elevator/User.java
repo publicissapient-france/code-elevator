@@ -1,6 +1,7 @@
 package elevator;
 
 import elevator.engine.ElevatorEngine;
+import elevator.exception.ElevatorIsBrokenException;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
@@ -16,11 +17,10 @@ public class User {
     private final Integer floorToGo;
     private Integer currentFloor;
     private Integer tickToGo;
-
     private User.State state;
     private Integer tickToWait;
 
-    public User(ElevatorEngine elevatorEngine) {
+    User(ElevatorEngine elevatorEngine) throws ElevatorIsBrokenException {
         this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
         this.tickToGo = 0;
@@ -47,8 +47,7 @@ public class User {
         elevatorEngine.call(initialFloor, direction);
     }
 
-
-    public void elevatorIsOpen(Integer floor) {
+    void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
         if (waiting() && at(floor)) {
             elevatorEngine.userHasEntered(this);
             elevatorEngine.go(floorToGo);
@@ -59,19 +58,19 @@ public class User {
         }
     }
 
-    public boolean waiting() {
+    boolean waiting() {
         return state == State.WAITING;
     }
 
-    public Boolean traveling() {
+    Boolean traveling() {
         return state == State.TRAVELLING;
     }
 
-    public Boolean done() {
+    Boolean done() {
         return state == State.DONE;
     }
 
-    public Boolean at(int floor) {
+    Boolean at(int floor) {
         return this.currentFloor == floor;
     }
 

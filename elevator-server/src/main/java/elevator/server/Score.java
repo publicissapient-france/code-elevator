@@ -19,11 +19,6 @@ public class Score {
     }
 
     public Score loose() {
-        score -= 50;
-        return this;
-    }
-
-    public Score kindLoose() {
         score -= 10;
         return this;
     }
