@@ -34,10 +34,15 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     $scope.login = function () {
         $http.post('/resources/player/register?email=' + $scope.player.email
                 + "&pseudo=" + $scope.player["pseudo"]
-                + "&serverURL=" + $scope.player["serverURL"]).success(function () {
+                + "&serverURL=http://" + $scope.player["serverURL"])
+            .success(function () {
+                delete $scope.message;
                 $cookieStore.put('isLogged', $scope.player.email);
                 $scope.loggedIn = true;
                 fetchPlayerInfo($scope, $http, $timeout);
+            })
+            .error(function (data) {
+                $scope.message = data;
             });
     };
 

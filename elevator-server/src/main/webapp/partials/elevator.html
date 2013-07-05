@@ -6,14 +6,19 @@
     <hr/>
     <form name="form" novalidate>
         <input ng-model="player.pseudo" type="text" placeholder="Pseudo" required/>
-        <input ng-model="player.email" type="email" placeholder="Email" required/>
-        <input ng-model="player.serverURL" type="url" placeholder="Server URL" required/>
+        <input ng-model="player.email" type="email" placeholder="Email" required
+               title="only used to display your gravatar"/>
+        <div class="input-prepend">
+            <span class="add-on">http://</span>
+            <input class="span2" ng-model="player.serverURL" type="text" placeholder="Server URL" required>
+        </div>
 
         <div class="control-group">
-            <button class="btn btn-large btn-success"
-                    ng-click="login()" type="button">I want to participate</button>
+            <input type="submit" class="btn btn-large btn-success" ng-click="login()" ng-disabled="!form.$valid"
+                   value="I want to participate"/>
         </div>
     </form>
+    <div ng-show="message" class="alert alert-error">{{message}}</div>
 </div>
 
 <div ng-show="loggedIn" class="jumbotron">
