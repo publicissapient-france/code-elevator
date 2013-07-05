@@ -75,7 +75,7 @@ public class ParticipantServer extends AbstractHandler {
         Integer port = 1981;
         String elevatorEngineClassName = null;
         if (args.length == 2) {
-            port = readPort(args, port);
+            port = readPort(args[0], port);
             elevatorEngineClassName = args[1];
         }
         ElevatorEngine elevator = readElevatorEngine(elevatorEngineClassName, elevatorEngines);
@@ -86,9 +86,9 @@ public class ParticipantServer extends AbstractHandler {
         server.join();
     }
 
-    private static Integer readPort(String[] args, Integer defaultPort) {
+    private static Integer readPort(String arg, Integer defaultPort) {
         try {
-            return Integer.parseInt(args[0]);
+            return Integer.parseInt(arg);
         } catch (NumberFormatException e) {
             return defaultPort;
         }
