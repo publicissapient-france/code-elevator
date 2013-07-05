@@ -48,7 +48,7 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar']).
 
                             var image = new Kinetic.Image({
                                 x: 5,
-                                y: y+5,
+                                y: y + 5,
                                 image: imageObj,
                                 width: 32,
                                 height: 32

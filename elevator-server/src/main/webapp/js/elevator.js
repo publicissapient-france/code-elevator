@@ -6,7 +6,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     $scope.playerInfo = {
         email: "",
         score: 0,
-        peopleWaitingTheElevator: Array.apply(null, new Array(6)).map(Number.prototype.valueOf,0),
+        peopleWaitingTheElevator: Array.apply(null, new Array(6)).map(Number.prototype.valueOf, 0),
         elevatorAtFloor: 0,
         peopleInTheElevator: 0,
         doorIsOpen: false
@@ -16,7 +16,6 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
         $scope.loggedIn = true;
         $scope.player.email = $cookieStore.get('isLogged');
     }
-
 
     function fetchPlayerInfo($scope, $http, $timeout) {
         (function fetch() {
@@ -29,6 +28,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
             }
         })();
     }
+
     fetchPlayerInfo($scope, $http, $timeout);
 
     $scope.login = function () {
@@ -38,7 +38,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                 $cookieStore.put('isLogged', $scope.player.email);
                 $scope.loggedIn = true;
                 fetchPlayerInfo($scope, $http, $timeout);
-        });
+            });
     };
 
     $scope.disconnect = function () {
