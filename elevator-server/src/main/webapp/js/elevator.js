@@ -1,7 +1,7 @@
 'use strict';
 
 function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
-    $scope.player = {}
+    $scope.player = {};
 
     $scope.playerInfo = {
         email: "",
@@ -33,8 +33,8 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
 
     $scope.login = function () {
         $http.post('/resources/player/register?email=' + $scope.player.email
-                + "&pseudo=" + $scope.player.pseudo
-                + "&serverURL=" + $scope.player.serverURL).success(function () {
+                + "&pseudo=" + $scope.player["pseudo"]
+                + "&serverURL=" + $scope.player["serverURL"]).success(function () {
                 $cookieStore.put('isLogged', $scope.player.email);
                 $scope.loggedIn = true;
                 fetchPlayerInfo($scope, $http, $timeout);
@@ -43,7 +43,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
 
     $scope.disconnect = function () {
         $http.post('/resources/player/unregister?email=' + $scope.player.email)
-            .success(function (data) {
+            .success(function () {
                 $cookieStore.remove('isLogged');
                 $scope.loggedIn = false;
             });
