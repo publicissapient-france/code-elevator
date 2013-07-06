@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 class StartedElevatorServer {
 
-    private final Map<String, ElevatorGame> elevatorGames = new TreeMap<>();
+    private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
     StartedElevatorServer() {
@@ -25,38 +25,35 @@ class StartedElevatorServer {
     }
 
     public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
-        if (elevatorGames.containsKey(player.email)) {
+        if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already have been added");
         }
         ElevatorGame elevatorGame = new ElevatorGame(player, server, clock);
         elevatorGame.start();
-        elevatorGames.put(player.email, elevatorGame);
+        elevatorGames.put(player, elevatorGame);
         return this;
     }
 
     public Set<Player> players() {
-        Set<Player> players = new HashSet<>(elevatorGames.size());
-        for (ElevatorGame elevatorGame : elevatorGames.values()) {
-            players.add(elevatorGame.player);
-        }
-        return unmodifiableSet(players);
+        return unmodifiableSet(elevatorGames.keySet());
     }
 
-    public StartedElevatorServer removeElevatorGame(String email) {
-        if (elevatorGames.containsKey(email)) {
-            ElevatorGame game = elevatorGames.get(email);
+    public StartedElevatorServer removeElevatorGame(String pseudo) {
+        Player player = new Player("", pseudo);
+        if (elevatorGames.containsKey(player)) {
+            ElevatorGame game = elevatorGames.get(player);
             game.stop();
-            elevatorGames.remove(email);
+            elevatorGames.remove(player);
         }
         return this;
     }
 
-    public PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
-
-        if (!elevatorGames.containsKey(email)) {
+    public PlayerInfo getPlayerInfo(String pseudo) throws PlayerNotFoundException {
+        Player player = new Player("", pseudo);
+        if (!elevatorGames.containsKey(player)) {
             throw new PlayerNotFoundException("Player not found");
         }
-        return elevatorGames.get(email).getPlayerInfo();
+        return elevatorGames.get(player).getPlayerInfo();
     }
 
     public Collection<ElevatorGame> getUnmodifiableElevatorGames() {

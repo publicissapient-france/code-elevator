@@ -1,9 +1,9 @@
 package elevator.server;
 
-class Player {
+class Player implements Comparable<Player> {
 
     final String email;
-    String pseudo;
+    final String pseudo;
 
     Player(String email, String pseudo) {
         this.email = email;
@@ -15,20 +15,24 @@ class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Player email = (Player) o;
+        Player player = (Player) o;
 
-        return this.email.equals(email.email);
-
+        return pseudo.equals(player.pseudo);
     }
 
     @Override
     public int hashCode() {
-        return email.hashCode();
+        return pseudo.hashCode();
     }
 
     @Override
     public String toString() {
-        return email;
+        return pseudo;
+    }
+
+    @Override
+    public int compareTo(Player player) {
+        return pseudo.compareTo(player.pseudo);
     }
 
 }

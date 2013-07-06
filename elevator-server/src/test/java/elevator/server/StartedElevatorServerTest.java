@@ -29,14 +29,12 @@ public class StartedElevatorServerTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void should_not_add_elevator_game_with_same_email_twice() throws Exception {
+    public void should_not_add_elevator_game_with_same_pseudo_twice() throws Exception {
         StartedElevatorServer startedElevatorServer = new StartedElevatorServer();
 
         startedElevatorServer.
                 addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1")).
                 addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080/myApp"));
-
-        fail();
     }
 
 }

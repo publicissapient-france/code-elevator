@@ -33,8 +33,8 @@ public class WebResource {
 
     @POST
     @Path("/player/unregister")
-    public void unregisterNewParticipant(@QueryParam("email") String email) {
-        server.removeElevatorGame(email);
+    public void unregisterParticipant(@QueryParam("pseudo") String pseudo) {
+        server.removeElevatorGame(pseudo);
     }
 
     @GET
@@ -47,8 +47,8 @@ public class WebResource {
     @GET
     @Path("/player/info/")
     @Produces(MediaType.APPLICATION_JSON)
-    public PlayerInfo infoForPlayer(@QueryParam("email") String email) {
-        return server.getPlayerInfo(email);
+    public PlayerInfo infoForPlayer(@QueryParam("pseudo") String pseudo) {
+        return server.getPlayerInfo(pseudo);
     }
 
     @GET
