@@ -11,7 +11,7 @@ public class NaiveElevator implements ElevatorEngine {
 
     private Integer floor = LOWER_FLOOR;
     private Direction direction = Direction.UP;
-    private State state = State.MOVE;
+    private State nextState = State.OPEN;
 
     private enum State {
         OPEN, CLOSE, MOVE,;
@@ -29,15 +29,15 @@ public class NaiveElevator implements ElevatorEngine {
 
     @Override
     public Command nextCommand() {
-        switch (state) {
+        switch (nextState) {
             case OPEN:
-                state = State.CLOSE;
+                nextState = State.CLOSE;
                 return OPEN;
             case CLOSE:
-                state = State.MOVE;
+                nextState = State.MOVE;
                 return CLOSE;
             case MOVE:
-                state = State.OPEN;
+                nextState = State.OPEN;
                 if (Direction.UP.equals(direction)) {
                     return goesUp();
                 } else {
@@ -62,7 +62,7 @@ public class NaiveElevator implements ElevatorEngine {
     public ElevatorEngine reset() {
         floor = LOWER_FLOOR;
         direction = Direction.UP;
-        state = State.MOVE;
+        nextState = State.OPEN;
         return this;
     }
 
