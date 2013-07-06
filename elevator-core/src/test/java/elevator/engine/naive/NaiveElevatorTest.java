@@ -30,4 +30,12 @@ public class NaiveElevatorTest {
                 onTick("      4");
     }
 
+    @Test
+    public void should_works_even_with_reset_at_start() {
+        NaiveElevator naiveElevator = new NaiveElevator();
+
+        assertThat(naiveElevator).is("CLOSE 0").reset().is("CLOSE 0").
+                onTick("      1");
+    }
+
 }

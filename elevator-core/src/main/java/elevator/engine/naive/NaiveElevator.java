@@ -62,7 +62,7 @@ public class NaiveElevator implements ElevatorEngine {
     public ElevatorEngine reset() {
         floor = LOWER_FLOOR;
         direction = Direction.UP;
-        state = State.CLOSE;
+        state = State.MOVE;
         return this;
     }
 

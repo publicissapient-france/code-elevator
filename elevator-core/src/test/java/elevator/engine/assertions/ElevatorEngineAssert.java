@@ -44,6 +44,11 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
         return this;
     }
 
+    public ElevatorEngineAssert reset() {
+        actual.reset();
+        return this;
+    }
+
     private Matcher getMatcher(String expectedState) {
         Matcher matcher = PATTERN.matcher(expectedState);
 
