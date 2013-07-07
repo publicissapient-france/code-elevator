@@ -136,10 +136,11 @@ public class HTTPElevatorTest {
     }
 
     @Test
-    public void should_tell_that_a_transport_error_has_occured() throws Exception {
+    public void should_tell_that_a_transport_error_has_occured_at_second_call_when_first_call_is_non_blocking() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
+        httpElevator.call(4, UP);
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
@@ -147,18 +148,14 @@ public class HTTPElevatorTest {
     }
 
     @Test
-    public void should_handle_transport_error_twice() throws Exception {
+    public void should_tell_that_a_transport_error_has_occured_when_call_is_blocking() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
-        try {
-            httpElevator.call(4, UP);
-        } catch (ElevatorIsBrokenException e) {
-        }
+                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
-        httpElevator.call(4, UP);
+        httpElevator.nextCommand();
     }
 
 }
