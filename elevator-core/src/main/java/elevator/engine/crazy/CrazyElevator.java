@@ -55,9 +55,9 @@ public class CrazyElevator implements ElevatorEngine {
     private void crazyWait() {
         if (crazy()) {
             try {
-                Long secondsToWait = new Double(random() * 10).longValue();
-                System.out.println("waiting for " + secondsToWait + "s");
-                Thread.sleep(secondsToWait * 1000);
+                Long millisecondsToWait = new Double(random() * 1500).longValue();
+                System.out.println("waiting for " + millisecondsToWait + "ms");
+                Thread.sleep(millisecondsToWait);
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
             }
