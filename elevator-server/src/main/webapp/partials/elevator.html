@@ -29,6 +29,9 @@
         <h3 style="text-align: center;">{{player.pseudo}}</h3>
         <h5 style="text-align: center;">{{playerInfo.score}} points</h5>
         <building player="playerInfo"></building>
+        <div ng-show="playerInfo.lastErrorMessage" class="alert alert-error">
+            <strong>Last error:</strong> {{playerInfo.lastErrorMessage}}
+        </div>
     </div>
 
     <div style="vertical-align: middle;">

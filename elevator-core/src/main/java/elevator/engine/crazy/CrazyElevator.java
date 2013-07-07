@@ -47,8 +47,8 @@ public class CrazyElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine reset() {
-        underlyingElevator.reset();
+    public ElevatorEngine reset(String cause) {
+        underlyingElevator.reset(cause);
         return this;
     }
 

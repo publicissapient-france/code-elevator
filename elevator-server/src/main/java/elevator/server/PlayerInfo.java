@@ -13,6 +13,7 @@ public class PlayerInfo implements Serializable {
     public final int elevatorAtFloor;
     public final int peopleInTheElevator;
     public final boolean doorIsOpen;
+    public final String lastErrorMessage;
 
     public PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
@@ -22,6 +23,7 @@ public class PlayerInfo implements Serializable {
         elevatorAtFloor = game.floor();
         peopleInTheElevator = game.travelingUsers();
         doorIsOpen = game.doorIsOpen();
+        lastErrorMessage = game.lastErrorMessage;
     }
 
 }

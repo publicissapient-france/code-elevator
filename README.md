@@ -16,7 +16,7 @@ server :
 - `/go?floorToGo=[0-5]`
 - `/userHasEntered`
 - `/userHasExited`
-- `/reset`
+- `/reset?cause=information+message`
 
 ### response
 

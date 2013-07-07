@@ -63,7 +63,7 @@ public class QueueElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine reset() {
+    public ElevatorEngine reset(String cause) {
         floor = LOWER_FLOOR;
         door = Door.CLOSE;
         return this;

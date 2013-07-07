@@ -59,7 +59,7 @@ public class NaiveElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine reset() {
+    public ElevatorEngine reset(String cause) {
         floor = LOWER_FLOOR;
         direction = Direction.UP;
         nextState = State.OPEN;

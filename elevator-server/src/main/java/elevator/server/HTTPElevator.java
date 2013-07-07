@@ -6,15 +6,15 @@ import elevator.User;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
+
+import static java.net.URLEncoder.encode;
 
 class HTTPElevator implements ElevatorEngine {
 
@@ -25,6 +25,7 @@ class HTTPElevator implements ElevatorEngine {
     private final URL userHasEntered;
     private final URL userHasExited;
     private final URL reset;
+    private final String defaultCharset;
 
     private String transportErrorMessage;
 
@@ -40,6 +41,7 @@ class HTTPElevator implements ElevatorEngine {
         this.userHasEntered = new URL(server, "userHasEntered", urlStreamHandler);
         this.userHasExited = new URL(server, "userHasExited", urlStreamHandler);
         this.reset = new URL(server, "reset", urlStreamHandler);
+        this.defaultCharset = Charset.defaultCharset().name();
     }
 
     @Override
@@ -100,10 +102,11 @@ class HTTPElevator implements ElevatorEngine {
     }
 
     @Override
-    public ElevatorEngine reset() throws ElevatorIsBrokenException {
+    public ElevatorEngine reset(String cause) throws ElevatorIsBrokenException {
         // do not check transport error
-        System.out.println(reset);
-        httpGet(reset);
+        String encodedCause = urlEncode(cause);
+        System.out.println(reset + "?cause=" + encodedCause);
+        httpGet(reset + "?cause=" + encodedCause);
         return this;
     }
 
@@ -141,6 +144,14 @@ class HTTPElevator implements ElevatorEngine {
     private void checkTransportError() {
         if (transportErrorMessage != null) {
             throw new ElevatorIsBrokenException(transportErrorMessage);
+        }
+    }
+
+    private String urlEncode(String cause) {
+        try {
+            return encode(cause, defaultCharset);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 

@@ -59,7 +59,7 @@ public class ParticipantServer extends AbstractHandler {
                 break;
             case "/reset":
                 synchronized (elevator) {
-                    elevator.reset();
+                    elevator.reset(baseRequest.getParameter("cause"));
                 }
                 LOGGER.info(target);
                 break;

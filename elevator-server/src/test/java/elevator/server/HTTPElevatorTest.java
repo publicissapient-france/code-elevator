@@ -72,9 +72,9 @@ public class HTTPElevatorTest {
     @Test
     public void should_call_server_with_reset() throws Exception {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
-                new DontConnectURLStreamHandler("http://10.0.0.1/myApp/reset", urlConnection));
+                new DontConnectURLStreamHandler("http://10.0.0.1/myApp/reset?cause=reason", urlConnection));
 
-        httpElevator.reset();
+        httpElevator.reset("reason");
 
         verify(urlConnection).getInputStream();
     }

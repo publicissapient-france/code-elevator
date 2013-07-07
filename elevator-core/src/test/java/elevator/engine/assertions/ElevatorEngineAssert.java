@@ -44,8 +44,8 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
         return this;
     }
 
-    public ElevatorEngineAssert reset() {
-        actual.reset();
+    public ElevatorEngineAssert reset(String cause) {
+        actual.reset(cause);
         return this;
     }
 
