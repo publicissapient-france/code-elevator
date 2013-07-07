@@ -26,7 +26,7 @@ public class WebResource {
                                @QueryParam("serverURL") String serverURL) throws MalformedURLException {
         try {
             server.addElevatorGame(new Player(email, pseudo), new URL(serverURL));
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | MalformedURLException e) {
             throw new WebApplicationException(e, Response.status(FORBIDDEN).entity(e.getMessage()).build());
         }
     }
