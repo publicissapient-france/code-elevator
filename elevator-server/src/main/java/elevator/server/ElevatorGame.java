@@ -10,6 +10,7 @@ import java.util.Set;
 class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
+    private static final int MAX_NUMBER_OF_USERS = 10;
 
     final Player player;
     final Score score;
@@ -26,7 +27,7 @@ class ElevatorGame implements ClockListener {
         }
         this.player = player;
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
-        this.building = new Building(elevatorEngine);
+        this.building = new Building(elevatorEngine, MAX_NUMBER_OF_USERS);
         this.clock = clock;
         this.score = new Score();
         this.lastErrorMessage = null;

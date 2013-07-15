@@ -19,6 +19,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class ElevatorUI extends JFrame {
 
+    private static final int MAX_NUMBER_OF_USERS = 10;
+
     public ElevatorUI() throws HeadlessException {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -28,7 +30,7 @@ public class ElevatorUI extends JFrame {
         final Clock clock = new Clock();
 
         for (ElevatorEngine elevatorEngine : ServiceLoader.load(ElevatorEngine.class)) {
-            final Building building = new Building(elevatorEngine);
+            final Building building = new Building(elevatorEngine, MAX_NUMBER_OF_USERS);
             clock.addClockListener(new ClockListener() {
                 @Override
                 public ClockListener onTick() {
