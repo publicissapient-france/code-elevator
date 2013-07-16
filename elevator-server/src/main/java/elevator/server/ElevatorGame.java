@@ -10,7 +10,6 @@ import java.util.Set;
 class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
-    private static final int MAX_NUMBER_OF_USERS = 10;
 
     final Player player;
     final Score score;
@@ -21,13 +20,13 @@ class ElevatorGame implements ClockListener {
     private final HTTPElevator elevatorEngine;
     private final Building building;
 
-    ElevatorGame(Player player, URL url, Clock clock) throws MalformedURLException {
+    ElevatorGame(Player player, URL url, Integer maxNumberOfUsers, Clock clock) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
         this.player = player;
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
-        this.building = new Building(elevatorEngine, MAX_NUMBER_OF_USERS);
+        this.building = new Building(elevatorEngine, maxNumberOfUsers);
         this.clock = clock;
         this.score = new Score();
         this.lastErrorMessage = null;
@@ -101,6 +100,10 @@ class ElevatorGame implements ClockListener {
         } catch (ElevatorIsBrokenException e) {
             score.loose();
         }
+    }
+
+    void setMaxNumberOfUsers(Integer maxNumberOfUsers) {
+        building.setMaxNumberOfUsers(maxNumberOfUsers);
     }
 
 }

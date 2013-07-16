@@ -62,4 +62,22 @@ public class WebResource {
         return players;
     }
 
+    @GET
+    @Path("/admin/maxNumberOfUsers")
+    public String getMaxNumberOfUsers() {
+        return String.valueOf(server.getMaxNumberOfUsers());
+    }
+
+    @GET
+    @Path("/admin/increaseMaxNumberOfUsers")
+    public String increaseMaxNumberOfUsers() {
+        return String.valueOf(server.increaseMaxNumberOfUsers());
+    }
+
+    @GET
+    @Path("/admin/decreaseMaxNumberOfUsers")
+    public String decreaseMaxNumberOfUsers() {
+        return String.valueOf(server.decreaseMaxNumberOfUsers());
+    }
+
 }
