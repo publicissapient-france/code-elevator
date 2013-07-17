@@ -11,7 +11,6 @@ import static elevator.Door.CLOSE;
 import static elevator.Door.OPEN;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
-import static java.lang.Math.max;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
@@ -19,24 +18,20 @@ public class Building {
 
     private final Set<User> users;
     private final ElevatorEngine elevatorEngine;
+    private final MaxNumberOfUsers maxNumberOfUsers;
 
-    private Integer maxNumberOfUsers;
     private Door door;
     private Integer floor;
 
-    public Building(ElevatorEngine elevatorEngine, Integer maxNumberOfUsers) {
+    public Building(ElevatorEngine elevatorEngine, MaxNumberOfUsers maxNumberOfUsers) {
         this.users = Collections.synchronizedSet(new HashSet<User>());
         this.elevatorEngine = elevatorEngine;
-        this.setMaxNumberOfUsers(maxNumberOfUsers);
+        this.maxNumberOfUsers = maxNumberOfUsers;
         reset();
     }
 
-    public void setMaxNumberOfUsers(Integer maxNumberOfUsers) {
-        this.maxNumberOfUsers = max(0, maxNumberOfUsers);
-    }
-
     public synchronized Building addUser() throws ElevatorIsBrokenException {
-        if (users.size() >= maxNumberOfUsers) {
+        if (users.size() >= maxNumberOfUsers.value()) {
             return this;
         }
 

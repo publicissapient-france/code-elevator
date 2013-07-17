@@ -18,8 +18,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class BuildingTest {
 
-    private static final int MAX_NUMBER_OF_USERS = 10;
-
     @Mock
     public ElevatorEngine elevator;
 
@@ -28,7 +26,7 @@ public class BuildingTest {
 
     @Test
     public void should_add_user() {
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         building.addUser();
 
@@ -37,7 +35,9 @@ public class BuildingTest {
 
     @Test
     public void should_not_add_more_than_max_number_of_users() {
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        final ConstantMaxNumberOfUsers maxNumberOfUsers = new ConstantMaxNumberOfUsers();
+        final Integer MAX_NUMBER_OF_USERS = maxNumberOfUsers.value();
+        final Building building = new Building(elevator, maxNumberOfUsers);
         for (Integer i = 1; i <= MAX_NUMBER_OF_USERS; i++) {
             building.addUser();
         }
@@ -50,7 +50,7 @@ public class BuildingTest {
 
     @Test
     public void should_set_max_number_of_users_to_zero_if_max_number_of_users_is_negative() {
-        Building building = new Building(elevator, -4);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers(-4));
 
         building.addUser();
 
@@ -59,7 +59,7 @@ public class BuildingTest {
 
     @Test
     public void should_have_an_initial_state() throws Exception {
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR);
     }
@@ -67,7 +67,7 @@ public class BuildingTest {
     @Test
     public void should_restore_initial_state_if_reseted() throws Exception {
         when(elevator.nextCommand()).thenReturn(UP, UP, OPEN, OPEN);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
         building.updateBuildingState();
         building.updateBuildingState();
@@ -85,7 +85,7 @@ public class BuildingTest {
     @Test
     public void should_does_nothing_if_elevator_does_nothing() {
         when(elevator.nextCommand()).thenReturn(NOTHING);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         building.updateBuildingState();
 
@@ -95,7 +95,7 @@ public class BuildingTest {
     @Test
     public void should_throws_exception_if_elevator_closes_doors_but_doors_are_already_closed() {
         when(elevator.nextCommand()).thenReturn(CLOSE);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("can't close doors");
@@ -105,7 +105,7 @@ public class BuildingTest {
     @Test
     public void should_throw_exception_if_elevator_opens_doors_but_doors_are_already_open() {
         when(elevator.nextCommand()).thenReturn(OPEN, OPEN);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
 
         expectedException.expect(ElevatorIsBrokenException.class);
@@ -116,7 +116,7 @@ public class BuildingTest {
     @Test
     public void should_throws_exception_if_elevator_goes_down_but_is_already_at_lower_floor() {
         when(elevator.nextCommand()).thenReturn(DOWN);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("can't goes down because current floor is the lowest floor");
@@ -126,7 +126,7 @@ public class BuildingTest {
     @Test
     public void should_throws_exception_if_elevator_goes_down_but_doors_are_open() {
         when(elevator.nextCommand()).thenReturn(UP, Command.OPEN, DOWN);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
         building.updateBuildingState();
 
@@ -138,7 +138,7 @@ public class BuildingTest {
     @Test
     public void should_throws_exception_if_elevator_goes_up_but_is_already_at_higher_floor() {
         when(elevator.nextCommand()).thenReturn(UP, UP, UP, UP, UP, UP);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
         building.updateBuildingState();
         building.updateBuildingState();
@@ -153,7 +153,7 @@ public class BuildingTest {
     @Test
     public void should_throws_exception_if_elevator_goes_up_but_doors_are_open() {
         when(elevator.nextCommand()).thenReturn(Command.OPEN, UP);
-        Building building = new Building(elevator, MAX_NUMBER_OF_USERS);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
 
         expectedException.expect(ElevatorIsBrokenException.class);

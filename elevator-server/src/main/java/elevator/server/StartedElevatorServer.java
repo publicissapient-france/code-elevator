@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Executors;
 
-import static java.lang.Math.max;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -16,7 +15,7 @@ class StartedElevatorServer {
     private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
-    private Integer maxNumberOfUsers = 1;
+    private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
 
     StartedElevatorServer() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
@@ -64,24 +63,15 @@ class StartedElevatorServer {
     }
 
     Integer getMaxNumberOfUsers() {
-        return maxNumberOfUsers;
+        return maxNumberOfUsers.value();
     }
 
     Integer increaseMaxNumberOfUsers() {
-        maxNumberOfUsers++;
-        return updateMaxNumberOfUsers();
+        return maxNumberOfUsers.increase();
     }
 
     Integer decreaseMaxNumberOfUsers() {
-        maxNumberOfUsers = max(0, maxNumberOfUsers - 1);
-        return updateMaxNumberOfUsers();
-    }
-
-    private Integer updateMaxNumberOfUsers() {
-        for (ElevatorGame elevatorGame : elevatorGames.values()) {
-            elevatorGame.setMaxNumberOfUsers(maxNumberOfUsers);
-        }
-        return maxNumberOfUsers;
+        return maxNumberOfUsers.decrease();
     }
 
 }

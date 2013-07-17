@@ -20,7 +20,7 @@ class ElevatorGame implements ClockListener {
     private final HTTPElevator elevatorEngine;
     private final Building building;
 
-    ElevatorGame(Player player, URL url, Integer maxNumberOfUsers, Clock clock) throws MalformedURLException {
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
@@ -100,10 +100,6 @@ class ElevatorGame implements ClockListener {
         } catch (ElevatorIsBrokenException e) {
             score.loose();
         }
-    }
-
-    void setMaxNumberOfUsers(Integer maxNumberOfUsers) {
-        building.setMaxNumberOfUsers(maxNumberOfUsers);
     }
 
 }

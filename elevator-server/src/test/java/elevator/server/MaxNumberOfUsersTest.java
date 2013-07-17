@@ -1,0 +1,47 @@
+package elevator.server;
+
+import org.junit.Test;
+
+import static org.fest.assertions.Assertions.assertThat;
+
+public class MaxNumberOfUsersTest {
+
+    @Test
+    public void should_start_at_zero() throws Exception {
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+
+        assertThat(maxNumberOfUsers.value()).isEqualTo(0);
+    }
+
+    @Test
+    public void should_increase() throws Exception {
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+
+        Integer increasedValue = maxNumberOfUsers.increase();
+
+        assertThat(increasedValue).as("default max number of users increased by one")
+                .isEqualTo(1)
+                .isEqualTo(maxNumberOfUsers.value());
+    }
+
+    @Test
+    public void should_decrease() throws Exception {
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+        maxNumberOfUsers.increase();
+
+        Integer decreasedValue = maxNumberOfUsers.decrease();
+
+        assertThat(decreasedValue).as("max number of users of 1 decreased by one")
+                .isEqualTo(0);
+    }
+
+    @Test
+    public void should_not_decrease_less_than_zero() throws Exception {
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+
+        Integer decreasedValue = maxNumberOfUsers.decrease();
+
+        assertThat(decreasedValue).as("default max number of users decreased by one")
+                .isEqualTo(0);
+    }
+}
