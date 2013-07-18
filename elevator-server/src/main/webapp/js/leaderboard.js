@@ -1,4 +1,3 @@
-'use strict';
 
 function LeaderboardCtrl($scope, $http, $timeout) {
     $scope.players = [];

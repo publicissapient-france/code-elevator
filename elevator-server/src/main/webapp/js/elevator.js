@@ -1,5 +1,3 @@
-'use strict';
-
 function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     $scope.player = {};
 
@@ -12,6 +10,8 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
         doorIsOpen: false,
         lastErrorMessage: null
     };
+
+    $scope.loggedIn = false;
 
     if ($cookieStore.get('isLogged')) {
         $scope.loggedIn = true;
@@ -43,6 +43,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                 fetchPlayerInfo($scope, $http, $timeout);
             })
             .error(function (data) {
+                $scope.loggedId = false;
                 $scope.message = data;
             });
     };
@@ -55,4 +56,5 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
             });
     };
 }
+
 ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
