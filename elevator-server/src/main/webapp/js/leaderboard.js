@@ -1,5 +1,5 @@
+function LeaderboardCtrl($scope, $cookieStore, $http, $timeout) {
 
-function LeaderboardCtrl($scope, $http, $timeout) {
     $scope.players = [];
 
     function fetchLeaderboard($scope, $http, $timeout) {
@@ -14,7 +14,13 @@ function LeaderboardCtrl($scope, $http, $timeout) {
 
     fetchLeaderboard($scope, $http, $timeout);
 
+    $scope.loggedIn = function () {
+        if ($cookieStore.get('isLogged')) {
+            return true;
+        }
+        return false;
+    }
+
 }
 
-
-LeaderboardCtrl.$inject = ['$scope', '$http', '$timeout'];
+LeaderboardCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
