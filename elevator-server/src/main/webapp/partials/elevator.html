@@ -34,7 +34,9 @@
     <div ng-show="message" class="alert alert-error">{{message}}</div>
 </div>
 
-<div ng-show="loggedIn" class="jumbotron">
+<div ng-show="loggedIn" class="row-fluid">
+
+    <div class="span9 jumbotron">
 
     <div class="well" style="vertical-align: middle;">
         <gravatar-image data-email="player.email" data-size="120" data-rating="pg" data-default="404" data-secure="true"></gravatar-image>
@@ -49,4 +51,28 @@
     <div style="vertical-align: middle;">
         <button class="btn btn-large btn-warning" ng-click="disconnect()">disconnect</button>
     </div>
+
+    </div>
+
+    <div class="span3">
+        <h3>API doc</h3>
+        <h4>Awaiting response</h4>
+        <dl>
+            <dt><span class="label label-info">GET</span> <code>/nextCommand</code></dt>
+            <dd>body of the request <strong>must</strong> contains <code>NOTHING</code>, <code>UP</code>, <code>DOWN</code>, <code>OPEN</code> or <code>CLOSE</code></dd>
+        </dl>
+        <h4>Events</h4>
+        <span>just respond HTTP 200 return code</span>
+        <dl>
+            <dt><span class="label label-info">GET</span> <code>/call</code></dt>
+            <dd><code>?atFloor=[0-5]&to=[UP|DOWN]</code></dd>
+            <dt><span class="label label-info">GET</span> <code>/go</code></dt>
+            <dd><code>?floorToGo=[0-5]</code></dd>
+            <dt><span class="label label-info">GET</span> <code>/userHasEntered</code></dt>
+            <dt><span class="label label-info">GET</span> <code>/userHasExited</code></dt>
+            <dt><span class="label label-info">GET</span> <code>/reset</code></dt>
+            <dd><code>?cause=information+message</code></dd>
+        </dl>
+    </div>
+
 </div>
