@@ -43,7 +43,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                 fetchPlayerInfo($scope, $http, $timeout);
             })
             .error(function (data) {
-                $scope.loggedId = false;
+                $scope.loggedIn = false;
                 $scope.message = data;
             });
     };
