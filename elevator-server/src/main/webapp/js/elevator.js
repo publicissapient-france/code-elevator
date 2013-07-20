@@ -1,4 +1,4 @@
-function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
+function ElevatorCtrl($scope, $timeout, ElevatorAuth) {
     $scope.player = {};
 
     $scope.playerInfo = {
@@ -14,13 +14,13 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
     $scope.loggedIn = ElevatorAuth.loggedIn;
 
     if ($scope.loggedIn()) {
-        $scope.player = $cookieStore.get('isLogged');
+        $scope.player = ElevatorAuth.player();
     }
 
-    function fetchPlayerInfo($scope, $http, $timeout) {
+    function fetchPlayerInfo($scope, ElevatorAuth, $timeout) {
         (function fetch() {
             if ($scope.loggedIn()) {
-                $http.get('/resources/player/info?pseudo=' + $scope.player.pseudo)
+                ElevatorAuth.playerInfo()
                     .success(function (data) {
                         $scope.playerInfo = data;
                     });
@@ -29,19 +29,13 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
         })();
     }
 
-    fetchPlayerInfo($scope, $http, $timeout);
+    fetchPlayerInfo($scope, ElevatorAuth, $timeout);
 
     $scope.login = function () {
-        $http.post('/resources/player/register?email=' + $scope.player.email
-                + "&pseudo=" + $scope.player.pseudo
-                + "&serverURL=http://" + $scope.player["serverURL"])
+        ElevatorAuth.register($scope.player)
             .success(function () {
                 delete $scope.message;
-                $cookieStore.put('isLogged', {
-                    "pseudo": $scope.player.pseudo,
-                    "email": $scope.player.email
-                });
-                fetchPlayerInfo($scope, $http, $timeout);
+                fetchPlayerInfo($scope, ElevatorAuth, $timeout);
             })
             .error(function (data) {
                 $scope.message = data;
@@ -49,10 +43,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
     };
 
     $scope.disconnect = function () {
-        $http.post('/resources/player/unregister?pseudo=' + $scope.player.pseudo)
-            .success(function () {
-                $cookieStore.remove('isLogged');
-            });
+        ElevatorAuth.unregister($scope.player);
     };
 
     $scope.$on("$destroy", function() {
@@ -60,4 +51,4 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
     });
 }
 
-ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout', 'ElevatorAuth'];
+ElevatorCtrl.$inject = ['$scope', '$timeout', 'ElevatorAuth'];
