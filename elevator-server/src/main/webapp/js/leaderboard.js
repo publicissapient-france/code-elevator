@@ -14,7 +14,7 @@ function LeaderboardCtrl($scope, $cookieStore, $http, $timeout) {
 
     fetchLeaderboard($scope, $http, $timeout);
 
-    $scope.loggedIn = function () {
+    $scope.loggedIn = function () { // TODO extract with other controller
         if ($cookieStore.get('isLogged')) {
             return true;
         }

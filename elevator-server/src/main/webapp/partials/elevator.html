@@ -4,8 +4,8 @@
             <span class="brand">Code Elevator</span>
             <ul class="nav">
                 <li class="active"><a>
-                    <span ng-hide="loggedIn">Subscribe</span>
-                    <span ng-show="loggedIn">My elevator</span>
+                    <span ng-hide="loggedIn()">Subscribe</span>
+                    <span ng-show="loggedIn()">My elevator</span>
                 </a></li>
                 <li><a href="#/leaderboard">Leaderboard</a></li>
             </ul>
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div ng-hide="loggedIn" class="jumbotron">
+<div ng-hide="loggedIn()" class="jumbotron">
     <h1>Code Elevator</h1>
 
     <h2>From the ground to the highest level</h2>
@@ -34,7 +34,7 @@
     <div ng-show="message" class="alert alert-error">{{message}}</div>
 </div>
 
-<div ng-show="loggedIn" class="row-fluid">
+<div ng-show="loggedIn()" class="row-fluid">
 
     <div class="span9 jumbotron">
 

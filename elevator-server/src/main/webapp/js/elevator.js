@@ -11,16 +11,20 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
         lastErrorMessage: null
     };
 
-    $scope.loggedIn = false;
+    $scope.loggedIn = function () { // TODO extract with other controller
+        if ($cookieStore.get('isLogged')) {
+            return true;
+        }
+        return false;
+    };
 
-    if ($cookieStore.get('isLogged')) {
-        $scope.loggedIn = true;
+    if ($scope.loggedIn()) {
         $scope.player.pseudo = $cookieStore.get('isLogged');
     }
 
     function fetchPlayerInfo($scope, $http, $timeout) {
         (function fetch() {
-            if ($scope.loggedIn) {
+            if ($scope.loggedIn()) {
                 $http.get('/resources/player/info?pseudo=' + $scope.player.pseudo)
                     .success(function (data) {
                         $scope.playerInfo = data;
@@ -39,11 +43,9 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
             .success(function () {
                 delete $scope.message;
                 $cookieStore.put('isLogged', $scope.player.pseudo);
-                $scope.loggedIn = true;
                 fetchPlayerInfo($scope, $http, $timeout);
             })
             .error(function (data) {
-                $scope.loggedIn = false;
                 $scope.message = data;
             });
     };
@@ -52,7 +54,6 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
         $http.post('/resources/player/unregister?pseudo=' + $scope.player.pseudo)
             .success(function () {
                 $cookieStore.remove('isLogged');
-                $scope.loggedIn = false;
             });
     };
 }
