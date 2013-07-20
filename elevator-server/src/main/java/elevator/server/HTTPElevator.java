@@ -7,14 +7,12 @@ import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.net.*;
 import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
 
 import static java.net.URLEncoder.encode;
+import static java.text.MessageFormat.format;
 
 class HTTPElevator implements ElevatorEngine {
 
@@ -77,6 +75,9 @@ class HTTPElevator implements ElevatorEngine {
         } catch (IllegalArgumentException e) {
             out.append(" ").append(commandFromResponse);
             throw new ElevatorIsBrokenException("Command \"" + commandFromResponse + "\" is not a valid command; valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive");
+        } catch (UnknownHostException e) {
+            transportErrorMessage = format("IP address of \"{0}\" could not be determined", e.getMessage());
+            throw new ElevatorIsBrokenException(transportErrorMessage);
         } catch (IOException e) {
             transportErrorMessage = e.getMessage();
             throw new ElevatorIsBrokenException(transportErrorMessage);
@@ -127,6 +128,8 @@ class HTTPElevator implements ElevatorEngine {
                     try (InputStream in = urlConnection.getInputStream()) {
                         transportErrorMessage = null;
                     }
+                } catch (UnknownHostException e) {
+                    transportErrorMessage = format("IP address of \"{0}\" could not be determined", e.getMessage());
                 } catch (IOException e) {
                     transportErrorMessage = e.getMessage();
                 }

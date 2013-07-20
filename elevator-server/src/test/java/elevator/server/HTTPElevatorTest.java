@@ -17,6 +17,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 
 import static elevator.Command.OPEN;
@@ -132,6 +133,17 @@ public class HTTPElevatorTest {
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
+        httpElevator.nextCommand();
+    }
+
+    @Test
+    public void should_handle_UnknownHostException() throws Exception {
+        when(urlConnection.getInputStream()).thenThrow(new UnknownHostException("fakehost"));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://fakehost"), executorService,
+                new DontConnectURLStreamHandler("http://fakehost/nextCommand", urlConnection));
+
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("IP address of \"fakehost\" could not be determined");
         httpElevator.nextCommand();
     }
 
