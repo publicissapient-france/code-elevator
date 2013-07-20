@@ -19,7 +19,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     };
 
     if ($scope.loggedIn()) {
-        $scope.player.pseudo = $cookieStore.get('isLogged');
+        $scope.player = $cookieStore.get('isLogged');
     }
 
     function fetchPlayerInfo($scope, $http, $timeout) {
@@ -42,7 +42,10 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                 + "&serverURL=http://" + $scope.player["serverURL"])
             .success(function () {
                 delete $scope.message;
-                $cookieStore.put('isLogged', $scope.player.pseudo);
+                $cookieStore.put('isLogged', {
+                    "pseudo": $scope.player.pseudo,
+                    "email": $scope.player.email
+                });
                 fetchPlayerInfo($scope, $http, $timeout);
             })
             .error(function (data) {
