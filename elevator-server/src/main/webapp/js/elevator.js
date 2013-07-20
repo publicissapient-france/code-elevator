@@ -29,7 +29,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                     .success(function (data) {
                         $scope.playerInfo = data;
                     });
-                $timeout(fetch, 1000);
+                $scope.nextFetchPlayerInfo = $timeout(fetch, 1000);
             }
         })();
     }
@@ -59,6 +59,10 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
                 $cookieStore.remove('isLogged');
             });
     };
+
+    $scope.$on("$destroy", function() {
+        $timeout.cancel($scope.nextFetchPlayerInfo);
+    });
 }
 
 ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
