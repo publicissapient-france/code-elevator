@@ -1,4 +1,4 @@
-function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
+function ElevatorCtrl($scope, $cookieStore, $http, $timeout, ElevatorAuth) {
     $scope.player = {};
 
     $scope.playerInfo = {
@@ -11,12 +11,7 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
         lastErrorMessage: null
     };
 
-    $scope.loggedIn = function () { // TODO extract with other controller
-        if ($cookieStore.get('isLogged')) {
-            return true;
-        }
-        return false;
-    };
+    $scope.loggedIn = ElevatorAuth.loggedIn;
 
     if ($scope.loggedIn()) {
         $scope.player = $cookieStore.get('isLogged');
@@ -65,4 +60,4 @@ function ElevatorCtrl($scope, $cookieStore, $http, $timeout) {
     });
 }
 
-ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
+ElevatorCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout', 'ElevatorAuth'];

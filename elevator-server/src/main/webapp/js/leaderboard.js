@@ -1,4 +1,4 @@
-function LeaderboardCtrl($scope, $cookieStore, $http, $timeout) {
+function LeaderboardCtrl($scope, ElevatorAuth, $http, $timeout) {
 
     $scope.players = [];
 
@@ -14,13 +14,8 @@ function LeaderboardCtrl($scope, $cookieStore, $http, $timeout) {
 
     fetchLeaderboard($scope, $http, $timeout);
 
-    $scope.loggedIn = function () { // TODO extract with other controller
-        if ($cookieStore.get('isLogged')) {
-            return true;
-        }
-        return false;
-    }
+    $scope.loggedIn = ElevatorAuth.loggedIn;
 
 }
 
-LeaderboardCtrl.$inject = ['$scope', '$cookieStore', '$http', '$timeout'];
+LeaderboardCtrl.$inject = ['$scope', 'ElevatorAuth', '$http', '$timeout'];
