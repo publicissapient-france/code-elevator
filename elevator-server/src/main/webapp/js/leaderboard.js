@@ -8,11 +8,15 @@ function LeaderboardCtrl($scope, ElevatorAuth, $http, $timeout) {
                 .success(function (data) {
                     $scope.players = data;
                 });
-            $timeout(fetch, 1000);
+            $scope.nextFetchLeaderboard = $timeout(fetch, 1000);
         })();
     }
 
     fetchLeaderboard($scope, $http, $timeout);
+
+    $scope.$on("$destroy", function() {
+        $timeout.cancel($scope.nextFetchLeaderboard);
+    });
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
 
