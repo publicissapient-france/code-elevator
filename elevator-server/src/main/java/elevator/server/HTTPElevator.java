@@ -27,6 +27,7 @@ class HTTPElevator implements ElevatorEngine {
     private final URL reset;
     private final String defaultCharset;
     private final Pattern errorStatusMessage;
+    private final String VALID_COMMANDS;
 
     private String transportErrorMessage;
 
@@ -44,6 +45,7 @@ class HTTPElevator implements ElevatorEngine {
         this.reset = new URL(server, "reset", urlStreamHandler);
         this.defaultCharset = Charset.defaultCharset().name();
         this.errorStatusMessage = Pattern.compile("Server returned HTTP response code: (\\d+).+");
+        VALID_COMMANDS = "valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive";
     }
 
     @Override
@@ -71,6 +73,9 @@ class HTTPElevator implements ElevatorEngine {
             URLConnection urlConnection = getUrlConnection(nextCommand);
             try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
                 commandFromResponse = in.readLine();
+                if (commandFromResponse == null) {
+                    throw new ElevatorIsBrokenException(format("No command was provided; {0}", VALID_COMMANDS));
+                }
                 transportErrorMessage = null;
                 Command command = Command.valueOf(commandFromResponse);
                 out.append(" ").append(command);
@@ -78,7 +83,7 @@ class HTTPElevator implements ElevatorEngine {
             }
         } catch (IllegalArgumentException e) {
             out.append(" ").append(commandFromResponse);
-            throw new ElevatorIsBrokenException("Command \"" + commandFromResponse + "\" is not a valid command; valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive");
+            throw new ElevatorIsBrokenException(format("Command \"{0}\" is not a valid command; {1}", commandFromResponse, VALID_COMMANDS));
         } catch (IOException e) {
             transportErrorMessage = createErrorMessage(nextCommand, e);
             throw new ElevatorIsBrokenException(transportErrorMessage);

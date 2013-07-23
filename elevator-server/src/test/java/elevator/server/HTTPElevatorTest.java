@@ -127,6 +127,17 @@ public class HTTPElevatorTest {
     }
 
     @Test
+    public void should_throws_exception_when_server_send_no_command() throws Exception {
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[0]));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
+
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("No command was provided; valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive");
+        httpElevator.nextCommand();
+    }
+
+    @Test
     public void should_handle_transport_error() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
