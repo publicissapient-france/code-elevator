@@ -10,6 +10,8 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.net.URLEncoder.encode;
 import static java.text.MessageFormat.format;
@@ -24,6 +26,7 @@ class HTTPElevator implements ElevatorEngine {
     private final URL userHasExited;
     private final URL reset;
     private final String defaultCharset;
+    private final Pattern errorStatusMessage;
 
     private String transportErrorMessage;
 
@@ -40,6 +43,7 @@ class HTTPElevator implements ElevatorEngine {
         this.userHasExited = new URL(server, "userHasExited", urlStreamHandler);
         this.reset = new URL(server, "reset", urlStreamHandler);
         this.defaultCharset = Charset.defaultCharset().name();
+        this.errorStatusMessage = Pattern.compile("Server returned HTTP response code: (\\d+).+");
     }
 
     @Override
@@ -75,11 +79,8 @@ class HTTPElevator implements ElevatorEngine {
         } catch (IllegalArgumentException e) {
             out.append(" ").append(commandFromResponse);
             throw new ElevatorIsBrokenException("Command \"" + commandFromResponse + "\" is not a valid command; valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive");
-        } catch (UnknownHostException e) {
-            transportErrorMessage = format("IP address of \"{0}\" could not be determined", e.getMessage());
-            throw new ElevatorIsBrokenException(transportErrorMessage);
         } catch (IOException e) {
-            transportErrorMessage = e.getMessage();
+            transportErrorMessage = createErrorMessage(nextCommand, e);
             throw new ElevatorIsBrokenException(transportErrorMessage);
         } finally {
             System.out.println(out.toString());
@@ -128,10 +129,8 @@ class HTTPElevator implements ElevatorEngine {
                     try (InputStream in = urlConnection.getInputStream()) {
                         transportErrorMessage = null;
                     }
-                } catch (UnknownHostException e) {
-                    transportErrorMessage = format("IP address of \"{0}\" could not be determined", e.getMessage());
                 } catch (IOException e) {
-                    transportErrorMessage = e.getMessage();
+                    transportErrorMessage = createErrorMessage(url, e);
                 }
             }
         });
@@ -156,6 +155,27 @@ class HTTPElevator implements ElevatorEngine {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String createErrorMessage(URL url, IOException e) {
+        if (e instanceof FileNotFoundException) {
+            return format("Resource \"{0}\" is not found", urlWithoutQuery(url));
+        }
+
+        if (e instanceof UnknownHostException) {
+            return format("IP address of \"{0}\" could not be determined", e.getMessage());
+        }
+
+        Matcher matcher = errorStatusMessage.matcher(e.getMessage());
+        if (matcher.matches()) {
+            return format("Server returned HTTP response code: {0} for URL: {1}", matcher.group(1), urlWithoutQuery(url));
+        }
+
+        return e.getMessage();
+    }
+
+    private String urlWithoutQuery(URL url) {
+        return format("{0}://{1}{2}", url.getProtocol(), url.getAuthority(), url.getPath());
     }
 
 }

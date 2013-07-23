@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -156,6 +157,30 @@ public class HTTPElevatorTest {
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
+        httpElevator.call(4, UP);
+    }
+
+    @Test
+    public void should_handle_404_error() throws Exception {
+        when(urlConnection.getInputStream()).thenThrow(new FileNotFoundException("http://localhost:8080/context/call?atFloor=4&to=UP"));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
+                new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
+        httpElevator.call(4, UP);
+
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("Resource \"http://localhost:8080/context/call\" is not found");
+        httpElevator.call(4, UP);
+    }
+
+    @Test
+    public void should_return_url_without_query_when_server_respond_with_HTTP_status_code_error() throws Exception {
+        when(urlConnection.getInputStream()).thenThrow(new IOException("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call?atFloor=4&to=UP"));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
+                new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
+        httpElevator.call(4, UP);
+
+        expectedException.expect(ElevatorIsBrokenException.class);
+        expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call");
         httpElevator.call(4, UP);
     }
 
