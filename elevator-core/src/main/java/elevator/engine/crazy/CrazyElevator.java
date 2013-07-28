@@ -18,31 +18,31 @@ public class CrazyElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) {
-        crazyWait();
+        doCrazy();
         return this;
     }
 
     @Override
     public ElevatorEngine go(Integer floorToGo) {
-        crazyWait();
+        doCrazy();
         return this;
     }
 
     @Override
     public Command nextCommand() {
-        crazyWait();
+        doCrazy();
         return crazyCommand();
     }
 
     @Override
     public ElevatorEngine userHasEntered(User user) {
-        crazyWait();
+        doCrazy();
         return this;
     }
 
     @Override
     public ElevatorEngine userHasExited(User user) {
-        crazyWait();
+        doCrazy();
         return this;
     }
 
@@ -52,7 +52,7 @@ public class CrazyElevator implements ElevatorEngine {
         return this;
     }
 
-    private void crazyWait() {
+    private void doCrazy() {
         if (crazy()) {
             try {
                 Long millisecondsToWait = new Double(random() * 1500).longValue();
@@ -61,6 +61,10 @@ public class CrazyElevator implements ElevatorEngine {
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
             }
+        }
+        if (crazy()) {
+            System.out.println(" throw an exception");
+            throw new RuntimeException("crazy exception");
         }
     }
 
@@ -75,7 +79,7 @@ public class CrazyElevator implements ElevatorEngine {
     }
 
     private Boolean crazy() {
-        Boolean crazy = random() * 5 > 4d;
+        Boolean crazy = random() * 9 > 8d;
         if (crazy) {
             System.out.print("CRAZY ");
         }
