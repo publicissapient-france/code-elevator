@@ -18,7 +18,7 @@ public class ElevatorApplication extends Application {
     @Override
     public Set<Object> getSingletons() {
         HashSet<Object> singletons = new HashSet<>();
-        singletons.add(new WebResource(new StartedElevatorServer()));
+        singletons.add(new WebResource(new ElevatorServer()));
         return singletons;
     }
 

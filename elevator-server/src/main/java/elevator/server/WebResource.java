@@ -14,9 +14,9 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 @Path("/")
 public class WebResource {
 
-    private final StartedElevatorServer server;
+    private final ElevatorServer server;
 
-    public WebResource(StartedElevatorServer server) {
+    public WebResource(ElevatorServer server) {
         this.server = server;
     }
 

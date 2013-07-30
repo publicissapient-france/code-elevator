@@ -10,14 +10,14 @@ import java.util.concurrent.Executors;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class StartedElevatorServer {
+class ElevatorServer {
 
     private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
     private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
 
-    StartedElevatorServer() {
+    ElevatorServer() {
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -26,7 +26,7 @@ class StartedElevatorServer {
         }, 0, 1, SECONDS);
     }
 
-    public StartedElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
+    public ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already have been added");
         }
@@ -40,7 +40,7 @@ class StartedElevatorServer {
         return unmodifiableSet(elevatorGames.keySet());
     }
 
-    public StartedElevatorServer removeElevatorGame(String pseudo) {
+    public ElevatorServer removeElevatorGame(String pseudo) {
         Player player = new Player("", pseudo);
         if (elevatorGames.containsKey(player)) {
             ElevatorGame game = elevatorGames.get(player);
