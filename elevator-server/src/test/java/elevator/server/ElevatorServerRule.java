@@ -10,7 +10,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.net.InetSocketAddress;
 
-public class ElevatorServerRule implements TestRule {
+class ElevatorServerRule implements TestRule {
 
     public WebTarget target;
     private Statement base;
