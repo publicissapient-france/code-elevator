@@ -1,5 +1,7 @@
 package elevator.server;
 
+import elevator.server.security.AdminAuthorization;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -64,18 +66,21 @@ public class WebResource {
 
     @GET
     @Path("/admin/maxNumberOfUsers")
+    @AdminAuthorization
     public String getMaxNumberOfUsers() {
         return String.valueOf(server.getMaxNumberOfUsers());
     }
 
     @GET
     @Path("/admin/increaseMaxNumberOfUsers")
+    @AdminAuthorization
     public String increaseMaxNumberOfUsers() {
         return String.valueOf(server.increaseMaxNumberOfUsers());
     }
 
     @GET
     @Path("/admin/decreaseMaxNumberOfUsers")
+    @AdminAuthorization
     public String decreaseMaxNumberOfUsers() {
         return String.valueOf(server.decreaseMaxNumberOfUsers());
     }

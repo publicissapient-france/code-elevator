@@ -1,5 +1,6 @@
 package elevator.server;
 
+import elevator.server.security.AdminAuthorizationFilter;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
 import javax.ws.rs.core.Application;
@@ -12,6 +13,7 @@ public class ElevatorApplication extends Application {
     public Set<Class<?>> getClasses() {
         HashSet<Class<?>> classes = new HashSet<>();
         classes.add(JacksonJsonProvider.class);
+        classes.add(AdminAuthorizationFilter.class);
         return classes;
     }
 
