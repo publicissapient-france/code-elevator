@@ -25,18 +25,15 @@
             <version>2.0</version>
         </dependency>
         <dependency>
+            <!-- needed by web.xml to instantiate org.glassfish.jersey.servlet.ServletContainer -->
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet-core</artifactId>
             <version>2.0</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>9.0.4.v20130625</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-servlet</artifactId>
             <version>9.0.4.v20130625</version>
         </dependency>
         <dependency>
@@ -66,12 +63,6 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>9.0.4.v20130625</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.core</groupId>
-            <artifactId>jersey-client</artifactId>
-            <version>2.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
