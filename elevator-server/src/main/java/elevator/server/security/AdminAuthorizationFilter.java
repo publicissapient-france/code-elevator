@@ -12,6 +12,12 @@ import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 @AdminAuthorization
 public class AdminAuthorizationFilter implements ContainerRequestFilter {
 
+    private final Password password;
+
+    public AdminAuthorizationFilter(Password password) {
+        this.password = password;
+    }
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         String authorization = requestContext.getHeaderString(AUTHORIZATION);
@@ -22,7 +28,7 @@ public class AdminAuthorizationFilter implements ContainerRequestFilter {
         authorization = authorization.replaceFirst("[Bb]asic ", "");
         String userAndPassword = new String(parseBase64Binary(authorization));
 
-        if (!userAndPassword.equals("admin:toHah1ooMeor6Oht")) {
+        if (!userAndPassword.equals("admin:" + password.value())) {
             throw new WebApplicationException(UNAUTHORIZED);
         }
     }

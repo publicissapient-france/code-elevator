@@ -1,5 +1,6 @@
 package elevator.server;
 
+import elevator.server.security.RandomPassword;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -40,7 +41,7 @@ public class WebResourceTest {
     }
 
     private String adminCredentials() {
-        return "Basic " + printBase64Binary("admin:toHah1ooMeor6Oht".getBytes());
+        return "Basic " + printBase64Binary(("admin:" + RandomPassword.password).getBytes()); // TODO how to know generated password ?
     }
 
 }

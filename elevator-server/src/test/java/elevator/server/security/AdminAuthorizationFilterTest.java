@@ -25,9 +25,16 @@ public class AdminAuthorizationFilterTest {
     @Rule
     public ExpectedException thrown = none();
 
+    private Password passwordForTest = new Password() {
+        @Override
+        public String value() {
+            return "password for test";
+        }
+    };
+
     @Test
     public void should_not_authorize_if_no_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
         thrown.expect(WebApplicationException.class);
 
         adminAuthorizationFilter.filter(containerRequestContext);
@@ -35,7 +42,7 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_not_authorize_if_bad_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
                 .thenReturn("Basic " + printBase64Binary("admin:badpassword".getBytes()));
         thrown.expect(WebApplicationException.class);
@@ -45,9 +52,9 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_authorize_if_good_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-                .thenReturn("Basic " + printBase64Binary("admin:toHah1ooMeor6Oht".getBytes()));
+                .thenReturn("Basic " + printBase64Binary("admin:password for test".getBytes()));
 
         adminAuthorizationFilter.filter(containerRequestContext);
     }
