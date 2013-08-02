@@ -14,7 +14,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>fr.xebia</groupId>
+            <groupId>${project.parent.groupId}</groupId>
             <artifactId>elevator-core</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
