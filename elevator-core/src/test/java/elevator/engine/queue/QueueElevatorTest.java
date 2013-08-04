@@ -1,7 +1,6 @@
 package elevator.engine.queue;
 
 import elevator.engine.ElevatorEngine;
-import elevator.engine.naive.NaiveElevator;
 import org.junit.Test;
 
 import static elevator.Direction.UP;

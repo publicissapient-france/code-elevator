@@ -1,28 +1,30 @@
 package elevator.server;
 
-import elevator.server.security.AdminAuthorizationFilter;
-import elevator.server.security.RandomPassword;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import static com.google.common.collect.Sets.newHashSet;
+
+import java.util.Set;
 
 import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+
+import com.google.common.collect.Sets;
+
+import elevator.server.security.AdminAuthorizationFilter;
+import elevator.server.security.RandomPassword;
 
 public class ElevatorApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        HashSet<Class<?>> classes = new HashSet<>();
-        classes.add(JacksonJsonProvider.class);
-        return classes;
+        return Sets.<Class<?>> newHashSet(JacksonJsonProvider.class);
     }
 
     @Override
     public Set<Object> getSingletons() {
-        HashSet<Object> singletons = new HashSet<>();
-        singletons.add(new WebResource(new ElevatorServer()));
-        singletons.add(new AdminAuthorizationFilter(new RandomPassword()));
-        return singletons;
+        return newHashSet( //
+                new WebResource(new ElevatorServer()), //
+                new AdminAuthorizationFilter(new RandomPassword()));
     }
 
 }

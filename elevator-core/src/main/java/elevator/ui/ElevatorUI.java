@@ -20,6 +20,8 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 public class ElevatorUI extends JFrame {
 
+    private static final long serialVersionUID = -7040543347613308702L;
+
     public ElevatorUI() throws HeadlessException {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
