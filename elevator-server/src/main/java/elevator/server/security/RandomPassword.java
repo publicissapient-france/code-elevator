@@ -6,10 +6,6 @@ public class RandomPassword implements Password {
 
     public static final String password = generate();
 
-    public RandomPassword() {
-        // this.password = generate();
-    }
-
     private static String generate() {
         final String chars = "" +
                 "0123456789" +
