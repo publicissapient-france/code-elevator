@@ -118,6 +118,8 @@ public class Building {
                     throw new ElevatorIsBrokenException("can't goes up because current floor is the highest floor");
                 }
                 break;
+            case NOTHING:
+                break;
         }
     }
 
@@ -152,6 +154,8 @@ public class Building {
             case DOWN:
                 floor--;
                 notifyUsers(floor);
+                break;
+            case NOTHING:
                 break;
         }
         return doneUsers;
