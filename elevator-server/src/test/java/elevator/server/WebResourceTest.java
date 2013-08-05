@@ -40,7 +40,7 @@ public class WebResourceTest {
     }
 
     private String adminCredentials() {
-        return "Basic " + printBase64Binary(("admin:" + RandomPassword.password).getBytes());
+        return "Basic " + printBase64Binary(("admin:" + elevatorServerRule.password()).getBytes());
     }
 
 }

@@ -1,14 +1,29 @@
 package elevator.server.security;
 
+import elevator.server.logging.ElevatorLogger;
+
 import static java.lang.Math.random;
 import static java.lang.String.format;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 public class RandomPassword implements Password {
 
-    public static final String password = generate();
+    private final java.util.logging.Logger logger;
+    private final String password;
 
-    private static String generate() {
+    public RandomPassword() {
+        this.logger = new ElevatorLogger("RandomPassword").logger();
+        this.password = generate();
+        this.logger.config(password);
+        String authToken = printBase64Binary(("admin:" + password).getBytes());
+        String curl = "curl --header 'Authorization: Basic %s' 'http://<server>[:<port>]/resources/admin/%s'";
+        this.logger.config(format(curl, authToken, "maxNumberOfUsers"));
+        this.logger.config(format(curl, authToken, "increaseMaxNumberOfUsers"));
+        this.logger.config(format(curl, authToken, "decreaseMaxNumberOfUsers"));
+
+    }
+
+    private String generate() {
         final String chars = "" +
                 "0123456789" +
                 "abcdefghijklmnopqrstuvwxyz" +
@@ -20,12 +35,6 @@ public class RandomPassword implements Password {
         for (Integer i = 0; i < 16; i++) {
             password.append(chars.charAt(new Double(random() * chars.length()).intValue()));
         }
-
-        String authToken = printBase64Binary(("admin:" + password.toString()).getBytes());
-        String curl = "curl --header 'Authorization: Basic %s' 'http://localhost:8080/resources/admin/%s'";
-        System.out.println(format(curl, authToken, "maxNumberOfUsers"));
-        System.out.println(format(curl, authToken, "increaseMaxNumberOfUsers"));
-        System.out.println(format(curl, authToken, "decreaseMaxNumberOfUsers"));
 
         return password.toString();
     }
