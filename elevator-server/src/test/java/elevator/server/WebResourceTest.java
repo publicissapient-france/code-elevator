@@ -1,16 +1,14 @@
 package elevator.server;
 
+import org.junit.ClassRule;
+import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.fest.assertions.Assertions.assertThat;
-
-import javax.ws.rs.core.Response;
-
-import org.junit.ClassRule;
-import org.junit.Test;
-
-import elevator.server.security.RandomPassword;
 
 public class WebResourceTest {
 
@@ -25,18 +23,18 @@ public class WebResourceTest {
 
     @Test
     public void should_initialize_maxNumberOfUsers_with_zero() {
-        Response response = elevatorServerRule.target //
-                .path("/admin/maxNumberOfUsers").request() //
-                .header(AUTHORIZATION, adminCredentials()) //
+        Response response = elevatorServerRule.target
+                .path("/admin/maxNumberOfUsers").request()
+                .header(AUTHORIZATION, adminCredentials())
                 .buildGet().invoke();
         assertThat(response.readEntity(String.class)).isEqualTo("0");
     }
 
     @Test
     public void should_increase_maxNumberOfUsers() {
-        Response response = elevatorServerRule.target //
-                .path("/admin/increaseMaxNumberOfUsers").request() //
-                .header(AUTHORIZATION, adminCredentials()) //
+        Response response = elevatorServerRule.target
+                .path("/admin/increaseMaxNumberOfUsers").request()
+                .header(AUTHORIZATION, adminCredentials())
                 .buildGet().invoke();
         assertThat(response.readEntity(String.class)).isEqualTo("1");
     }

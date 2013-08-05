@@ -22,8 +22,8 @@ public class ElevatorApplication extends Application {
 
     @Override
     public Set<Object> getSingletons() {
-        return newHashSet( //
-                new WebResource(new ElevatorServer()), //
+        return newHashSet(
+                new WebResource(new ElevatorServer()),
                 new AdminAuthorizationFilter(new RandomPassword()));
     }
 

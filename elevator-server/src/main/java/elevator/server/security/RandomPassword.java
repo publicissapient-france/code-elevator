@@ -9,10 +9,10 @@ public class RandomPassword implements Password {
     public static final String password = generate();
 
     private static String generate() {
-        final String chars = "" + //
-                "0123456789" + //
-                "abcdefghijklmnopqrstuvwxyz" + //
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + //
+        final String chars = "" +
+                "0123456789" +
+                "abcdefghijklmnopqrstuvwxyz" +
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                 "_-";
 
         final StringBuilder password = new StringBuilder(16);
