@@ -16,6 +16,7 @@ import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 
 public class InteractionPanel extends JPanel {
 
+    private static final long serialVersionUID = -4552133516569878418L;
     private final Map<BuildingAndElevator, Deque<JLabel>> buildings;
 
     InteractionPanel(List<BuildingAndElevator> buildings) {
@@ -71,6 +72,7 @@ public class InteractionPanel extends JPanel {
 
     private static class CallElevatorAction extends AbstractAction {
 
+        private static final long serialVersionUID = 2830386200495313435L;
         private final List<BuildingAndElevator> buildings;
         private final int currentFloor;
         private final Direction direction;

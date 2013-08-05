@@ -102,6 +102,8 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
                 actualDoor = CLOSE;
                 actualFloor--;
                 break;
+            case NOTHING:
+                break;
         }
 
         return this;

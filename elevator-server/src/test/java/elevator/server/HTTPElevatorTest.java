@@ -42,7 +42,7 @@ public class HTTPElevatorTest {
 
     @Before
     public void initExecutorServiceToRunInCurrentThread() {
-        doAnswer(new Answer() {
+        doAnswer(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
                 ((Runnable) invocationOnMock.getArguments()[0]).run();
