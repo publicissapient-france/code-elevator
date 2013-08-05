@@ -2,6 +2,7 @@ package elevator.server;
 
 import static com.google.common.collect.Sets.newHashSet;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.core.Application;
@@ -15,6 +16,14 @@ import elevator.server.security.RandomPassword;
 
 public class ElevatorApplication extends Application {
 
+    private final HashSet<Object> singletons;
+
+    public ElevatorApplication() {
+        singletons = newHashSet(
+                new WebResource(new ElevatorServer()),
+                new AdminAuthorizationFilter(new RandomPassword()));
+    }
+
     @Override
     public Set<Class<?>> getClasses() {
         return Sets.<Class<?>> newHashSet(JacksonJsonProvider.class);
@@ -22,9 +31,7 @@ public class ElevatorApplication extends Application {
 
     @Override
     public Set<Object> getSingletons() {
-        return newHashSet(
-                new WebResource(new ElevatorServer()),
-                new AdminAuthorizationFilter(new RandomPassword()));
+        return singletons;
     }
 
 }
