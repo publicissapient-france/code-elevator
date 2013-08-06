@@ -5,16 +5,18 @@ import elevator.Direction;
 import elevator.User;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.server.logging.ElevatorLogger;
 
 import java.io.*;
 import java.net.*;
-import java.nio.charset.Charset;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.lang.String.format;
 import static java.net.URLEncoder.encode;
-import static java.text.MessageFormat.format;
+import static java.nio.charset.Charset.defaultCharset;
 
 class HTTPElevator implements ElevatorEngine {
 
@@ -25,9 +27,9 @@ class HTTPElevator implements ElevatorEngine {
     private final URL userHasEntered;
     private final URL userHasExited;
     private final URL reset;
-    private final String defaultCharset;
     private final Pattern errorStatusMessage;
-    private final String VALID_COMMANDS;
+    private final String validCommands;
+    private final Logger logger;
 
     private String transportErrorMessage;
 
@@ -43,15 +45,14 @@ class HTTPElevator implements ElevatorEngine {
         this.userHasEntered = new URL(server, "userHasEntered", urlStreamHandler);
         this.userHasExited = new URL(server, "userHasExited", urlStreamHandler);
         this.reset = new URL(server, "reset", urlStreamHandler);
-        this.defaultCharset = Charset.defaultCharset().name();
         this.errorStatusMessage = Pattern.compile("Server returned HTTP response code: (\\d+).+");
-        VALID_COMMANDS = "valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive";
+        this.validCommands = "valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive";
+        this.logger = new ElevatorLogger("HTTPElevator").logger();
     }
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) throws ElevatorIsBrokenException {
         checkTransportError();
-        System.out.println(server.toString() + "/call?atFloor=" + atFloor + "&to=" + to.toString());
         httpGet("call?atFloor=" + atFloor + "&to=" + to);
         return this;
     }
@@ -59,7 +60,6 @@ class HTTPElevator implements ElevatorEngine {
     @Override
     public ElevatorEngine go(Integer floorToGo) throws ElevatorIsBrokenException {
         checkTransportError();
-        System.out.println(server.toString() + "/go?floorToGo=" + floorToGo);
         httpGet("go?floorToGo=" + floorToGo);
         return this;
     }
@@ -74,7 +74,7 @@ class HTTPElevator implements ElevatorEngine {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()))) {
                 commandFromResponse = in.readLine();
                 if (commandFromResponse == null) {
-                    throw new ElevatorIsBrokenException(format("No command was provided; {0}", VALID_COMMANDS));
+                    throw new ElevatorIsBrokenException(format("No command was provided; %s", validCommands));
                 }
                 transportErrorMessage = null;
                 Command command = Command.valueOf(commandFromResponse);
@@ -83,19 +83,18 @@ class HTTPElevator implements ElevatorEngine {
             }
         } catch (IllegalArgumentException e) {
             out.append(" ").append(commandFromResponse);
-            throw new ElevatorIsBrokenException(format("Command \"{0}\" is not a valid command; {1}", commandFromResponse, VALID_COMMANDS));
+            throw new ElevatorIsBrokenException(format("Command \"%s\" is not a valid command; %s", commandFromResponse, validCommands));
         } catch (IOException e) {
             transportErrorMessage = createErrorMessage(nextCommand, e);
             throw new ElevatorIsBrokenException(transportErrorMessage);
         } finally {
-            System.out.println(out.toString());
+            logger.info(out.toString());
         }
     }
 
     @Override
     public ElevatorEngine userHasEntered(User user) throws ElevatorIsBrokenException {
         checkTransportError();
-        System.out.println(userHasEntered);
         httpGet(userHasEntered);
         return this;
     }
@@ -103,7 +102,6 @@ class HTTPElevator implements ElevatorEngine {
     @Override
     public ElevatorEngine userHasExited(User user) throws ElevatorIsBrokenException {
         checkTransportError();
-        System.out.println(userHasExited);
         httpGet(userHasExited);
         return this;
     }
@@ -111,9 +109,7 @@ class HTTPElevator implements ElevatorEngine {
     @Override
     public ElevatorEngine reset(String cause) throws ElevatorIsBrokenException {
         // do not check transport error
-        String encodedCause = urlEncode(cause);
-        System.out.println(reset + "?cause=" + encodedCause);
-        httpGet(reset + "?cause=" + encodedCause);
+        httpGet(reset + "?cause=" + urlEncode(cause));
         return this;
     }
 
@@ -126,6 +122,7 @@ class HTTPElevator implements ElevatorEngine {
     }
 
     private void httpGet(final URL url) throws ElevatorIsBrokenException {
+        logger.info(url.toString());
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -156,7 +153,7 @@ class HTTPElevator implements ElevatorEngine {
 
     private String urlEncode(String cause) {
         try {
-            return encode(cause, defaultCharset);
+            return encode(cause, defaultCharset().name());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -164,23 +161,23 @@ class HTTPElevator implements ElevatorEngine {
 
     private String createErrorMessage(URL url, IOException e) {
         if (e instanceof FileNotFoundException) {
-            return format("Resource \"{0}\" is not found", urlWithoutQuery(url));
+            return format("Resource \"%s\" is not found", urlWithoutQuery(url));
         }
 
         if (e instanceof UnknownHostException) {
-            return format("IP address of \"{0}\" could not be determined", e.getMessage());
+            return format("IP address of \"%s\" could not be determined", e.getMessage());
         }
 
         Matcher matcher = errorStatusMessage.matcher(e.getMessage());
         if (matcher.matches()) {
-            return format("Server returned HTTP response code: {0} for URL: {1}", matcher.group(1), urlWithoutQuery(url));
+            return format("Server returned HTTP response code: %s for URL: %s", matcher.group(1), urlWithoutQuery(url));
         }
 
         return e.getMessage();
     }
 
     private String urlWithoutQuery(URL url) {
-        return format("{0}://{1}{2}", url.getProtocol(), url.getAuthority(), url.getPath());
+        return format("%s://%s%s", url.getProtocol(), url.getAuthority(), url.getPath());
     }
 
 }

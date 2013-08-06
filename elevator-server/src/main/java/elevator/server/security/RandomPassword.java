@@ -2,13 +2,15 @@ package elevator.server.security;
 
 import elevator.server.logging.ElevatorLogger;
 
+import java.util.logging.Logger;
+
 import static java.lang.Math.random;
 import static java.lang.String.format;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 public class RandomPassword implements Password {
 
-    private final java.util.logging.Logger logger;
+    private final Logger logger;
     private final String password;
 
     public RandomPassword() {
