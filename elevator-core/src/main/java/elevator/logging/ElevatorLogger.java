@@ -1,4 +1,4 @@
-package elevator.server.logging;
+package elevator.logging;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;

@@ -5,7 +5,7 @@ import elevator.Direction;
 import elevator.User;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
-import elevator.server.logging.ElevatorLogger;
+import elevator.logging.ElevatorLogger;
 
 import java.io.*;
 import java.net.*;

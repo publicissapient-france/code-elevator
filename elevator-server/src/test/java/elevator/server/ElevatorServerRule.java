@@ -1,6 +1,6 @@
 package elevator.server;
 
-import elevator.server.logging.ElevatorLogger;
+import elevator.logging.ElevatorLogger;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.rules.TestRule;

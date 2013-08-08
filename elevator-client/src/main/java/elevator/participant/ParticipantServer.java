@@ -3,6 +3,7 @@ package elevator.participant;
 import elevator.Command;
 import elevator.Direction;
 import elevator.engine.ElevatorEngine;
+import elevator.logging.ElevatorLogger;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -15,15 +16,15 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
-import static java.util.logging.Logger.getLogger;
+import static java.lang.String.format;
 
 public class ParticipantServer extends AbstractHandler {
 
-    private static final Logger LOGGER = getLogger(ParticipantServer.class.getName());
-
+    private final Logger logger;
     private final ElevatorEngine elevator;
 
     public ParticipantServer(ElevatorEngine elevator) {
+        this.logger = new ElevatorLogger(elevator.getClass().getSimpleName()).logger();
         this.elevator = elevator;
     }
 
@@ -35,7 +36,7 @@ public class ParticipantServer extends AbstractHandler {
                 synchronized (elevator) {
                     Command nextCommand = elevator.nextCommand();
                     baseRequest.getResponse().getWriter().println(nextCommand);
-                    LOGGER.info(target + " " + nextCommand);
+                    logger.info(format("%s %s", target, nextCommand));
                 }
                 break;
             case "/call":
@@ -44,27 +45,28 @@ public class ParticipantServer extends AbstractHandler {
                 synchronized (elevator) {
                     elevator.call(atFloor, to);
                 }
-                LOGGER.info(target + " atFloor " + atFloor + " to " + to);
+                logger.info(format("%s atFloor %d to %s", target, atFloor, to));
                 break;
             case "/go":
                 Integer floorToGo = Integer.valueOf(baseRequest.getParameter("floorToGo"));
                 synchronized (elevator) {
                     elevator.go(floorToGo);
                 }
-                LOGGER.info(target + " " + floorToGo);
+                logger.info(format("%s floorToGo %d", target, floorToGo));
                 break;
             case "/userHasEntered":
             case "/userHasExited":
-                LOGGER.info(target);
+                logger.info(target);
                 break;
             case "/reset":
+                String cause = baseRequest.getParameter("cause");
                 synchronized (elevator) {
-                    elevator.reset(baseRequest.getParameter("cause"));
+                    elevator.reset(cause);
                 }
-                LOGGER.info(target);
+                logger.info(format("%s cause %s", target, cause));
                 break;
             default:
-                LOGGER.warning(target);
+                logger.warning(target);
         }
         baseRequest.setHandled(true);
     }

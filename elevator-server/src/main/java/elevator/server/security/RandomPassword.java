@@ -1,6 +1,6 @@
 package elevator.server.security;
 
-import elevator.server.logging.ElevatorLogger;
+import elevator.logging.ElevatorLogger;
 
 import java.util.logging.Logger;
 

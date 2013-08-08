@@ -1,4 +1,4 @@
-package elevator.server.logging;
+package elevator.logging;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-public class ElevatorFormatter extends Formatter {
+class ElevatorFormatter extends Formatter {
 
     @Override
     public String format(LogRecord record) {
@@ -21,7 +21,7 @@ public class ElevatorFormatter extends Formatter {
             pw.close();
             throwable = sw.toString();
         }
-        return String.format("%1$TF %1$TT'%1$TL %2$16s %3$s%4$s%n",
+        return String.format("%1$TF %1$TT.%1$TL %2$16s %3$s%4$s%n",
                 date,
                 record.getLoggerName(),
                 message,

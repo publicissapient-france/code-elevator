@@ -5,14 +5,21 @@ import elevator.Direction;
 import elevator.User;
 import elevator.engine.ElevatorEngine;
 import elevator.engine.naive.NaiveElevator;
+import elevator.logging.ElevatorLogger;
+
+import java.util.logging.Logger;
 
 import static java.lang.Math.random;
+import static java.lang.String.format;
+import static java.util.logging.Level.WARNING;
 
 public class CrazyElevator implements ElevatorEngine {
 
+    private final Logger logger;
     private ElevatorEngine underlyingElevator;
 
     public CrazyElevator() {
+        logger = new ElevatorLogger("CrazyElevator").logger();
         underlyingElevator = new NaiveElevator();
     }
 
@@ -56,14 +63,14 @@ public class CrazyElevator implements ElevatorEngine {
         if (crazy()) {
             try {
                 Long millisecondsToWait = new Double(random() * 1500).longValue();
-                System.out.println("waiting for " + millisecondsToWait + "ms");
+                logger.info(format("waiting for %dms", millisecondsToWait));
                 Thread.sleep(millisecondsToWait);
             } catch (InterruptedException e) {
-                System.err.println(e.getMessage());
+                logger.log(WARNING, e.getMessage(), e);
             }
         }
         if (crazy()) {
-            System.out.println(" throw an exception");
+            logger.info("throw an exception");
             throw new RuntimeException("crazy exception");
         }
     }
@@ -72,18 +79,14 @@ public class CrazyElevator implements ElevatorEngine {
         Command correctCommand = underlyingElevator.nextCommand();
         if (crazy()) {
             Command crazyCommand = Command.values()[new Double(random() * 5).intValue()];
-            System.out.println("send " + crazyCommand + " instead of " + correctCommand);
+            logger.info(format("send %s instead of %s", crazyCommand, correctCommand));
             return crazyCommand;
         }
         return correctCommand;
     }
 
     private Boolean crazy() {
-        Boolean crazy = random() * 9 > 8d;
-        if (crazy) {
-            System.out.print("CRAZY ");
-        }
-        return crazy;
+        return random() * 9 > 8d;
     }
 
 }

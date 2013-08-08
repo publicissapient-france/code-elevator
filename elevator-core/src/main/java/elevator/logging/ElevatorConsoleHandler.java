@@ -1,4 +1,4 @@
-package elevator.server.logging;
+package elevator.logging;
 
 import java.io.OutputStream;
 import java.util.logging.ConsoleHandler;
