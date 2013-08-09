@@ -1,0 +1,36 @@
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto; padding: 0 20px;">
+            <span class="brand">Code Elevator</span>
+            <ul class="nav">
+                <li><a href="#/">
+                    <span ng-hide="loggedIn()">Subscribe</span>
+                    <span ng-show="loggedIn()">My elevator</span></a>
+                </li>
+                <li><a href="#/leaderboard">Leaderboard</a></li>
+                <li class="active"><a>Administration</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="well" ng-show="adminAuthorization()">
+        <p>Max number of users per building: {{maxNumberOfUsers}}</p>
+        <p>
+            <button class="btn btn-large btn-success" ng-click="increaseMaxNumberOfUsers()">increase</button>
+            <button class="btn btn-large btn-danger" ng-click="decreaseMaxNumberOfUsers()" ng-disabled="maxNumberOfUsers == 0">decrease</button>
+        </p>
+        <p><button class="btn btn-large btn-warning" ng-click="logout()">logout</button></p>
+    </div>
+    <div class="well" ng-hide="adminAuthorization()">
+        <form name="form">
+            <p><input ng-model="user" type="text" placeholder="User" required/></p>
+            <p><input ng-model="password" type="password" placeholder="Password" required/></p>
+
+            <div class="control-group">
+                <input type="submit" class="btn btn-large btn-success" ng-click="login()" ng-disabled="!form.$valid" value="Login"/>
+            </div>
+        </form>
+    </div>
+</div>
