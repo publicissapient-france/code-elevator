@@ -1,32 +1,47 @@
-function AdministrationCtrl($scope, ElevatorAuth) {
+function AdministrationCtrl($scope, $http, ElevatorAuth) {
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
-
-    var adminAuthorization = false;
+    $scope.maxNumberOfUsers = -1;
+    $scope.basicCookie = null;
 
     $scope.adminAuthorization = function () {
-        return adminAuthorization;
+        return $scope.maxNumberOfUsers >= 0;
     }
 
     $scope.login = function () {
-        console.log("should login " + $scope.user + " with password " + $scope.password);
-        adminAuthorization = true;
+        updateMaxNumberOfUsers('maxNumberOfUsers');
     }
 
     $scope.logout = function () {
-        adminAuthorization = false;
+        $scope.maxNumberOfUsers = -1;
+        $scope.errorMessage = '';
     }
 
-    $scope.maxNumberOfUsers = 0;
-
     $scope.increaseMaxNumberOfUsers = function () {
-        $scope.maxNumberOfUsers++;
+        updateMaxNumberOfUsers('increaseMaxNumberOfUsers');
     }
 
     $scope.decreaseMaxNumberOfUsers = function () {
-        $scope.maxNumberOfUsers--;
+        updateMaxNumberOfUsers('decreaseMaxNumberOfUsers');
+    }
+
+    var updateMaxNumberOfUsers = function (path) {
+        $http({
+            'method': 'GET',
+            'url': '/resources/admin/' + path,
+            'headers': {
+                'Authorization': 'Basic ' + $scope.basicCookie
+            }}).
+            success(function (data) {
+                $scope.maxNumberOfUsers = data;
+                $scope.errorMessage = '';
+            }).
+            error(function () {
+                $scope.maxNumberOfUsers = -1;
+                $scope.errorMessage = 'You are not allowed to access to this page.';
+            });
     }
 
 }
 
-AdministrationCtrl.$inject = ['$scope', 'ElevatorAuth'];
+AdministrationCtrl.$inject = ['$scope', '$http', 'ElevatorAuth'];
