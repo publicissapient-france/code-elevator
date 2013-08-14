@@ -49,7 +49,7 @@ class ElevatorServerRule implements TestRule {
             try {
                 server.start();
                 passwordRetrievedWhenLogged();
-                warmup(address);
+                warmup(address); // in order to retrieve logged password
                 base.evaluate();
             } finally {
                 try {
