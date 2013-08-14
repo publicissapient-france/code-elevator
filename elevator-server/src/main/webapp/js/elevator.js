@@ -1,4 +1,4 @@
-function ElevatorCtrl($scope, $timeout, ElevatorAuth) {
+function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     $scope.player = {};
 
     $scope.playerInfo = {
@@ -46,9 +46,13 @@ function ElevatorCtrl($scope, $timeout, ElevatorAuth) {
         ElevatorAuth.unregister($scope.player);
     };
 
+    $scope.reset = function () {
+        $http.post('/resources/player/reset?email=' + $scope.player.email);
+    };
+
     $scope.$on("$destroy", function() {
         $timeout.cancel($scope.nextFetchPlayerInfo);
     });
 }
 
-ElevatorCtrl.$inject = ['$scope', '$timeout', 'ElevatorAuth'];
+ElevatorCtrl.$inject = ['$scope', '$timeout', '$http', 'ElevatorAuth'];

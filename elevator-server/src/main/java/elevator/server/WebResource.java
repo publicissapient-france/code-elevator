@@ -22,6 +22,13 @@ public class WebResource {
         this.server = server;
     }
 
+    @GET
+    @Path("/players")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Set<Player> players() {
+        return server.players();
+    }
+
     @POST
     @Path("/player/register")
     public void newParticipant(@QueryParam("email") String email, @QueryParam("pseudo") String pseudo,
@@ -39,11 +46,10 @@ public class WebResource {
         server.removeElevatorGame(pseudo);
     }
 
-    @GET
-    @Path("/players")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Set<Player> players() {
-        return server.players();
+    @POST
+    @Path("/player/reset")
+    public void resetPlayer(@QueryParam("email") String email) {
+        server.resetPlayer(email);
     }
 
     @GET

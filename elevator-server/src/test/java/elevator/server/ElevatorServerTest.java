@@ -1,5 +1,6 @@
 package elevator.server;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.net.URL;
@@ -35,6 +36,18 @@ public class ElevatorServerTest {
         elevatorServer.
                 addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1")).
                 addElevatorGame(new Player("player@provider.com", "pseudo2"), new URL("http://127.0.0.1:8080/myApp"));
+    }
+
+    @Test
+    public void should_loose_and_give_message_when_user_wants_to_reset() throws Exception {
+        ElevatorServer elevatorServer = new ElevatorServer();
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1"));
+
+        elevatorServer.resetPlayer("player@provider.com");
+
+        PlayerInfo playerInfo = elevatorServer.getPlayerInfo("player@provider.com");
+        assertThat(playerInfo.lastErrorMessage).isEqualTo("player has requested a reset");
+        assertThat(playerInfo.score).isEqualTo(-10);
     }
 
 }

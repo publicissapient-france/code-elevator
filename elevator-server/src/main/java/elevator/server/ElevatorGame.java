@@ -34,7 +34,7 @@ class ElevatorGame implements ClockListener {
 
     ElevatorGame start() {
         clock.addClockListener(this);
-        reset("the elevator is at the lowest level and its doors are closed");
+        resetElevatorEngine("the elevator is at the lowest level and its doors are closed");
         return this;
     }
 
@@ -68,9 +68,7 @@ class ElevatorGame implements ClockListener {
                 score.success(doneUser);
             }
         } catch (ElevatorIsBrokenException e) {
-            score.loose();
-            lastErrorMessage = e.getMessage();
-            reset(lastErrorMessage);
+            reset(e.getMessage());
         }
         return this;
     }
@@ -90,11 +88,17 @@ class ElevatorGame implements ClockListener {
         return player.hashCode();
     }
 
-    public PlayerInfo getPlayerInfo() {
+    PlayerInfo getPlayerInfo() {
         return new PlayerInfo(this, player);
     }
 
-    private void reset(String cause) {
+    void reset(String message) {
+        score.loose();
+        lastErrorMessage = message;
+        resetElevatorEngine(lastErrorMessage);
+    }
+
+    private void resetElevatorEngine(String cause) {
         try {
             elevatorEngine.reset(cause);
         } catch (ElevatorIsBrokenException e) {

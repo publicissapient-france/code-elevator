@@ -6,7 +6,7 @@ import org.junit.Test;
 import javax.ws.rs.core.Response;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static javax.ws.rs.core.Response.Status.*;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -37,6 +37,38 @@ public class WebResourceTest {
                 .header(AUTHORIZATION, adminCredentials())
                 .buildGet().invoke();
         assertThat(response.readEntity(String.class)).isEqualTo("1");
+    }
+
+    @Test
+    public void should_not_reset_with_unknow_user() {
+        Response response = elevatorServerRule.target
+                .path("/player/reset")
+                .queryParam("email", "unkown@provider.com").request()
+                .buildPost(null).invoke();
+
+        assertThat(response.getStatus()).isEqualTo(NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void should_reset() {
+        try {
+            elevatorServerRule.target.path("/player/register")
+                    .queryParam("email", "player@provider.com")
+                    .queryParam("pseudo", "player")
+                    .queryParam("serverURL", "http://localhost").request()
+                    .buildPost(null).invoke();
+
+            Response response = elevatorServerRule.target
+                    .path("/player/reset")
+                    .queryParam("email", "player@provider.com").request()
+                    .buildPost(null).invoke();
+
+            assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
+        } finally {
+            elevatorServerRule.target.path("/player/unregister")
+                    .queryParam("pseudo", "player").request()
+                    .buildPost(null).invoke();
+        }
     }
 
     private String adminCredentials() {

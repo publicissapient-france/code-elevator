@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Executors;
 
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -51,11 +52,11 @@ class ElevatorServer {
     }
 
     PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
-        Player player = new Player(email, "");
-        if (!elevatorGames.containsKey(player)) {
-            throw new PlayerNotFoundException("Player not found");
-        }
-        return elevatorGames.get(player).getPlayerInfo();
+        return elevatorGame(email).getPlayerInfo();
+    }
+
+    void resetPlayer(String email) {
+        elevatorGame(email).reset("player has requested a reset");
     }
 
     public Collection<ElevatorGame> getUnmodifiableElevatorGames() {
@@ -72,6 +73,14 @@ class ElevatorServer {
 
     Integer decreaseMaxNumberOfUsers() {
         return maxNumberOfUsers.decrease();
+    }
+
+    private ElevatorGame elevatorGame(String email) {
+        Player player = new Player(email, "");
+        if (!elevatorGames.containsKey(player)) {
+            throw new PlayerNotFoundException(format("Player %s not found", player));
+        }
+        return elevatorGames.get(player);
     }
 
 }
