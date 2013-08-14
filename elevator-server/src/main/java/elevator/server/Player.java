@@ -17,22 +17,22 @@ class Player implements Comparable<Player> {
 
         Player player = (Player) o;
 
-        return pseudo.equals(player.pseudo);
+        return email.equals(player.email);
     }
 
     @Override
     public int hashCode() {
-        return pseudo.hashCode();
+        return email.hashCode();
     }
 
     @Override
     public String toString() {
-        return pseudo;
+        return email;
     }
 
     @Override
     public int compareTo(Player player) {
-        return pseudo.compareTo(player.pseudo);
+        return email.compareTo(player.email);
     }
 
 }

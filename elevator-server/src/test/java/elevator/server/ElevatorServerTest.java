@@ -11,12 +11,12 @@ public class ElevatorServerTest {
 
     @Test
     public void should_add_elevator_game() throws Exception {
-        Player email = new Player("player@provider.com", "pseudo");
+        Player player = new Player("player@provider.com", "pseudo");
         ElevatorServer elevatorServer = new ElevatorServer();
 
-        elevatorServer.addElevatorGame(email, new URL("http://127.0.0.1"));
+        elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1"));
 
-        assertThat(elevatorServer.players()).hasSize(1).containsOnly(email);
+        assertThat(elevatorServer.players()).hasSize(1).containsOnly(player);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -29,12 +29,12 @@ public class ElevatorServerTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void should_not_add_elevator_game_with_same_pseudo_twice() throws Exception {
+    public void should_not_add_elevator_game_with_same_email_twice() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
 
         elevatorServer.
-                addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1")).
-                addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080/myApp"));
+                addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1")).
+                addElevatorGame(new Player("player@provider.com", "pseudo2"), new URL("http://127.0.0.1:8080/myApp"));
     }
 
 }
