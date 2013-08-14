@@ -5,15 +5,19 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
     $scope.user = null;
     $scope.password = null;
 
+    var cookieValue = null;
+
     $scope.adminAuthorization = function () {
         return $scope.maxNumberOfUsers >= 0;
     }
 
     $scope.login = function () {
+        cookieValue = Base64.encode($scope.user + ":" + $scope.password);
         updateMaxNumberOfUsers('maxNumberOfUsers');
     }
 
     $scope.logout = function () {
+        cookieValue = null;
         $scope.maxNumberOfUsers = -1;
         $scope.errorMessage = '';
     }
@@ -31,7 +35,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
             'method': 'GET',
             'url': '/resources/admin/' + path,
             'headers': {
-                'Authorization': 'Basic ' + Base64.encode($scope.user + ":" + $scope.password)
+                'Authorization': 'Basic ' + cookieValue
             }}).
             success(function (data) {
                 $scope.maxNumberOfUsers = data;
