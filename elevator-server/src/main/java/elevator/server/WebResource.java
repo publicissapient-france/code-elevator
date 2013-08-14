@@ -47,10 +47,10 @@ public class WebResource {
     }
 
     @GET
-    @Path("/player/info/")
+    @Path("/player/info")
     @Produces(MediaType.APPLICATION_JSON)
-    public PlayerInfo infoForPlayer(@QueryParam("pseudo") String pseudo) {
-        return server.getPlayerInfo(pseudo);
+    public PlayerInfo playerInfo(@QueryParam("email") String email) {
+        return server.getPlayerInfo(email);
     }
 
     @GET

@@ -50,8 +50,8 @@ class ElevatorServer {
         return this;
     }
 
-    public PlayerInfo getPlayerInfo(String pseudo) throws PlayerNotFoundException {
-        Player player = new Player("", pseudo);
+    PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
+        Player player = new Player(email, "");
         if (!elevatorGames.containsKey(player)) {
             throw new PlayerNotFoundException("Player not found");
         }

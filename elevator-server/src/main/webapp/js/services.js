@@ -17,7 +17,7 @@ angular.module('elevatorApp.services', ['ngCookies']).
                 if (!this.loggedIn()) {
                     throw "not logged in";
                 }
-                return $http.get('/resources/player/info?pseudo=' + this.player().pseudo);
+                return $http.get('/resources/player/info?email=' + this.player().email);
             },
             "register": function (player) {
                 return $http.post('/resources/player/register?email=' + player.email
