@@ -1,8 +1,9 @@
-function AdministrationCtrl($scope, $http, ElevatorAuth) {
+function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
     $scope.maxNumberOfUsers = -1;
-    $scope.basicCookie = null;
+    $scope.user = null;
+    $scope.password = null;
 
     $scope.adminAuthorization = function () {
         return $scope.maxNumberOfUsers >= 0;
@@ -30,7 +31,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth) {
             'method': 'GET',
             'url': '/resources/admin/' + path,
             'headers': {
-                'Authorization': 'Basic ' + $scope.basicCookie
+                'Authorization': 'Basic ' + Base64.encode($scope.user + ":" + $scope.password)
             }}).
             success(function (data) {
                 $scope.maxNumberOfUsers = data;
@@ -44,4 +45,4 @@ function AdministrationCtrl($scope, $http, ElevatorAuth) {
 
 }
 
-AdministrationCtrl.$inject = ['$scope', '$http', 'ElevatorAuth'];
+AdministrationCtrl.$inject = ['$scope', '$http', 'ElevatorAuth', 'Base64'];

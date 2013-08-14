@@ -16,6 +16,16 @@
 
 <div class="container-fluid">
     <div class="alert alert-error" ng-show="errorMessage">{{errorMessage}}</div>
+    <div class="well" ng-hide="adminAuthorization()">
+        <form name="form">
+            <input ng-model="user" type="text" placeholder="User" required/>
+            <input ng-model="password" type="password" placeholder="Password" required/>
+
+            <div class="control-group">
+                <input type="submit" class="btn btn-large btn-success" ng-click="login()" ng-disabled="!form.$valid" value="Login"/>
+            </div>
+        </form>
+    </div>
     <div class="well" ng-show="adminAuthorization()">
         <p>Max number of users per building: {{maxNumberOfUsers}}</p>
         <p>
@@ -25,14 +35,5 @@
         <p>
             <button class="btn btn-large btn-warning" ng-click="logout()">logout</button>
         </p>
-    </div>
-    <div class="well" ng-hide="adminAuthorization()">
-        <form name="form">
-            <input ng-model="basicCookie" type="text" placeholder="Basic Cookie" title="base 64 encoded user name and password separated by colon" required/>
-
-            <div class="control-group">
-                <input type="submit" class="btn btn-large btn-success" ng-click="login()" ng-disabled="!form.$valid" value="Login"/>
-            </div>
-        </form>
     </div>
 </div>
