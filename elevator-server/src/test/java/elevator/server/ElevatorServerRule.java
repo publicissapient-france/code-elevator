@@ -36,6 +36,11 @@ class ElevatorServerRule implements TestRule {
 
     private class ElevatorServerStatement extends Statement {
 
+        /**
+         * Keep a strong reference on this {@link Logger} as described by {@link java.util.logging.LogManager#getLogger}
+         */
+        private Logger randomPasswordLogger;
+
         @Override
         public void evaluate() throws Throwable {
             InetSocketAddress address = new InetSocketAddress("localhost", 8080);
@@ -56,7 +61,7 @@ class ElevatorServerRule implements TestRule {
         }
 
         private void passwordRetrievedWhenLogged() {
-            Logger randomPasswordLogger = new ElevatorLogger("RandomPassword").logger();
+            randomPasswordLogger = new ElevatorLogger("RandomPassword").logger();
             randomPasswordLogger.addHandler(new Handler() {
                 @Override
                 public void publish(LogRecord record) {
