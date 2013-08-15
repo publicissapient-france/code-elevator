@@ -66,9 +66,25 @@ public class WebResourceTest {
             assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
         } finally {
             elevatorServerRule.target.path("/player/unregister")
-                    .queryParam("pseudo", "player").request()
+                    .queryParam("email", "player@provider.com").request()
                     .buildPost(null).invoke();
         }
+    }
+
+    @Test
+    public void should_unregister() {
+        elevatorServerRule.target.path("/player/register")
+                .queryParam("email", "player@provider.com")
+                .queryParam("pseudo", "player")
+                .queryParam("serverURL", "http://localhost").request()
+                .buildPost(null).invoke();
+
+        Response response = elevatorServerRule.target
+                .path("/player/unregister")
+                .queryParam("email", "player@provider.com").request()
+                .buildPost(null).invoke();
+
+        assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
     }
 
     private String adminCredentials() {

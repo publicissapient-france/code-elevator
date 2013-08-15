@@ -31,7 +31,7 @@ angular.module('elevatorApp.services', ['ngCookies']).
                     })
             },
             "unregister": function (player) {
-                $http.post('/resources/player/unregister?pseudo=' + player.pseudo)
+                $http.post('/resources/player/unregister?email=' + player.email)
                     .success(function () {
                         $cookieStore.remove('isLogged');
                     });

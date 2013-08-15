@@ -41,14 +41,10 @@ class ElevatorServer {
         return unmodifiableSet(elevatorGames.keySet());
     }
 
-    public ElevatorServer removeElevatorGame(String pseudo) {
-        Player player = new Player("", pseudo);
-        if (elevatorGames.containsKey(player)) {
-            ElevatorGame game = elevatorGames.get(player);
-            game.stop();
-            elevatorGames.remove(player);
-        }
-        return this;
+    void removeElevatorGame(String email) {
+        ElevatorGame elevatorGame = elevatorGame(email);
+        elevatorGame.stop();
+        elevatorGames.remove(elevatorGame.player);
     }
 
     PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {

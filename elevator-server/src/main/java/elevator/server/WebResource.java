@@ -42,8 +42,8 @@ public class WebResource {
 
     @POST
     @Path("/player/unregister")
-    public void unregisterParticipant(@QueryParam("pseudo") String pseudo) {
-        server.removeElevatorGame(pseudo);
+    public void unregisterParticipant(@QueryParam("email") String email) {
+        server.removeElevatorGame(email);
     }
 
     @POST
