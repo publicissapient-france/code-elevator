@@ -84,7 +84,7 @@ class ElevatorServerRule implements TestRule {
 
         private void warmup(InetSocketAddress address) {
             try {
-                new URL("http://" + address.getHostName() + ":" + address.getPort() + "/resources/players").openStream().close();
+                new URL("http://" + address.getHostName() + ":" + address.getPort() + "/resources/leaderboard").openStream().close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

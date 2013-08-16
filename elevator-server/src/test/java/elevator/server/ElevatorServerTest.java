@@ -4,6 +4,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.Collection;
 
 import static org.fest.assertions.Assertions.assertThat;
 import static org.fest.assertions.Fail.fail;
@@ -20,7 +21,9 @@ public class ElevatorServerTest {
 
         elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1:8080"));
 
-        assertThat(elevatorServer.players()).hasSize(1).containsOnly(player);
+        Collection<ElevatorGame> elevatorGames = elevatorServer.getUnmodifiableElevatorGames();
+        assertThat(elevatorGames).hasSize(1);
+        assertThat(elevatorGames.iterator().next().player).isEqualTo(player);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -60,7 +63,7 @@ public class ElevatorServerTest {
 
         elevatorServer.removeElevatorGame("player@provider.com");
 
-        assertThat(elevatorServer.players()).isEmpty();
+        assertThat(elevatorServer.getUnmodifiableElevatorGames()).isEmpty();
     }
 
 }

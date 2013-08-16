@@ -4,12 +4,14 @@ import elevator.Clock;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class ElevatorServer {
@@ -35,10 +37,6 @@ class ElevatorServer {
         ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock);
         elevatorGames.put(player, elevatorGame);
         return this;
-    }
-
-    public Set<Player> players() {
-        return unmodifiableSet(elevatorGames.keySet());
     }
 
     void removeElevatorGame(String email) {

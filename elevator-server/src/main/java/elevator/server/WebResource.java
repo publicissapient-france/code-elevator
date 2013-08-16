@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
@@ -20,13 +19,6 @@ public class WebResource {
 
     public WebResource(ElevatorServer server) {
         this.server = server;
-    }
-
-    @GET
-    @Path("/players")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Set<Player> players() {
-        return server.players();
     }
 
     @POST
