@@ -7,7 +7,8 @@ import java.net.URL;
 import java.util.*;
 import java.util.concurrent.Executors;
 
-import static java.lang.String.format;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -42,9 +43,11 @@ class ElevatorServer {
     }
 
     void removeElevatorGame(String email) {
-        ElevatorGame elevatorGame = elevatorGame(email);
-        elevatorGame.stop();
-        elevatorGames.remove(elevatorGame.player);
+        ElevatorGame elevatorGame = elevatorGame(email, FALSE);
+        if (elevatorGame != null) {
+            elevatorGame.stop();
+            elevatorGames.remove(elevatorGame.player);
+        }
     }
 
     PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
@@ -72,9 +75,16 @@ class ElevatorServer {
     }
 
     private ElevatorGame elevatorGame(String email) {
+        return elevatorGame(email, TRUE);
+    }
+
+    private ElevatorGame elevatorGame(String email, Boolean failOnError) {
         Player player = new Player(email, "");
         if (!elevatorGames.containsKey(player)) {
-            throw new PlayerNotFoundException(format("Player %s not found", player));
+            if (failOnError) {
+                throw new PlayerNotFoundException(player.email);
+            }
+            return null;
         }
         return elevatorGames.get(player);
     }

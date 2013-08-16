@@ -66,18 +66,12 @@ public class BuildingTest {
 
     @Test
     public void should_restore_initial_state_if_reseted() throws Exception {
-        when(elevator.nextCommand()).thenReturn(UP, UP, OPEN, OPEN);
+        when(elevator.nextCommand()).thenReturn(UP);
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
-        building.updateBuildingState();
-        building.updateBuildingState();
         building.addUser();
-        assertThat(building).doorIs(Door.OPEN).floorIs(2).users().hasSize(1);
 
-        try {
-            building.updateBuildingState();
-        } catch (ElevatorIsBrokenException e) {
-        }
+        building.reset();
 
         assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
     }

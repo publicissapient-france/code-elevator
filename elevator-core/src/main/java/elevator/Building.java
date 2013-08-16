@@ -80,14 +80,9 @@ public class Building {
     }
 
     public Set<User> updateBuildingState() throws ElevatorIsBrokenException {
-        try {
-            Command command = elevatorEngine.nextCommand();
-            validateCommand(command);
-            return applyCommand(command);
-        } catch (ElevatorIsBrokenException e) {
-            reset();
-            throw e;
-        }
+        Command command = elevatorEngine.nextCommand();
+        validateCommand(command);
+        return applyCommand(command);
     }
 
     private void validateCommand(Command command) throws ElevatorIsBrokenException {
@@ -123,7 +118,7 @@ public class Building {
         }
     }
 
-    private synchronized void reset() {
+    public synchronized void reset() {
         floor = LOWER_FLOOR;
         door = CLOSE;
         users.clear();
