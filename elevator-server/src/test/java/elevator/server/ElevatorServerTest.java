@@ -1,5 +1,6 @@
 package elevator.server;
 
+import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.net.URL;
@@ -9,12 +10,15 @@ import static org.fest.assertions.Fail.fail;
 
 public class ElevatorServerTest {
 
+    @ClassRule
+    public static PlayerServerRule playerServerRule = new PlayerServerRule();
+
     @Test
     public void should_add_elevator_game() throws Exception {
         Player player = new Player("player@provider.com", "pseudo");
         ElevatorServer elevatorServer = new ElevatorServer();
 
-        elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1"));
+        elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1:8080"));
 
         assertThat(elevatorServer.players()).hasSize(1).containsOnly(player);
     }
@@ -33,14 +37,14 @@ public class ElevatorServerTest {
         ElevatorServer elevatorServer = new ElevatorServer();
 
         elevatorServer.
-                addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1")).
+                addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1:8080")).
                 addElevatorGame(new Player("player@provider.com", "pseudo2"), new URL("http://127.0.0.1:8080/myApp"));
     }
 
     @Test
     public void should_loose_and_give_message_when_user_wants_to_reset() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1"));
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
 
         elevatorServer.resetPlayer("player@provider.com");
 
@@ -52,7 +56,7 @@ public class ElevatorServerTest {
     @Test
     public void should_remove_elevator_game() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1"));
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
 
         elevatorServer.removeElevatorGame("player@provider.com");
 

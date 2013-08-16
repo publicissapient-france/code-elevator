@@ -16,7 +16,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_loose_and_update_message_when_reset() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(null, new URL("http://localhost"), null, new Clock());
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, new Clock());
 
         elevatorGame.reset("error message");
 

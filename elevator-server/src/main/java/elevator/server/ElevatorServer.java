@@ -33,7 +33,6 @@ class ElevatorServer {
             throw new IllegalStateException("a game with player " + player + " has already have been added");
         }
         ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock);
-        elevatorGame.start();
         elevatorGames.put(player, elevatorGame);
         return this;
     }
