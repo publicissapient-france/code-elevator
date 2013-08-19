@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 public class PlayerInfo implements Serializable {
 
-    private static final long serialVersionUID = -6875006554350182431L;
-
     public final String pseudo;
     public final String email;
     public final int score;
@@ -14,6 +12,7 @@ public class PlayerInfo implements Serializable {
     public final int peopleInTheElevator;
     public final boolean doorIsOpen;
     public final String lastErrorMessage;
+    public final String state;
 
     public PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
@@ -24,6 +23,7 @@ public class PlayerInfo implements Serializable {
         peopleInTheElevator = game.travelingUsers();
         doorIsOpen = game.doorIsOpen();
         lastErrorMessage = game.lastErrorMessage;
+        state = game.state.toString();
     }
 
 }

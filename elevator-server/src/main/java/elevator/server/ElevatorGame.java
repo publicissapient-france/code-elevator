@@ -7,6 +7,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 
+import static elevator.server.ElevatorGame.State.PAUSE;
+import static elevator.server.ElevatorGame.State.RESUME;
+
 class ElevatorGame implements ClockListener {
 
     private static final String HTTP = "http";
@@ -15,6 +18,7 @@ class ElevatorGame implements ClockListener {
     final Score score;
 
     String lastErrorMessage;
+    State state;
 
     private final Clock clock;
     private final HTTPElevator elevatorEngine;
@@ -30,17 +34,20 @@ class ElevatorGame implements ClockListener {
         this.clock = clock;
         this.score = new Score();
         this.lastErrorMessage = null;
+        this.state = RESUME;
         this.resume();
         this.resetElevatorEngine("the elevator is at the lowest level and its doors are closed");
     }
 
     ElevatorGame stop() {
         clock.removeClockListener(this);
+        state = PAUSE;
         return this;
     }
 
     ElevatorGame resume() {
         clock.addClockListener(this);
+        state = RESUME;
         return this;
     }
 
@@ -108,4 +115,7 @@ class ElevatorGame implements ClockListener {
         }
     }
 
+    enum State {
+        RESUME, PAUSE
+    }
 }

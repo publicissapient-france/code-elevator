@@ -24,6 +24,23 @@ public class ElevatorGameTest {
     }
 
     @Test
+    public void should_get_player_info() throws Exception {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock);
+
+        PlayerInfo playerInfo = elevatorGame.getPlayerInfo();
+
+        assertThat(playerInfo.doorIsOpen).isFalse();
+        assertThat(playerInfo.elevatorAtFloor).isZero();
+        assertThat(playerInfo.email).isEqualTo("player@provider.com");
+        assertThat(playerInfo.lastErrorMessage).isNull();
+        assertThat(playerInfo.peopleInTheElevator).isZero();
+        assertThat(playerInfo.peopleWaitingTheElevator).isEqualTo(new int[]{0, 0, 0, 0, 0, 0});
+        assertThat(playerInfo.pseudo).isEqualTo("player");
+        assertThat(playerInfo.score).isZero();
+        assertThat(playerInfo.state).isEqualTo("RESUME");
+    }
+
+    @Test
     public void should_loose_and_update_message_when_reset() throws Exception {
         ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock);
 
@@ -40,6 +57,7 @@ public class ElevatorGameTest {
         elevatorGame.stop();
 
         verify(clock, times(1)).removeClockListener(elevatorGame);
+        assertThat(elevatorGame.getPlayerInfo().state).isEqualTo("PAUSE");
     }
 
     @Test
