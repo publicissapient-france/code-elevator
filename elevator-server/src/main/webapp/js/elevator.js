@@ -50,6 +50,10 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
         $http.post('/resources/player/reset?email=' + $scope.player.email);
     };
 
+    $scope.pause = function () {
+        $http.post('/resources/player/pause?email=' + $scope.player.email);
+    };
+
     $scope.$on("$destroy", function() {
         $timeout.cancel($scope.nextFetchPlayerInfo);
     });

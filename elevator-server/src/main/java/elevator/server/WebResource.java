@@ -33,6 +33,18 @@ public class WebResource {
     }
 
     @POST
+    @Path("/player/pause")
+    public void pauseParticipant(@QueryParam("email") String email) {
+        server.pauseElevatorGame(email);
+    }
+
+    @POST
+    @Path("/player/resume")
+    public void resumeParticipant(@QueryParam("email") String email) {
+        server.resumeElevatorGame(email);
+    }
+
+    @POST
     @Path("/player/unregister")
     public void unregisterParticipant(@QueryParam("email") String email) {
         server.removeElevatorGame(email);

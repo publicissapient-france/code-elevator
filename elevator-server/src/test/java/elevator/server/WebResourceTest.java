@@ -87,6 +87,32 @@ public class WebResourceTest {
         assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
     }
 
+    @Test
+    public void should_resume() {
+        try {
+            elevatorServerRule.target.path("/player/register")
+                    .queryParam("email", "player@provider.com")
+                    .queryParam("pseudo", "player")
+                    .queryParam("serverURL", "http://localhost").request()
+                    .buildPost(null).invoke();
+
+            elevatorServerRule.target.path("/player/pause")
+                    .queryParam("email", "player@provider.com").request()
+                    .buildPost(null).invoke();
+
+            Response response = elevatorServerRule.target.path("/player/resume")
+                    .queryParam("email", "player@provider.com").request()
+                    .buildPost(null).invoke();
+
+            assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
+        } finally {
+            elevatorServerRule.target
+                    .path("/player/unregister")
+                    .queryParam("email", "player@provider.com").request()
+                    .buildPost(null).invoke();
+        }
+    }
+
     private String adminCredentials() {
         return "Basic " + printBase64Binary(("admin:" + elevatorServerRule.password()).getBytes());
     }

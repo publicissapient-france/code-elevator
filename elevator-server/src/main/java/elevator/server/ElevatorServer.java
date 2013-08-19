@@ -47,6 +47,14 @@ class ElevatorServer {
         }
     }
 
+    void pauseElevatorGame(String email) {
+        elevatorGame(email).stop();
+    }
+
+    void resumeElevatorGame(String email) {
+        elevatorGame(email).resume();
+    }
+
     PlayerInfo getPlayerInfo(String email) throws PlayerNotFoundException {
         return elevatorGame(email).getPlayerInfo();
     }

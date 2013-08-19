@@ -28,14 +28,19 @@ class ElevatorGame implements ClockListener {
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
         this.building = new Building(elevatorEngine, maxNumberOfUsers);
         this.clock = clock;
-        this.clock.addClockListener(this);
         this.score = new Score();
         this.lastErrorMessage = null;
+        this.resume();
         this.resetElevatorEngine("the elevator is at the lowest level and its doors are closed");
     }
 
     ElevatorGame stop() {
         clock.removeClockListener(this);
+        return this;
+    }
+
+    ElevatorGame resume() {
+        clock.addClockListener(this);
         return this;
     }
 

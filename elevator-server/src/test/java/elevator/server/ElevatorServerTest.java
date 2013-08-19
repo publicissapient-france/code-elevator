@@ -66,4 +66,14 @@ public class ElevatorServerTest {
         assertThat(elevatorServer.getUnmodifiableElevatorGames()).isEmpty();
     }
 
+    @Test
+    public void should_resume_elevator_game() throws Exception {
+        ElevatorServer elevatorServer = new ElevatorServer();
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080")).pauseElevatorGame("player@provider.com");
+
+        elevatorServer.resumeElevatorGame("player@provider.com");
+
+        assertThat(elevatorServer.getUnmodifiableElevatorGames()).hasSize(1);
+    }
+
 }
