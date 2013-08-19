@@ -8,7 +8,8 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
         elevatorAtFloor: 0,
         peopleInTheElevator: 0,
         doorIsOpen: false,
-        lastErrorMessage: null
+        lastErrorMessage: null,
+        state: 'RESUME'
     };
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
@@ -51,11 +52,17 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     };
 
     $scope.pause = function () {
-        $http.post('/resources/player/pause?email=' + $scope.player.email);
+        $http.post('/resources/player/pause?email=' + $scope.player.email).
+            success(function () {
+                $scope.playerInfo.state = 'PAUSE';
+            });
     };
 
     $scope.resume = function () {
-        $http.post('/resources/player/resume?email=' + $scope.player.email);
+        $http.post('/resources/player/resume?email=' + $scope.player.email).
+            success(function () {
+                $scope.playerInfo.state = 'RESUME';
+            });
     };
 
     $scope.$on("$destroy", function() {
