@@ -36,6 +36,7 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
         ElevatorAuth.register($scope.player)
             .success(function () {
                 delete $scope.message;
+                $scope.player = ElevatorAuth.player();
                 fetchPlayerInfo($scope, ElevatorAuth, $timeout);
             })
             .error(function (data) {
@@ -48,24 +49,42 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     };
 
     $scope.reset = function () {
-        $http.post('/resources/player/reset?email=' + $scope.player.email);
+        $http({
+            'method': 'POST',
+            'url': '/resources/player/reset?email=' + $scope.player.email,
+            'headers': {
+                'Authorization': 'Basic ' + $scope.player.cookieValue
+            }
+        });
     };
 
     $scope.pause = function () {
-        $http.post('/resources/player/pause?email=' + $scope.player.email).
+        $http({
+            'method': 'POST',
+            'url': '/resources/player/pause?email=' + $scope.player.email,
+            'headers': {
+                'Authorization': 'Basic ' + $scope.player.cookieValue
+            }
+        }).
             success(function () {
                 $scope.playerInfo.state = 'PAUSE';
             });
     };
 
     $scope.resume = function () {
-        $http.post('/resources/player/resume?email=' + $scope.player.email).
+        $http({
+            'method': 'POST',
+            'url': '/resources/player/resume?email=' + $scope.player.email,
+            'headers': {
+                'Authorization': 'Basic ' + $scope.player.cookieValue
+            }
+        }).
             success(function () {
                 $scope.playerInfo.state = 'RESUME';
             });
     };
 
-    $scope.$on("$destroy", function() {
+    $scope.$on("$destroy", function () {
         $timeout.cancel($scope.nextFetchPlayerInfo);
     });
 }

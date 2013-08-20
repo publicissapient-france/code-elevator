@@ -25,7 +25,7 @@ public class WebResourceTest {
     public void should_initialize_maxNumberOfUsers_with_zero() {
         Response response = elevatorServerRule.target
                 .path("/admin/maxNumberOfUsers").request()
-                .header(AUTHORIZATION, adminCredentials())
+                .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
         assertThat(response.readEntity(String.class)).isEqualTo("0");
     }
@@ -34,54 +34,77 @@ public class WebResourceTest {
     public void should_increase_maxNumberOfUsers() {
         Response response = elevatorServerRule.target
                 .path("/admin/increaseMaxNumberOfUsers").request()
-                .header(AUTHORIZATION, adminCredentials())
+                .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
         assertThat(response.readEntity(String.class)).isEqualTo("1");
     }
 
     @Test
     public void should_not_reset_with_unknow_user() {
-        Response response = elevatorServerRule.target
-                .path("/player/reset")
-                .queryParam("email", "unkown@provider.com").request()
-                .buildPost(null).invoke();
+        String password = null;
+        try {
+            password = elevatorServerRule.target.path("/player/register")
+                    .queryParam("email", "player@provider.com")
+                    .queryParam("pseudo", "player")
+                    .queryParam("serverURL", "http://localhost").request()
+                    .buildPost(null).invoke().readEntity(String.class);
 
-        assertThat(response.getStatus()).isEqualTo(NOT_FOUND.getStatusCode());
+            Response response = elevatorServerRule.target
+                    .path("/player/reset")
+                    .queryParam("email", "unkown@provider.com").request()
+                    .header(AUTHORIZATION, credentials("player@provider.com", password))
+                    .buildPost(null).invoke();
+
+            assertThat(response.getStatus()).isEqualTo(NOT_FOUND.getStatusCode());
+        } finally {
+            if (password != null) {
+                elevatorServerRule.target.path("/player/unregister")
+                        .queryParam("email", "player@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player@provider.com", password))
+                        .buildPost(null).invoke();
+            }
+        }
     }
 
     @Test
     public void should_reset() {
+        String password = null;
         try {
-            elevatorServerRule.target.path("/player/register")
+            password = elevatorServerRule.target.path("/player/register")
                     .queryParam("email", "player@provider.com")
                     .queryParam("pseudo", "player")
                     .queryParam("serverURL", "http://localhost").request()
-                    .buildPost(null).invoke();
+                    .buildPost(null).invoke().readEntity(String.class);
 
             Response response = elevatorServerRule.target
                     .path("/player/reset")
                     .queryParam("email", "player@provider.com").request()
+                    .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
             assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
         } finally {
-            elevatorServerRule.target.path("/player/unregister")
-                    .queryParam("email", "player@provider.com").request()
-                    .buildPost(null).invoke();
+            if (password != null) {
+                elevatorServerRule.target.path("/player/unregister")
+                        .queryParam("email", "player@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player@provider.com", password))
+                        .buildPost(null).invoke();
+            }
         }
     }
 
     @Test
     public void should_unregister() {
-        elevatorServerRule.target.path("/player/register")
+        String password = elevatorServerRule.target.path("/player/register")
                 .queryParam("email", "player@provider.com")
                 .queryParam("pseudo", "player")
                 .queryParam("serverURL", "http://localhost").request()
-                .buildPost(null).invoke();
+                .buildPost(null).invoke().readEntity(String.class);
 
         Response response = elevatorServerRule.target
                 .path("/player/unregister")
                 .queryParam("email", "player@provider.com").request()
+                .header(AUTHORIZATION, credentials("player@provider.com", password))
                 .buildPost(null).invoke();
 
         assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
@@ -89,32 +112,38 @@ public class WebResourceTest {
 
     @Test
     public void should_resume() {
+        String password = null;
         try {
-            elevatorServerRule.target.path("/player/register")
+            password = elevatorServerRule.target.path("/player/register")
                     .queryParam("email", "player@provider.com")
                     .queryParam("pseudo", "player")
                     .queryParam("serverURL", "http://localhost").request()
-                    .buildPost(null).invoke();
+                    .buildPost(null).invoke().readEntity(String.class);
 
             elevatorServerRule.target.path("/player/pause")
                     .queryParam("email", "player@provider.com").request()
+                    .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
             Response response = elevatorServerRule.target.path("/player/resume")
                     .queryParam("email", "player@provider.com").request()
+                    .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
             assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
         } finally {
-            elevatorServerRule.target
-                    .path("/player/unregister")
-                    .queryParam("email", "player@provider.com").request()
-                    .buildPost(null).invoke();
+            if (password != null) {
+                elevatorServerRule.target
+                        .path("/player/unregister")
+                        .queryParam("email", "player@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player@provider.com", password))
+                        .buildPost(null).invoke();
+            }
         }
     }
 
-    private String adminCredentials() {
-        return "Basic " + printBase64Binary(("admin:" + elevatorServerRule.password()).getBytes());
+    private String credentials(String user, String password) {
+        return "Basic " + printBase64Binary((user + ":" + password).getBytes());
     }
 
 }

@@ -1,5 +1,5 @@
 angular.module('elevatorApp.services', ['ngCookies']).
-    factory('ElevatorAuth', function ($cookieStore, $http) {
+    factory('ElevatorAuth',function ($cookieStore, $http, Base64) {
         return {
             "loggedIn": function () {
                 if ($cookieStore.get('isLogged')) {
@@ -17,22 +17,41 @@ angular.module('elevatorApp.services', ['ngCookies']).
                 if (!this.loggedIn()) {
                     throw "not logged in";
                 }
-                return $http.get('/resources/player/info?email=' + this.player().email);
+                return $http({
+                    'method': 'GET',
+                    'url': '/resources/player/info?email=' + this.player().email,
+                    'headers': {
+                        'Authorization': 'Basic ' + $cookieStore.get('isLogged').cookieValue
+                    }
+                }).
+                    error(function () {
+                        $cookieStore.remove('isLogged');
+                    });
             },
             "register": function (player) {
                 return $http.post('/resources/player/register?email=' + player.email
                         + "&pseudo=" + player.pseudo
                         + "&serverURL=http://" + player.serverURL).
-                    success(function () {
+                    success(function (data) {
                         $cookieStore.put('isLogged', {
                             "pseudo": player.pseudo,
-                            "email": player.email
+                            "email": player.email,
+                            "cookieValue": Base64.encode(player.email + ":" + data)
                         });
                     })
             },
             "unregister": function (player) {
-                $http.post('/resources/player/unregister?email=' + player.email)
-                    .success(function () {
+                $http({
+                    'method': 'POST',
+                    'url': '/resources/player/unregister?email=' + player.email,
+                    'headers': {
+                        'Authorization': 'Basic ' + $cookieStore.get('isLogged').cookieValue
+                    }
+                }).
+                    success(function () {
+                        $cookieStore.remove('isLogged');
+                    }).
+                    error(function () {
                         $cookieStore.remove('isLogged');
                     });
             }

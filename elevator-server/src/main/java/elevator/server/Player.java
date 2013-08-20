@@ -1,13 +1,24 @@
 package elevator.server;
 
+import elevator.server.security.Password;
+import elevator.server.security.RandomPassword;
+
 class Player implements Comparable<Player> {
 
     final String email;
     final String pseudo;
+    final Password password;
 
     Player(String email, String pseudo) {
         this.email = email;
         this.pseudo = pseudo;
+        this.password = new RandomPassword();
+    }
+
+    Player(String email) {
+        this.email = email;
+        this.pseudo = null;
+        this.password = null;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package elevator.server;
 
 import elevator.Clock;
+import elevator.server.security.UserPasswordValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,7 +15,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-class ElevatorServer {
+class ElevatorServer implements UserPasswordValidator {
 
     private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
@@ -37,6 +38,16 @@ class ElevatorServer {
         ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock);
         elevatorGames.put(player, elevatorGame);
         return this;
+    }
+
+    @Override
+    public Boolean validate(String email, String password) {
+        ElevatorGame elevatorGame = elevatorGame(email, FALSE);
+        if (elevatorGame == null) {
+            return FALSE;
+        }
+        Player player = elevatorGame.player;
+        return player.email.equals(email) && player.password.value().equals(password);
     }
 
     void removeElevatorGame(String email) {
@@ -84,7 +95,7 @@ class ElevatorServer {
     }
 
     private ElevatorGame elevatorGame(String email, Boolean failOnError) {
-        Player player = new Player(email, "");
+        Player player = new Player(email);
         if (!elevatorGames.containsKey(player)) {
             if (failOnError) {
                 throw new PlayerNotFoundException(player.email);
