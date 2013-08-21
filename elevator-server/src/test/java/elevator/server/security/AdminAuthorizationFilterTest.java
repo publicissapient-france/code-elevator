@@ -1,5 +1,6 @@
 package elevator.server.security;
 
+import elevator.logging.ElevatorLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -11,6 +12,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.junit.rules.ExpectedException.none;
@@ -25,16 +29,9 @@ public class AdminAuthorizationFilterTest {
     @Rule
     public ExpectedException thrown = none();
 
-    private Password passwordForTest = new Password() {
-        @Override
-        public String value() {
-            return "password for test";
-        }
-    };
-
     @Test
     public void should_not_authorize_if_no_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
         thrown.expect(WebApplicationException.class);
 
         adminAuthorizationFilter.filter(containerRequestContext);
@@ -42,7 +39,7 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_not_authorize_if_bad_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
                 .thenReturn("Basic " + printBase64Binary("admin:badpassword".getBytes()));
         thrown.expect(WebApplicationException.class);
@@ -52,10 +49,25 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_authorize_if_good_authorization_has_been_provided() throws IOException {
-        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter(passwordForTest);
-        when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-                .thenReturn("Basic " + printBase64Binary("admin:password for test".getBytes()));
+        Logger randomPasswordLogger = new ElevatorLogger("RandomPassword").logger();
+        final String[] password = new String[1];
+        randomPasswordLogger.addHandler(new Handler() {
+            @Override
+            public void publish(LogRecord record) {
+                password[0] = record.getMessage();
+            }
 
+            @Override
+            public void flush() {
+            }
+
+            @Override
+            public void close() throws SecurityException {
+            }
+        });
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
+        when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
+                .thenReturn("Basic " + printBase64Binary(("admin:" + password[0]).getBytes()));
         adminAuthorizationFilter.filter(containerRequestContext);
     }
 

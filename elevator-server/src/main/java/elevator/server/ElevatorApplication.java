@@ -2,7 +2,6 @@ package elevator.server;
 
 import com.google.common.collect.Sets;
 import elevator.server.security.AdminAuthorizationFilter;
-import elevator.server.security.RandomPassword;
 import elevator.server.security.UserAuthorizationFilter;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 
@@ -21,7 +20,7 @@ public class ElevatorApplication extends Application {
         singletons = newHashSet(
                 new WebResource(server),
                 new UserAuthorizationFilter(server),
-                new AdminAuthorizationFilter(new RandomPassword()));
+                new AdminAuthorizationFilter());
     }
 
     @Override
