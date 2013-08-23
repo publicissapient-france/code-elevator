@@ -46,7 +46,7 @@ public class ElevatorGameTest {
 
         elevatorGame.reset("error message");
 
-        assertThat(elevatorGame.score.score).isEqualTo(-10);
+        assertThat(elevatorGame.score()).isEqualTo(-10);
         assertThat(elevatorGame.lastErrorMessage).isEqualTo("error message");
     }
 

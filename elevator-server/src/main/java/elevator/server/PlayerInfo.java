@@ -17,7 +17,7 @@ public class PlayerInfo implements Serializable {
     public PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
         pseudo = player.pseudo;
-        score = game.score.score;
+        score = game.score();
         peopleWaitingTheElevator = game.waitingUsersByFloors();
         elevatorAtFloor = game.floor();
         peopleInTheElevator = game.travelingUsers();

@@ -15,7 +15,6 @@ class ElevatorGame implements ClockListener {
     private static final String HTTP = "http";
 
     final Player player;
-    final Score score;
 
     String lastErrorMessage;
     State state;
@@ -23,6 +22,7 @@ class ElevatorGame implements ClockListener {
     private final Clock clock;
     private final HTTPElevator elevatorEngine;
     private final Building building;
+    private final Score score;
 
     ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
@@ -98,6 +98,10 @@ class ElevatorGame implements ClockListener {
 
     PlayerInfo getPlayerInfo() {
         return new PlayerInfo(this, player);
+    }
+
+    Integer score() {
+        return score.score;
     }
 
     void reset(String message) {

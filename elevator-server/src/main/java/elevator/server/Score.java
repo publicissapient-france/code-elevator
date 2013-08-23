@@ -5,43 +5,50 @@ import elevator.engine.ElevatorEngine;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static java.lang.Math.min;
 
-public class Score {
+class Score {
 
-    private static final int EFFORT_TO_OPEN_AND_CLOSE_DOORS = 2;
-    private static final int SCORE_COEF = 2;
-    private static final int WAITING_TOP_SCORE = 2 * (ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR);
+    Integer score;
 
-    public int score;
-
-    public Score() {
+    Score() {
         score = 0;
     }
 
-    public Score loose() {
+    Score loose() {
         score -= 10;
         return this;
     }
 
-    public Score success(User user) {
+    Score success(User user) throws IllegalStateException {
         score += score(user);
         return this;
     }
 
-    int score(User user) {
-        return max(0, bestEffort(user) - effectiveEffort(user)) + waitingScore(user);
+    private Integer score(User user) throws IllegalStateException {
+        if (user.getTickToWait() < 1) {
+            throw new IllegalStateException("when done, user have to wait at least one tick");
+        }
+        Integer bestTickToGo = bestTickToGo(user.getInitialFloor(), user.getFloorToGo());
+        if (user.getTickToGo() < bestTickToGo) {
+            throw new IllegalStateException("when done, user have to wait at least minimum amount of ticks");
+        }
+        Integer score = 20
+                - user.getTickToWait()/ 2
+                - user.getTickToGo()
+                + bestTickToGo;
+        return min(max(0, score), 20);
     }
 
-    int bestEffort(User user) {
-        return abs(user.getFloorToGo() - user.getInitialFloor()) * SCORE_COEF + EFFORT_TO_OPEN_AND_CLOSE_DOORS;
-    }
+    private Integer bestTickToGo(Integer floor, Integer floorToGo) {
+        // elevator is OPEN at floor
+        final Integer elevatorHasToCloseDoorsWhenAtFloor = 1;
+        final Integer elevatorGoesStraightFromFloorToFloorToGo = abs(floorToGo - floor);
+        final Integer elevatorHasToOpenDoorsWhenAtFloorToGo = 1;
 
-    private int effectiveEffort(User user) {
-        return user.getTickToGo();
-    }
-
-    int waitingScore(User user) {
-        return max(0, WAITING_TOP_SCORE - user.getTickToWait());
+        return elevatorHasToCloseDoorsWhenAtFloor
+                + elevatorGoesStraightFromFloorToFloorToGo
+                + elevatorHasToOpenDoorsWhenAtFloorToGo;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class Score {
 
         Score score1 = (Score) o;
 
-        return score == score1.score;
+        return score.equals(score1.score);
     }
 
     @Override
