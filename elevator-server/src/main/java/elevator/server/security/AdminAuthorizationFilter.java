@@ -10,14 +10,10 @@ public class AdminAuthorizationFilter extends AuthorizationFilter implements Con
     }
 
     private static class AdminPasswordValidator implements UserPasswordValidator {
-
-        private Password password = new RandomPassword();
-
         @Override
         public Boolean validate(String email, String password) {
-            return "admin".equals(email) && this.password.value().equals(password);
+            return "admin".equals(email) && "admin".equals(password);
         }
-
     }
 
 }

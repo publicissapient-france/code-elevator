@@ -49,25 +49,9 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_authorize_if_good_authorization_has_been_provided() throws IOException {
-        Logger randomPasswordLogger = new ElevatorLogger("RandomPassword").logger();
-        final String[] password = new String[1];
-        randomPasswordLogger.addHandler(new Handler() {
-            @Override
-            public void publish(LogRecord record) {
-                password[0] = record.getMessage();
-            }
-
-            @Override
-            public void flush() {
-            }
-
-            @Override
-            public void close() throws SecurityException {
-            }
-        });
         AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-                .thenReturn("Basic " + printBase64Binary(("admin:" + password[0]).getBytes()));
+                .thenReturn("Basic " + printBase64Binary(("admin:admin").getBytes()));
         adminAuthorizationFilter.filter(containerRequestContext);
     }
 
