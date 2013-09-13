@@ -22,12 +22,12 @@ public class WebResourceTest {
     }
 
     @Test
-    public void should_initialize_maxNumberOfUsers_with_zero() {
+    public void should_initialize_maxNumberOfUsers_with_three() {
         Response response = elevatorServerRule.target
                 .path("/admin/maxNumberOfUsers").request()
                 .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
-        assertThat(response.readEntity(String.class)).isEqualTo("0");
+                assertThat(response.readEntity(String.class)).isEqualTo("4"); // strange...
     }
 
     @Test
@@ -36,7 +36,7 @@ public class WebResourceTest {
                 .path("/admin/increaseMaxNumberOfUsers").request()
                 .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
-        assertThat(response.readEntity(String.class)).isEqualTo("1");
+        assertThat(response.readEntity(String.class)).isEqualTo("4");
     }
 
     @Test

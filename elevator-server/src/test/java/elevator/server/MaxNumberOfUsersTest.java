@@ -7,15 +7,15 @@ import static org.fest.assertions.Assertions.assertThat;
 public class MaxNumberOfUsersTest {
 
     @Test
-    public void should_start_at_zero() throws Exception {
+    public void should_start_at_three() throws Exception {
         MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
 
-        assertThat(maxNumberOfUsers.value()).isEqualTo(0);
+        assertThat(maxNumberOfUsers.value()).isEqualTo(3);
     }
 
     @Test
     public void should_increase() throws Exception {
-        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers(0);
 
         Integer increasedValue = maxNumberOfUsers.increase();
 
@@ -26,7 +26,7 @@ public class MaxNumberOfUsersTest {
 
     @Test
     public void should_decrease() throws Exception {
-        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers(0);
         maxNumberOfUsers.increase();
 
         Integer decreasedValue = maxNumberOfUsers.decrease();
@@ -37,7 +37,7 @@ public class MaxNumberOfUsersTest {
 
     @Test
     public void should_not_decrease_less_than_zero() throws Exception {
-        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+        MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers(0);
 
         Integer decreasedValue = maxNumberOfUsers.decrease();
 
