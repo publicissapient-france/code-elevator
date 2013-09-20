@@ -1,7 +1,11 @@
 Code Elevator
 =============
 
-This project is a live coding contest.
+This is a slightly modified version of Sebastian original code-elevator, we have changed :
+* A script to run the server (`./run.sh`)
+* The admin login/password is hardcoded to admin/admin
+* The default number of potential passenger is bumped from 0 to 3
+
 
 Rules
 -----
