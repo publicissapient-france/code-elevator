@@ -39,8 +39,13 @@ Steps
 
     $ git clone https://github.com/jeanlaurent/code-elevator.git
     $ cd code-elevator
+    $ ./run.sh
+    
+If you can't run shell script on your machine, just type in :
+
     $ mvn clean install
     $ mvn --file elevator-server/pom.xml jetty:run
+    
 
 Go to [http://localhost:8080](http://localhost:8080), subscribe to a session and start implementing your participant
 server.
