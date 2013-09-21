@@ -37,10 +37,10 @@ Here is what you need to build and run a code elevator session :
 Steps
 -----
 
-    $ git clone git@github.com:jeanlaurent/code-elevator.git
+    $ git clone https://github.com/jeanlaurent/code-elevator.git
     $ cd code-elevator
     $ mvn clean install
-    $ mvn --file elevator-server jetty:run
+    $ mvn --file elevator-server/pom.xml jetty:run
 
 Go to [http://localhost:8080](http://localhost:8080), subscribe to a session and start implementing your participant
 server.
