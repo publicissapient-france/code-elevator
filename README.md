@@ -32,12 +32,12 @@ Prerequisites
 Here is what you need to build and run a code elevator session :
 
 - JDK 1.7
-- maven
+- maven 3.x
 
 Steps
 -----
 
-    $ git clone git@github.com:xebia-france/code-elevator.git
+    $ git clone git@github.com:jeanlaurent/code-elevator.git
     $ cd code-elevator
     $ mvn clean install
     $ mvn --file elevator-server jetty:run
@@ -45,6 +45,5 @@ Steps
 Go to [http://localhost:8080](http://localhost:8080), subscribe to a session and start implementing your participant
 server.
 
-Once already is ok for all participants, you should increase max number of users per building which is zero at first. To
-perform this go to [http://localhost:8080/#/administration](http://localhost:8080/#/administration), log in with user
-`admin` and password which has been logged out on standard output of server.
+If you want to increase the number of people at any given time, go to [http://localhost:8080/#/administration](http://localhost:8080/#/administration), log in with user
+`admin` and password `admin`.
