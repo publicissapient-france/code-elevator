@@ -9,4 +9,4 @@ then
 	fi
 fi
 echo "\nRunnin' server\n\n"
-mvn --file elevator-server jetty:run
+mvn --file elevator-server/pom.xml jetty:run
