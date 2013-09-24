@@ -113,7 +113,7 @@ public class BuildingTest {
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("can't goes down because current floor is the lowest floor");
+        expectedException.expectMessage("can't go down because current floor is the lowest floor");
         building.updateBuildingState();
     }
 
@@ -125,7 +125,7 @@ public class BuildingTest {
         building.updateBuildingState();
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("can't goes down because doors are opened");
+        expectedException.expectMessage("can't go down because doors are opened");
         building.updateBuildingState();
     }
 
@@ -140,7 +140,7 @@ public class BuildingTest {
         building.updateBuildingState();
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("can't goes up because current floor is the highest floor");
+        expectedException.expectMessage("can't go up because current floor is the highest floor");
         building.updateBuildingState();
     }
 
@@ -151,7 +151,7 @@ public class BuildingTest {
         building.updateBuildingState();
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("can't goes up because doors are opened");
+        expectedException.expectMessage("can't go up because doors are opened");
         building.updateBuildingState();
     }
 

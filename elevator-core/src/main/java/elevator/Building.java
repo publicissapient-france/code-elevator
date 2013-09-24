@@ -99,18 +99,18 @@ public class Building {
                 break;
             case DOWN:
                 if (door == OPEN) {
-                    throw new ElevatorIsBrokenException("can't goes down because doors are opened");
+                    throw new ElevatorIsBrokenException("can't go down because doors are opened");
                 }
                 if (floor.equals(LOWER_FLOOR)) {
-                    throw new ElevatorIsBrokenException("can't goes down because current floor is the lowest floor");
+                    throw new ElevatorIsBrokenException("can't go down because current floor is the lowest floor");
                 }
                 break;
             case UP:
                 if (door == OPEN) {
-                    throw new ElevatorIsBrokenException("can't goes up because doors are opened");
+                    throw new ElevatorIsBrokenException("can't go up because doors are opened");
                 }
                 if (floor.equals(HIGHER_FLOOR)) {
-                    throw new ElevatorIsBrokenException("can't goes up because current floor is the highest floor");
+                    throw new ElevatorIsBrokenException("can't go up because current floor is the highest floor");
                 }
                 break;
             case NOTHING:
