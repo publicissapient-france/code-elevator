@@ -9,7 +9,10 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
         peopleInTheElevator: 0,
         doorIsOpen: false,
         lastErrorMessage: null,
-        state: 'RESUME'
+        state: 'RESUME',
+        upButtonStateByFloor: new Array(),
+        downButtonStateByFloor: new Array(),
+        floorButtonStatesInElevator: new Array(),
     };
 
     $scope.loggedIn = ElevatorAuth.loggedIn;

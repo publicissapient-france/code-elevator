@@ -75,6 +75,30 @@ public class Building {
         return count;
     }
 
+    public synchronized Set<WaitingUser> waitingUsers() {
+        Set<WaitingUser> waitingUsers = new HashSet<WaitingUser>();
+
+        for (User user : users) {
+            if (user.waiting()) {
+                waitingUsers.add(new WaitingUser(user));
+            }
+        }
+
+        return waitingUsers;
+    }
+
+    public synchronized boolean[] getFloorButtonStatesInElevator() {
+        boolean[] states = new boolean[ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1];
+
+        for (User user : users) {
+            if (user.traveling()) {
+                states[user.getFloorToGo()] = true;
+            }
+        }
+
+        return states;
+    }
+
     public Door door() {
         return door;
     }
@@ -133,7 +157,7 @@ public class Building {
                 break;
             case OPEN:
                 door = OPEN;
-                doneUsers = new HashSet<>();
+                doneUsers = new HashSet<User>();
                 for (User user : users) {
                     user.elevatorIsOpen(floor);
                     if (user.done()) {
