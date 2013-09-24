@@ -65,6 +65,43 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar', 'elevatorApp.s
                             });
                             layer.add(peopleWaitingTheElevator);
 
+                            if(player.upButtonStateByFloor[numberOfFloors - i])
+                            {
+                                var upArrow = new Kinetic.Text({
+                                     x: 57,
+                                     y: y + 11,
+                                     text: "▲",
+                                     fontSize: 10,
+                                     fontFamily: 'Calibri',
+                                     fill: 'green'
+                                });
+                                layer.add(upArrow);
+                            }
+
+                            if(player.downButtonStateByFloor[numberOfFloors - i])
+                            {
+                                var downArrow = new Kinetic.Text({
+                                    x: 57,
+                                    y: y + 20,
+                                    text: "▼",
+                                    fontSize: 10,
+                                    fontFamily: 'Calibri',
+                                    fill: 'grey'
+                                });
+                                layer.add(downArrow);
+                            }
+
+                            if(player.floorButtonStatesInElevator[numberOfFloors - i])
+                            {
+                                var goIndicator = new Kinetic.Circle({
+                                        x: widthOfFloor - 6,
+                                        y: y + 6,
+                                        radius: 3,
+                                        fill: 'green',
+                                        strokeWidth: 0
+                                      });
+                                layer.add(goIndicator);
+                            }
                         }
 
                         var yElevator = heightOfRoof + ((numberOfFloors - player.elevatorAtFloor) * heightOfFloor);

@@ -14,6 +14,7 @@ public class User {
 
     private final ElevatorEngine elevatorEngine;
     private final Integer initialFloor;
+    private final Direction initialDirection;
     private final Integer floorToGo;
     private Integer currentFloor;
     private Integer tickToGo;
@@ -43,6 +44,7 @@ public class User {
             floorToGo = max(randomFloor(), LOWER_FLOOR + 1);
         }
         currentFloor = initialFloor;
+        initialDirection = direction;
 
         elevatorEngine.call(initialFloor, direction);
     }
@@ -92,6 +94,10 @@ public class User {
 
     public Integer getInitialFloor() {
         return initialFloor;
+    }
+
+    public Direction getInitialDirection() {
+        return initialDirection;
     }
 
     public Integer getFloorToGo() {

@@ -63,6 +63,14 @@ class ElevatorGame implements ClockListener {
         return building.waitingUsersByFloors();
     }
 
+    public Set<WaitingUser> waitingUsers() {
+        return building.waitingUsers();
+    }
+
+    public boolean[] getFloorButtonStatesInElevator() {
+        return building.getFloorButtonStatesInElevator();
+    }
+
     Boolean doorIsOpen() {
         return Door.OPEN.equals(building.door());
     }

@@ -1,6 +1,11 @@
 package elevator.server;
 
+import elevator.Direction;
+import elevator.WaitingUser;
+import elevator.engine.ElevatorEngine;
+
 import java.io.Serializable;
+import java.util.Set;
 
 public class PlayerInfo implements Serializable {
 
@@ -13,6 +18,9 @@ public class PlayerInfo implements Serializable {
     public final boolean doorIsOpen;
     public final String lastErrorMessage;
     public final String state;
+    public boolean[] upButtonStateByFloor;
+    public boolean[] downButtonStateByFloor;
+    public boolean[] floorButtonStatesInElevator;
 
     public PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
@@ -24,6 +32,21 @@ public class PlayerInfo implements Serializable {
         doorIsOpen = game.doorIsOpen();
         lastErrorMessage = game.lastErrorMessage;
         state = game.state.toString();
+
+        initializeBuildingButtonStates(game.waitingUsers());
+        floorButtonStatesInElevator = game.getFloorButtonStatesInElevator();
+    }
+
+    private void initializeBuildingButtonStates(Set<WaitingUser> waitingUsers) {
+        int floorNb = ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1;
+        upButtonStateByFloor = new boolean[floorNb];
+        downButtonStateByFloor = new boolean[floorNb];
+
+        for (WaitingUser user : waitingUsers) {
+            boolean[] states = user.getDesiredDirection().equals(Direction.DOWN) ? downButtonStateByFloor : upButtonStateByFloor;
+
+            states[user.getFloorNum()] = true;
+        }
     }
 
 }
