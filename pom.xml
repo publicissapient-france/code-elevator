@@ -18,6 +18,7 @@
         <module>elevator-core</module>
         <module>elevator-server</module>
         <module>elevator-client</module>
+        <module>elevator-participant</module>
     </modules>
 
     <scm>
