@@ -2,10 +2,13 @@ package elevator.server;
 
 import elevator.Direction;
 import elevator.User;
-import elevator.engine.ElevatorEngine;
 
 import java.io.Serializable;
 import java.util.Set;
+
+import static elevator.Direction.DOWN;
+import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
+import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 
 public class PlayerInfo implements Serializable {
 
@@ -18,11 +21,13 @@ public class PlayerInfo implements Serializable {
     public final boolean doorIsOpen;
     public final String lastErrorMessage;
     public final String state;
-    public boolean[] upButtonStateByFloor;
-    public boolean[] downButtonStateByFloor;
-    public boolean[] floorButtonStatesInElevator;
+    public final boolean[] upButtonStateByFloor;
+    public final boolean[] downButtonStateByFloor;
+    public final boolean[] floorButtonStatesInElevator;
 
     public PlayerInfo(ElevatorGame game, Player player) {
+        final Integer floorNb = HIGHER_FLOOR - LOWER_FLOOR + 1;
+
         email = player.email;
         pseudo = player.pseudo;
         score = game.score();
@@ -32,20 +37,19 @@ public class PlayerInfo implements Serializable {
         doorIsOpen = game.doorIsOpen();
         lastErrorMessage = game.lastErrorMessage;
         state = game.state.toString();
-
+        upButtonStateByFloor = new boolean[floorNb];
+        downButtonStateByFloor = new boolean[floorNb];
         initializeBuildingButtonStates(game.waitingUsers());
         floorButtonStatesInElevator = game.getFloorButtonStatesInElevator();
     }
 
     private void initializeBuildingButtonStates(Set<User> waitingUsers) {
-        int floorNb = ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1;
-        upButtonStateByFloor = new boolean[floorNb];
-        downButtonStateByFloor = new boolean[floorNb];
-
         for (User user : waitingUsers) {
-            boolean[] states = user.getInitialDirection().equals(Direction.DOWN) ? downButtonStateByFloor : upButtonStateByFloor;
-
-            states[user.getInitialFloor()] = true;
+            if (user.getInitialDirection().equals(DOWN)) {
+                downButtonStateByFloor[user.getInitialFloor()] = true;
+            } else {
+                upButtonStateByFloor[user.getInitialFloor()] = true;
+            }
         }
     }
 
