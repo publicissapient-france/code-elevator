@@ -75,12 +75,12 @@ public class Building {
         return count;
     }
 
-    public synchronized Set<WaitingUser> waitingUsers() {
-        Set<WaitingUser> waitingUsers = new HashSet<WaitingUser>();
+    public synchronized Set<User> waitingUsers() {
+        Set<User> waitingUsers = new HashSet<>();
 
         for (User user : users) {
             if (user.waiting()) {
-                waitingUsers.add(new WaitingUser(user));
+                waitingUsers.add(user);
             }
         }
 
@@ -157,7 +157,7 @@ public class Building {
                 break;
             case OPEN:
                 door = OPEN;
-                doneUsers = new HashSet<User>();
+                doneUsers = new HashSet<>();
                 for (User user : users) {
                     user.elevatorIsOpen(floor);
                     if (user.done()) {

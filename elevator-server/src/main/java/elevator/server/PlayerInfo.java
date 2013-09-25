@@ -1,7 +1,7 @@
 package elevator.server;
 
 import elevator.Direction;
-import elevator.WaitingUser;
+import elevator.User;
 import elevator.engine.ElevatorEngine;
 
 import java.io.Serializable;
@@ -37,15 +37,15 @@ public class PlayerInfo implements Serializable {
         floorButtonStatesInElevator = game.getFloorButtonStatesInElevator();
     }
 
-    private void initializeBuildingButtonStates(Set<WaitingUser> waitingUsers) {
+    private void initializeBuildingButtonStates(Set<User> waitingUsers) {
         int floorNb = ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1;
         upButtonStateByFloor = new boolean[floorNb];
         downButtonStateByFloor = new boolean[floorNb];
 
-        for (WaitingUser user : waitingUsers) {
-            boolean[] states = user.getDesiredDirection().equals(Direction.DOWN) ? downButtonStateByFloor : upButtonStateByFloor;
+        for (User user : waitingUsers) {
+            boolean[] states = user.getInitialDirection().equals(Direction.DOWN) ? downButtonStateByFloor : upButtonStateByFloor;
 
-            states[user.getFloorNum()] = true;
+            states[user.getInitialFloor()] = true;
         }
     }
 

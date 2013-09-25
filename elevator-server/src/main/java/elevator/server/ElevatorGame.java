@@ -63,7 +63,7 @@ class ElevatorGame implements ClockListener {
         return building.waitingUsersByFloors();
     }
 
-    public Set<WaitingUser> waitingUsers() {
+    public Set<User> waitingUsers() {
         return building.waitingUsers();
     }
 
