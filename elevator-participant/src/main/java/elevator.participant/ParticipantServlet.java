@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static java.lang.Integer.parseInt;
-import static java.lang.String.format;
 
 @WebServlet("/*")
 public class ParticipantServlet extends HttpServlet {
@@ -27,7 +26,6 @@ public class ParticipantServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println(format(req.getPathInfo() + req.getQueryString()));
         switch (req.getPathInfo()) {
             case "/reset":
                 elevator.reset(req.getParameter("cause"));
