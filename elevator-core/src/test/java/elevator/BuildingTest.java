@@ -9,9 +9,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import static elevator.Command.*;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.when;
 
@@ -153,6 +157,81 @@ public class BuildingTest {
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("can't go up because doors are opened");
         building.updateBuildingState();
+    }
+
+    @Test
+    public void shoud_count_traveling_users() {
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
+        building.addUser();
+        building.addUser();
+        User user = building.users().iterator().next();
+        travel(user);
+
+        int travelingUsers = building.travelingUsers();
+
+        assertThat(travelingUsers).isEqualTo(1);
+    }
+
+    @Test
+    public void should_know_how_many_users_are_waiting() {
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
+                addUser().
+                addUser().
+                addUser();
+        Iterator<User> users = building.users().iterator();
+        users.next().setCurrentFloor(5);
+        users.next().setCurrentFloor(5);
+        users.next().setCurrentFloor(0);
+
+        int[] waitingUsersByFloor = building.waitingUsersByFloors();
+
+        assertThat(waitingUsersByFloor).isEqualTo(new int[]{
+                1, 0, 0, 0, 0, 2
+        });
+    }
+
+    @Test
+    public void should_get_all_waiting_users() {
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
+                addUser().
+                addUser().
+                addUser();
+        Iterator<User> users = building.users().iterator();
+        User first = users.next();
+        travel(first);
+        User second = users.next();
+        User third = users.next();
+
+        Set<User> waitingUsers = building.waitingUsers();
+
+        assertThat(waitingUsers).containsOnly(second, third);
+    }
+
+    @Test
+    public void should_get_floor_button_states_in_elevator() {
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
+                addUser().
+                addUser();
+        Iterator<User> users = building.users().iterator();
+        User user = users.next();
+        Integer floorWhereUserWantsToGo = user.getFloorToGo();
+        travel(user);
+
+        boolean[] floorButtonStatesInElevator = building.getFloorButtonStatesInElevator();
+
+        assertThat(floorButtonStatesInElevator).isEqualTo(new boolean[]{
+                floorWhereUserWantsToGo == 0,
+                floorWhereUserWantsToGo == 1,
+                floorWhereUserWantsToGo == 2,
+                floorWhereUserWantsToGo == 3,
+                floorWhereUserWantsToGo == 4,
+                floorWhereUserWantsToGo == 5
+        });
+    }
+
+    private void travel(User user) {
+        user.setCurrentFloor(user.getFloorToGo());
+        user.elevatorIsOpen(user.getFloorToGo());
     }
 
 }
