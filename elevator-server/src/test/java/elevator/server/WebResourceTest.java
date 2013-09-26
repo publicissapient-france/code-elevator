@@ -1,6 +1,6 @@
 package elevator.server;
 
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
@@ -12,8 +12,8 @@ import static org.fest.assertions.Assertions.assertThat;
 
 public class WebResourceTest {
 
-    @ClassRule
-    public static ElevatorServerRule elevatorServerRule = new ElevatorServerRule();
+    @Rule
+    public ElevatorServerRule elevatorServerRule = new ElevatorServerRule();
 
     @Test
     public void should_not_authorize_non_admin_request() {
@@ -22,12 +22,12 @@ public class WebResourceTest {
     }
 
     @Test
-    public void should_initialize_maxNumberOfUsers_with_zero() {
+    public void should_initialize_maxNumberOfUsers_with_three() {
         Response response = elevatorServerRule.target
                 .path("/admin/maxNumberOfUsers").request()
                 .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
-        assertThat(response.readEntity(String.class)).isEqualTo("0");
+        assertThat(response.readEntity(String.class)).isEqualTo("3");
     }
 
     @Test
@@ -36,7 +36,7 @@ public class WebResourceTest {
                 .path("/admin/increaseMaxNumberOfUsers").request()
                 .header(AUTHORIZATION, credentials("admin", elevatorServerRule.password()))
                 .buildGet().invoke();
-        assertThat(response.readEntity(String.class)).isEqualTo("1");
+        assertThat(response.readEntity(String.class)).isEqualTo("4");
     }
 
     @Test

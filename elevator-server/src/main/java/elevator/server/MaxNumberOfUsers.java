@@ -7,7 +7,7 @@ class MaxNumberOfUsers implements elevator.MaxNumberOfUsers {
     private Integer value;
 
     MaxNumberOfUsers() {
-        this.value = 0;
+        this.value = 3;
     }
 
     @Override
