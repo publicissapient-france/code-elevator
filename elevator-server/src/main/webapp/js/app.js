@@ -26,10 +26,17 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar', 'elevatorApp.s
                     height: height
                 });
 
+                var layer = new Kinetic.Layer();
                 scope.$watch(attrs.player, function (player) {
-                    stage.removeChildren();
+                    var blank = new Kinetic.Rect({
+                        x: 0,
+                        y: 0,
+                        width: widthOfFloor,
+                        height: heightOfFloor,
+                        fill: 'white'
+                    });
+                    layer.add(blank);
                     if (player) {
-                        var layer = new Kinetic.Layer();
 
                         for (var i = 0; i <= numberOfFloors; i++) {
 
@@ -122,11 +129,12 @@ angular.module('elevatorApp', ['ngCookies', 'md5', 'ui-gravatar', 'elevatorApp.s
                             fill: 'green'
                         });
                         layer.add(peopleInTheElevator);
-
-                        // add the layer to the stage
-                        stage.add(layer);
                     }
+                    layer.draw();
+
                 });
+                // add the layer to the stage
+                stage.add(layer);
             }
         };
     });
