@@ -20,6 +20,8 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
 
     private static final Pattern PATTERN = Pattern.compile("(OPEN|CLOSE)?(?: )*(\\d+)?");
 
+    private final StringBuilder expectedStates;
+
     private Integer expectedFloor;
     private Door expectedDoor;
     private Integer actualFloor = LOWER_FLOOR;
@@ -27,6 +29,7 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
 
     ElevatorEngineAssert(ElevatorEngine actual) {
         super(ElevatorEngineAssert.class, actual);
+        expectedStates = new StringBuilder();
     }
 
     public ElevatorEngineAssert is(String expectedState) {
@@ -55,25 +58,28 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
         if (!matcher.matches()) {
             throw fail(format("\"%s\" is not recognized as a state expression", expectedState));
         }
+
+        expectedStates.append('\n');
+        expectedStates.append(expectedState);
         return matcher;
     }
 
     private void assertState(Matcher matcher) {
-        String expectedElevatorState1 = matcher.group(1);
-        String expectedElevatorFloor1 = matcher.group(2);
+        String expectedElevatorState = matcher.group(1);
+        String expectedElevatorFloor = matcher.group(2);
 
-        if (expectedElevatorState1 != null) {
-            expectedDoor = Door.valueOf(expectedElevatorState1);
+        if (expectedElevatorState != null) {
+            expectedDoor = Door.valueOf(expectedElevatorState);
         }
-        if (expectedElevatorFloor1 != null) {
-            expectedFloor = parseInt(expectedElevatorFloor1);
+        if (expectedElevatorFloor != null) {
+            expectedFloor = parseInt(expectedElevatorFloor);
         }
 
         if (expectedDoor != null) {
-            assertThat(actualDoor).isEqualTo(expectedDoor);
+            assertThat(actualDoor).as(expectedStates.toString()).isEqualTo(expectedDoor);
         }
         if (expectedFloor != null) {
-            assertThat(actualFloor).isEqualTo(expectedFloor);
+            assertThat(actualFloor).as(expectedStates.toString()).isEqualTo(expectedFloor);
         }
     }
 
