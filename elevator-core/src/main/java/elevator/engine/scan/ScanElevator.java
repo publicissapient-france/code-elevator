@@ -36,18 +36,14 @@ public class ScanElevator implements ElevatorEngine {
 
     @Override
     public elevator.Command nextCommand() {
-        Command nextCommand = commands.get(floor);
-        if (nextCommand == null) {
-            if (door == Door.OPEN) {
-                door = Door.CLOSE;
-                return CLOSE;
-            }
-            return NOTHING;
-        }
-
         if (door == Door.OPEN) {
             door = Door.CLOSE;
             return CLOSE;
+        }
+
+        Command nextCommand = commands.get(floor);
+        if (nextCommand == null) {
+            return NOTHING;
         }
 
         Direction direction = nextCommand.getDirection(floor);
@@ -59,13 +55,11 @@ public class ScanElevator implements ElevatorEngine {
         }
 
         if (direction == Direction.UP) {
-            door = Door.CLOSE;
             floor++;
             return elevator.Command.UP;
         }
 
         if (direction == Direction.DOWN) {
-            door = Door.CLOSE;
             floor--;
             return elevator.Command.DOWN;
         }
