@@ -7,6 +7,7 @@ public class PlayerInfo implements Serializable {
     public final String pseudo;
     public final String email;
     public final int score;
+    public final int averageScore;
     public final int[] peopleWaitingTheElevator;
     public final int elevatorAtFloor;
     public final int peopleInTheElevator;
@@ -14,10 +15,12 @@ public class PlayerInfo implements Serializable {
     public final String lastErrorMessage;
     public final String state;
 
+
     public PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
         pseudo = player.pseudo;
         score = game.score();
+        averageScore = game.averageScore();
         peopleWaitingTheElevator = game.waitingUsersByFloors();
         elevatorAtFloor = game.floor();
         peopleInTheElevator = game.travelingUsers();

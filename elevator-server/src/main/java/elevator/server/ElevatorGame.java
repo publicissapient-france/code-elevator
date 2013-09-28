@@ -103,6 +103,9 @@ class ElevatorGame implements ClockListener {
     Integer score() {
         return score.score;
     }
+    Integer averageScore(){
+        return score.getAverageScore();
+    }
 
     void reset(String message) {
         building.reset();
