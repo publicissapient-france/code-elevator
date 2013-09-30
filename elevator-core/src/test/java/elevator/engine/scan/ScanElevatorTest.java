@@ -1,8 +1,11 @@
 package elevator.engine.scan;
 
+import elevator.Direction;
+import elevator.engine.assertions.ElevatorEngineAssert;
 import org.junit.Before;
 import org.junit.Test;
 
+import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
@@ -112,6 +115,35 @@ public class ScanElevatorTest {
                 onTick("      0").
                 onTick("OPEN   ").
                 onTick("CLOSE  ");
+    }
+
+    @Test
+    public void should_not_open_doors_when_just_closing() {
+        assertThat(elevator).call(0, UP).
+        onTick("OPEN  0").go(2).
+        onTick("CLOSE  ").call(0, UP).
+        onTick("      1").
+        onTick("      2").
+        onTick("OPEN   ").
+        onTick("CLOSE  ").
+        onTick("      1").
+        onTick("      0").
+        onTick("OPEN   ").
+        onTick("CLOSE  ");
+    }
+
+    @Test
+    public void should_assume_that_user_enters_into_the_elevator_if_doors_are_open() {
+        assertThat(elevator).call(0, UP).
+        onTick("OPEN  0").go(2).call(0, UP).go(3).
+        onTick("CLOSE  ").
+        onTick("      1").
+        onTick("      2").
+        onTick("OPEN   ").
+        onTick("CLOSE  ").
+        onTick("      3").
+        onTick("OPEN   ").
+        onTick("CLOSE  ");
     }
 
 }

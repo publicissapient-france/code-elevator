@@ -8,6 +8,8 @@ import elevator.engine.ElevatorEngine;
 import static elevator.Command.*;
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 public class ScanElevator implements ElevatorEngine {
 
@@ -15,6 +17,7 @@ public class ScanElevator implements ElevatorEngine {
 
     private Integer floor = LOWER_FLOOR;
     private Door door = Door.CLOSE;
+    private Boolean justClosing = FALSE;
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) {
@@ -38,21 +41,29 @@ public class ScanElevator implements ElevatorEngine {
     public elevator.Command nextCommand() {
         if (door == Door.OPEN) {
             door = Door.CLOSE;
+            justClosing = TRUE;
             return CLOSE;
         }
 
         Command nextCommand = commands.get(floor);
         if (nextCommand == null) {
+            justClosing = FALSE;
             return NOTHING;
+        }
+
+        if (justClosing && nextCommand.floor.equals(floor)) { // put nextCommand again because we can't satisfy this request yet
+            commands.add(nextCommand);
         }
 
         Direction direction = nextCommand.getDirection(floor);
 
-        if (nextCommand.equals(new Command(floor, direction))
-                || (nextCommand.floor.equals(floor) && commands.commands().isEmpty())) {
+        if (!justClosing && (nextCommand.equals(new Command(floor, direction))
+                || (nextCommand.floor.equals(floor) && commands.commands().isEmpty()))) {
             door = Door.OPEN;
             return OPEN;
         }
+
+        justClosing = FALSE;
 
         if (direction == Direction.UP) {
             floor++;
