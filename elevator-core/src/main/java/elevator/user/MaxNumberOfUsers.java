@@ -1,4 +1,4 @@
-package elevator;
+package elevator.user;
 
 public interface MaxNumberOfUsers {
 

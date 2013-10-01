@@ -1,7 +1,6 @@
 package elevator.server;
 
-import elevator.Direction;
-import elevator.User;
+import elevator.user.User;
 
 import java.io.Serializable;
 import java.util.Set;

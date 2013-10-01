@@ -1,6 +1,6 @@
 package elevator.server;
 
-import elevator.User;
+import elevator.user.User;
 import org.junit.Test;
 
 import static java.lang.String.format;

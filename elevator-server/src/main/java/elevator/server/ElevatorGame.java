@@ -2,6 +2,8 @@ package elevator.server;
 
 import elevator.*;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.user.RandomUser;
+import elevator.user.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -78,7 +80,7 @@ class ElevatorGame implements ClockListener {
     @Override
     public ClockListener onTick() {
         try {
-            building.addUser();
+            building.addUser(new RandomUser());
             Set<User> doneUsers = building.updateBuildingState();
             for (User doneUser : doneUsers) {
                 score.success(doneUser);

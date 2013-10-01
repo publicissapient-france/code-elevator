@@ -2,7 +2,7 @@ package elevator.server;
 
 import static java.lang.Math.max;
 
-class MaxNumberOfUsers implements elevator.MaxNumberOfUsers {
+class MaxNumberOfUsers implements elevator.user.MaxNumberOfUsers {
 
     private Integer value;
 

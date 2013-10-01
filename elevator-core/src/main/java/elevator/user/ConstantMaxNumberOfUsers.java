@@ -1,4 +1,4 @@
-package elevator;
+package elevator.user;
 
 public class ConstantMaxNumberOfUsers implements MaxNumberOfUsers {
 
@@ -10,7 +10,7 @@ public class ConstantMaxNumberOfUsers implements MaxNumberOfUsers {
         this.value = MAX_NUMBER_OF_USERS;
     }
 
-    ConstantMaxNumberOfUsers(Integer value) {
+    public ConstantMaxNumberOfUsers(Integer value) {
         this.value = value;
     }
 

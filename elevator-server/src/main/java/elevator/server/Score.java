@@ -1,7 +1,6 @@
 package elevator.server;
 
-import elevator.User;
-import elevator.engine.ElevatorEngine;
+import elevator.user.User;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;

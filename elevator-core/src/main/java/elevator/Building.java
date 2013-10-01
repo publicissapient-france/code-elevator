@@ -2,6 +2,9 @@ package elevator;
 
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.user.InitializationStrategy;
+import elevator.user.MaxNumberOfUsers;
+import elevator.user.User;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -30,12 +33,12 @@ public class Building {
         reset();
     }
 
-    public synchronized Building addUser() throws ElevatorIsBrokenException {
+    public synchronized Building addUser(InitializationStrategy strategy) throws ElevatorIsBrokenException {
         if (users.size() >= maxNumberOfUsers.value()) {
             return this;
         }
 
-        User newUser = new User(elevatorEngine);
+        User newUser = new User(elevatorEngine, strategy);
         users.add(newUser);
         return this;
     }
@@ -188,9 +191,7 @@ public class Building {
 
     private synchronized void notifyUsers(Integer floor) {
         for (User user : users) {
-            if (user.traveling()) {
-                user.setCurrentFloor(floor);
-            }
+            user.elevatorIsAt(floor);
         }
     }
 

@@ -1,11 +1,8 @@
 package elevator.engine.scan;
 
-import elevator.Direction;
-import elevator.engine.assertions.ElevatorEngineAssert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;

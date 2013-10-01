@@ -1,14 +1,8 @@
-package elevator;
+package elevator.user;
 
+import elevator.Direction;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
-
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
-import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
-import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
-import static java.lang.Math.max;
-import static java.lang.Math.random;
 
 public class User {
 
@@ -21,35 +15,20 @@ public class User {
     private User.State state;
     private Integer tickToWait;
 
-    User(ElevatorEngine elevatorEngine) throws ElevatorIsBrokenException {
+    public User(ElevatorEngine elevatorEngine, InitializationStrategy strategy) throws ElevatorIsBrokenException {
         this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
         this.tickToGo = 0;
         this.tickToWait = 0;
+        this.initialFloor = strategy.initialFloor();
+        this.initialDirection = strategy.initialDirection();
+        this.floorToGo = strategy.floorToGo();
+        this.currentFloor = initialFloor;
 
-        Direction direction;
-        if (randomBoolean()) {
-            initialFloor = randomFloor();
-            direction = randomDirection();
-            if (LOWER_FLOOR.equals(initialFloor)) {
-                direction = UP;
-            }
-            if (HIGHER_FLOOR.equals(initialFloor)) {
-                direction = DOWN;
-            }
-            floorToGo = direction == UP ? HIGHER_FLOOR : LOWER_FLOOR;
-        } else {
-            initialFloor = LOWER_FLOOR;
-            direction = UP;
-            floorToGo = max(randomFloor(), LOWER_FLOOR + 1);
-        }
-        currentFloor = initialFloor;
-        initialDirection = direction;
-
-        elevatorEngine.call(initialFloor, direction);
+        elevatorEngine.call(initialFloor, initialDirection);
     }
 
-    void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
+    public void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
         if (waiting() && at(floor)) {
             elevatorEngine.userHasEntered(this);
             elevatorEngine.go(floorToGo);
@@ -60,32 +39,26 @@ public class User {
         }
     }
 
-    boolean waiting() {
+    public void elevatorIsAt(Integer currentFloor) {
+        if (traveling()) {
+            this.currentFloor = currentFloor;
+        }
+    }
+
+    public Boolean waiting() {
         return state == State.WAITING;
     }
 
-    Boolean traveling() {
+    public Boolean traveling() {
         return state == State.TRAVELLING;
     }
 
-    Boolean done() {
+    public Boolean done() {
         return state == State.DONE;
     }
 
-    Boolean at(int floor) {
+    public Boolean at(int floor) {
         return this.currentFloor == floor;
-    }
-
-    private Integer randomFloor() {
-        return new Double(random() * HIGHER_FLOOR).intValue();
-    }
-
-    private Direction randomDirection() {
-        return randomBoolean() ? UP : DOWN;
-    }
-
-    private Boolean randomBoolean() {
-        return random() > .5;
     }
 
     public Integer getTickToGo() {
@@ -104,7 +77,7 @@ public class User {
         return floorToGo;
     }
 
-    void tick() {
+    public void tick() {
         if (traveling()) {
             tickToGo++;
         }
@@ -117,12 +90,28 @@ public class User {
         return tickToWait;
     }
 
-    void setCurrentFloor(Integer currentFloor) {
-        this.currentFloor = currentFloor;
-    }
-
     private enum State {
         WAITING, TRAVELLING, DONE,;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder userToString = new StringBuilder("User ");
+        switch (state) {
+            case WAITING:
+                userToString.append("waiting at ").append(initialFloor).
+                        append(" since ").append(tickToWait).append(" tick").append((tickToWait > 0) ? "s" : "");
+                break;
+            case TRAVELLING:
+                userToString.append("traveling from ").append(initialFloor).
+                        append(" to ").append(floorToGo);
+                break;
+            case DONE:
+                userToString.append("arrived at ").append(floorToGo).
+                        append(" with ").append(tickToWait + tickToGo).append(" ticks");
+                break;
+        }
+        return userToString.toString();
     }
 
 }

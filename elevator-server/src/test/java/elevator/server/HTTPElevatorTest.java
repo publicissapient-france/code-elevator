@@ -1,7 +1,7 @@
 package elevator.server;
 
 import elevator.Command;
-import elevator.User;
+import elevator.user.User;
 import elevator.exception.ElevatorIsBrokenException;
 import org.junit.Before;
 import org.junit.Rule;

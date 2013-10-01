@@ -2,7 +2,7 @@ package elevator.engine.crazy;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.User;
+import elevator.user.User;
 import elevator.engine.ElevatorEngine;
 import elevator.engine.naive.NaiveElevator;
 import elevator.logging.ElevatorLogger;

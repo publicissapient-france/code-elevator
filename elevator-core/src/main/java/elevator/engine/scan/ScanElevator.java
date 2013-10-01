@@ -2,7 +2,7 @@ package elevator.engine.scan;
 
 import elevator.Direction;
 import elevator.Door;
-import elevator.User;
+import elevator.user.User;
 import elevator.engine.ElevatorEngine;
 
 import static elevator.Command.*;

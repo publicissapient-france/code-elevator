@@ -2,7 +2,7 @@ package elevator.engine;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.User;
+import elevator.user.User;
 import elevator.exception.ElevatorIsBrokenException;
 
 public interface ElevatorEngine {

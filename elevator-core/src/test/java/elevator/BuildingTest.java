@@ -2,6 +2,11 @@ package elevator;
 
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.user.ConstantMaxNumberOfUsers;
+import elevator.user.DeterministicUser;
+import elevator.user.RandomUser;
+import elevator.user.User;
+import org.fest.assertions.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -9,12 +14,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.Set;
 
 import static elevator.Command.*;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
+import static java.lang.Boolean.TRUE;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.when;
@@ -32,7 +38,7 @@ public class BuildingTest {
     public void should_add_user() {
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
-        building.addUser();
+        building.addUser(new RandomUser());
 
         assertThat(building).users().hasSize(1);
     }
@@ -43,11 +49,11 @@ public class BuildingTest {
         final Integer MAX_NUMBER_OF_USERS = maxNumberOfUsers.value();
         final Building building = new Building(elevator, maxNumberOfUsers);
         for (Integer i = 1; i <= MAX_NUMBER_OF_USERS; i++) {
-            building.addUser();
+            building.addUser(new RandomUser());
         }
         assertThat(building).users().hasSize(MAX_NUMBER_OF_USERS);
 
-        building.addUser();
+        building.addUser(new RandomUser());
 
         assertThat(building).users().hasSize(MAX_NUMBER_OF_USERS);
     }
@@ -56,7 +62,7 @@ public class BuildingTest {
     public void should_set_max_number_of_users_to_zero_if_max_number_of_users_is_negative() {
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers(-4));
 
-        building.addUser();
+        building.addUser(new RandomUser());
 
         assertThat(building).users().hasSize(0);
     }
@@ -73,7 +79,7 @@ public class BuildingTest {
         when(elevator.nextCommand()).thenReturn(UP);
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
         building.updateBuildingState();
-        building.addUser();
+        building.addUser(new RandomUser());
 
         building.reset();
 
@@ -161,11 +167,11 @@ public class BuildingTest {
 
     @Test
     public void shoud_count_traveling_users() {
-        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
-        building.addUser();
-        building.addUser();
-        User user = building.users().iterator().next();
-        travel(user);
+        when(elevator.nextCommand()).thenReturn(OPEN);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers())
+                .addUser(new DeterministicUser(0, 3))
+                .addUser(new DeterministicUser(5, 3));
+        building.updateBuildingState();
 
         int travelingUsers = building.travelingUsers();
 
@@ -174,14 +180,11 @@ public class BuildingTest {
 
     @Test
     public void should_know_how_many_users_are_waiting() {
+        Integer unsignifiantFloorToGo = 3;
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
-                addUser().
-                addUser().
-                addUser();
-        Iterator<User> users = building.users().iterator();
-        users.next().setCurrentFloor(5);
-        users.next().setCurrentFloor(5);
-        users.next().setCurrentFloor(0);
+                addUser(new DeterministicUser(0, unsignifiantFloorToGo)).
+                addUser(new DeterministicUser(5, unsignifiantFloorToGo)).
+                addUser(new DeterministicUser(5, unsignifiantFloorToGo));
 
         int[] waitingUsersByFloor = building.waitingUsersByFloors();
 
@@ -192,46 +195,50 @@ public class BuildingTest {
 
     @Test
     public void should_get_all_waiting_users() {
+        when(elevator.nextCommand()).thenReturn(Command.OPEN);
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
-                addUser().
-                addUser().
-                addUser();
-        Iterator<User> users = building.users().iterator();
-        User first = users.next();
-        travel(first);
-        User second = users.next();
-        User third = users.next();
+                addUser(new DeterministicUser(0, 1)).
+                addUser(new DeterministicUser(1, 2)).
+                addUser(new DeterministicUser(1, 3));
+        building.updateBuildingState();
 
         Set<User> waitingUsers = building.waitingUsers();
 
-        assertThat(waitingUsers).containsOnly(second, third);
+        assertThat(waitingUsers).satisfies(new AllUsersAreWaiting());
     }
 
     @Test
     public void should_get_floor_button_states_in_elevator() {
+        when(elevator.nextCommand()).thenReturn(OPEN);
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
-                addUser().
-                addUser();
-        Iterator<User> users = building.users().iterator();
-        User user = users.next();
-        Integer floorWhereUserWantsToGo = user.getFloorToGo();
-        travel(user);
+                addUser(new DeterministicUser(0, 3)).
+                addUser(new DeterministicUser(0, 4)).
+                addUser(new DeterministicUser(1, 5));
+        building.updateBuildingState();
 
         boolean[] floorButtonStatesInElevator = building.getFloorButtonStatesInElevator();
 
         assertThat(floorButtonStatesInElevator).isEqualTo(new boolean[]{
-                floorWhereUserWantsToGo == 0,
-                floorWhereUserWantsToGo == 1,
-                floorWhereUserWantsToGo == 2,
-                floorWhereUserWantsToGo == 3,
-                floorWhereUserWantsToGo == 4,
-                floorWhereUserWantsToGo == 5
+                false,
+                false,
+                false,
+                true,
+                true,
+                false
         });
     }
 
-    private void travel(User user) {
-        user.setCurrentFloor(user.getFloorToGo());
-        user.elevatorIsOpen(user.getFloorToGo());
+    private static class AllUsersAreWaiting extends Condition<Collection<?>> {
+
+        @Override
+        public boolean matches(Collection<?> users) {
+            Boolean allUsersAreWaiting = TRUE;
+            for (Object user : users) {
+                allUsersAreWaiting &= ((User) user).waiting();
+            }
+            return allUsersAreWaiting;
+        }
+
     }
 
 }

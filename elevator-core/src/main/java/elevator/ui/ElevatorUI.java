@@ -3,7 +3,7 @@ package elevator.ui;
 import elevator.Building;
 import elevator.Clock;
 import elevator.ClockListener;
-import elevator.ConstantMaxNumberOfUsers;
+import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.engine.ElevatorEngine;
 
 import javax.swing.*;
