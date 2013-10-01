@@ -1,6 +1,7 @@
 package elevator.server;
 
 import elevator.user.User;
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.lang.String.format;
@@ -81,6 +82,39 @@ public class ScoreTest {
         Score loose = score.loose();
 
         assertThat(loose.score).isEqualTo(-10);
+    }
+    
+    @Test
+    public void should_average_score() {
+        Score score = new Score();
+        score.score=100;
+        score.started=new DateTime(2013,9,28,9,0);
+        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,1));
+        {
+            assertThat(averageScore).isEqualTo(1000);
+        }
+    }
+    
+    @Test
+    public void should_average_score_with_precision() {
+        Score score = new Score();
+        score.score=202;
+        score.started=new DateTime(2013,9,28,9,0);
+        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,2));
+        {
+            assertThat(averageScore).isEqualTo(1010);
+        }
+    }
+    
+    @Test
+    public void should_average_score_after_10min() {
+        Score score = new Score();
+        score.score=1100;
+        score.started=new DateTime(2013,9,28,9,0);
+        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,11));
+        {
+            assertThat(averageScore).isEqualTo(1000);
+        }
     }
 
     private User user(int floor, int floorToGo, int tickToGo, int tickToWait) {

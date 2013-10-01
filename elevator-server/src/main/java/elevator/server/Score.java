@@ -1,6 +1,12 @@
 package elevator.server;
 
 import elevator.user.User;
+import elevator.engine.ElevatorEngine;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
+import org.joda.time.LocalDateTime;
+
+import java.util.Date;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
@@ -9,6 +15,7 @@ import static java.lang.Math.min;
 class Score {
 
     Integer score;
+    DateTime started = new DateTime();
 
     Score() {
         score = 0;
@@ -65,4 +72,14 @@ class Score {
         return score;
     }
 
+    int getAverageScore(){
+        DateTime now = new DateTime();
+        return getAverageScore(now);
+    }
+
+    protected int getAverageScore(DateTime now){
+        long elapsed = (int)new Duration(started, now).getStandardSeconds();
+        return (int)(score*(10f*60 / elapsed ));
+    }
+    
 }
