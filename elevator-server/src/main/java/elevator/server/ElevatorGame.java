@@ -1,6 +1,9 @@
 package elevator.server;
 
-import elevator.*;
+import elevator.Building;
+import elevator.Clock;
+import elevator.ClockListener;
+import elevator.Door;
 import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.RandomUser;
 import elevator.user.User;
@@ -113,7 +116,8 @@ class ElevatorGame implements ClockListener {
     Integer score() {
         return score.score;
     }
-    Integer averageScore(){
+
+    Integer averageScore() {
         return score.getAverageScore();
     }
 

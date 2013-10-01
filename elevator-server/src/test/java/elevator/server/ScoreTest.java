@@ -83,35 +83,35 @@ public class ScoreTest {
 
         assertThat(loose.score).isEqualTo(-10);
     }
-    
+
     @Test
     public void should_average_score() {
         Score score = new Score();
-        score.score=100;
-        score.started=new DateTime(2013,9,28,9,0);
-        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,1));
+        score.score = 100;
+        score.started = new DateTime(2013, 9, 28, 9, 0);
+        int averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 1));
         {
             assertThat(averageScore).isEqualTo(1000);
         }
     }
-    
+
     @Test
     public void should_average_score_with_precision() {
         Score score = new Score();
-        score.score=202;
-        score.started=new DateTime(2013,9,28,9,0);
-        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,2));
+        score.score = 202;
+        score.started = new DateTime(2013, 9, 28, 9, 0);
+        int averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 2));
         {
             assertThat(averageScore).isEqualTo(1010);
         }
     }
-    
+
     @Test
     public void should_average_score_after_10min() {
         Score score = new Score();
-        score.score=1100;
-        score.started=new DateTime(2013,9,28,9,0);
-        int averageScore = score.getAverageScore(new DateTime(2013,9,28,9,11));
+        score.score = 1100;
+        score.started = new DateTime(2013, 9, 28, 9, 0);
+        int averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 11));
         {
             assertThat(averageScore).isEqualTo(1000);
         }

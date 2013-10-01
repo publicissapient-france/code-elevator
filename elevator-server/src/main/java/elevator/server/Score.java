@@ -1,16 +1,10 @@
 package elevator.server;
 
 import elevator.user.User;
-import elevator.engine.ElevatorEngine;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.joda.time.LocalDateTime;
 
-import java.util.Date;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 class Score {
 
@@ -40,7 +34,7 @@ class Score {
             throw new IllegalStateException("when done, user have to wait at least minimum amount of ticks");
         }
         Integer score = 20
-                - user.getTickToWait()/ 2
+                - user.getTickToWait() / 2
                 - user.getTickToGo()
                 + bestTickToGo;
         return min(max(0, score), 20);
@@ -72,14 +66,14 @@ class Score {
         return score;
     }
 
-    int getAverageScore(){
+    int getAverageScore() {
         DateTime now = new DateTime();
         return getAverageScore(now);
     }
 
-    protected int getAverageScore(DateTime now){
-        long elapsed = (int)new Duration(started, now).getStandardSeconds();
-        return (int)(score*(10f*60 / elapsed ));
+    protected int getAverageScore(DateTime now) {
+        long elapsed = (int) new Duration(started, now).getStandardSeconds();
+        return (int) (score * (10f * 60 / elapsed));
     }
-    
+
 }

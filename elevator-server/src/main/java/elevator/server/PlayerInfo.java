@@ -25,7 +25,6 @@ public class PlayerInfo implements Serializable {
     public final boolean[] downButtonStateByFloor;
     public final boolean[] floorButtonStatesInElevator;
 
-
     public PlayerInfo(ElevatorGame game, Player player) {
         final Integer floorNb = HIGHER_FLOOR - LOWER_FLOOR + 1;
 
