@@ -3,6 +3,7 @@ package elevator.engine.scan;
 import org.junit.Before;
 import org.junit.Test;
 
+import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static org.fest.assertions.Assertions.assertThat;
@@ -141,6 +142,63 @@ public class ScanElevatorTest {
         onTick("      3").
         onTick("OPEN   ").
         onTick("CLOSE  ");
+    }
+
+    @Test
+    public void should_run_scenario_1() {
+        assertThat(elevator).reset("the elevator is at the...").call(2, DOWN).
+                onTick("CLOSE 1").call(0, UP).call(0, UP).
+                onTick("      2").
+                onTick("OPEN   ").go(0).
+                onTick("CLOSE  ").
+                onTick("      1").
+                onTick("      0").
+                onTick("OPEN   ").go(2).go(1).call(0, UP).
+                onTick("CLOSE  ").
+                onTick("      1");
+    }
+
+    @Test
+    public void should_run_scenario_2() {
+        assertThat(elevator).reset("the elevator is at the...").call(4, DOWN).call(1, DOWN).
+                onTick("CLOSE 1").call(0, UP).
+                onTick("      2").
+                onTick("      3").
+                onTick("      4").
+                onTick("OPEN   ").go(0).
+                onTick("CLOSE  ").
+                onTick("      3").
+                onTick("      2").
+                onTick("      1").
+                onTick("OPEN   ").go(0).
+                onTick("CLOSE  ").
+                onTick("      0").
+                onTick("OPEN   ").go(3).call(4, DOWN).
+                onTick("CLOSE  ").call(0, UP).
+                onTick("      1");
+    }
+
+    @Test
+    public void should_run_scenario_3() {
+        assertThat(elevator).reset("the elevator is at the...").call(5, DOWN).
+                onTick("CLOSE 1").call(3, DOWN).
+                onTick("      2").call(0, UP).
+                onTick("      3").
+                onTick("      4").
+                onTick("      5").
+                onTick("OPEN   ").go(0).
+                onTick("CLOSE  ").
+                onTick("      4").
+                onTick("      3").
+                onTick("OPEN   ").
+                onTick("CLOSE  ").go(0).
+                onTick("      2").
+                onTick("      1").
+                onTick("      0").
+                onTick("OPEN   ").
+                onTick("CLOSE  ").
+                onTick("CLOSE  ").
+                onTick("CLOSE  ");
     }
 
 }

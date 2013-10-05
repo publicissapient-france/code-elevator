@@ -2,7 +2,7 @@ package elevator.engine.scan;
 
 import org.junit.Test;
 
-import static elevator.Direction.UP;
+import static elevator.engine.scan.ElevatorDirection.UP;
 
 public class CommandTest {
 

@@ -1,8 +1,9 @@
 package elevator.engine.scan;
 
-import static elevator.Direction.UP;
+import static elevator.engine.scan.ElevatorDirection.NONE;
+import static elevator.engine.scan.ElevatorDirection.UP;
 
-class DistanceEvaluator {
+public class DistanceEvaluator {
 
     private final Command reference;
     private final Integer higherFloor;
@@ -14,7 +15,11 @@ class DistanceEvaluator {
         this.numberOfFloors = higherFloor - lowerFloor;
     }
 
-    Integer getDistance(Command command) {
+    public Integer getDistance(Command command) {
+        if (reference.direction == NONE || command.direction == NONE) {
+            return Math.abs(reference.floor - command.floor);
+        }
+
         Integer firstIndex = positionIndex(reference);
         Integer secondIndex = positionIndex(command);
 

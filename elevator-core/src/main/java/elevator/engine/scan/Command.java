@@ -1,13 +1,11 @@
 package elevator.engine.scan;
 
-import elevator.Direction;
-
 public class Command {
 
-    final Integer floor;
-    final Direction direction;
+    public final Integer floor;
+    public final ElevatorDirection direction;
 
-    Command(Integer floor, Direction direction) {
+    public Command(Integer floor, ElevatorDirection direction) {
         if (floor == null || direction == null) {
             throw new NullPointerException();
         }
@@ -35,16 +33,6 @@ public class Command {
     @Override
     public String toString() {
         return floor + " " + direction;
-    }
-
-    public Direction getDirection(Integer floor) {
-        if (this.floor.equals(floor)) {
-            return direction;
-        } else if (this.floor < floor) {
-            return Direction.DOWN;
-        } else {
-            return Direction.UP;
-        }
     }
 
 }

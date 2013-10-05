@@ -1,9 +1,8 @@
 package elevator.engine.scan;
 
-import elevator.Direction;
-
 import java.util.*;
 
+import static elevator.engine.scan.ElevatorDirection.NONE;
 import static java.lang.Math.abs;
 import static java.util.Collections.unmodifiableSet;
 
@@ -28,34 +27,49 @@ public class Commands {
         return this;
     }
 
-    public Command get(Integer floor) {
+    public Command get(Integer floor, ElevatorDirection elevatorDirection) {
         if (commands.isEmpty()) {
             return null;
         }
-        Direction direction = getDirection(floor);
-        final Command commandFromElevator = new Command(floor, direction);
-        if (commands.contains(commandFromElevator)) {
-            commands.remove(commandFromElevator);
-            return commandFromElevator;
+        SortedSet<Command> sortedCommands = sortCommands(floor, elevatorDirection);
+        return sortedCommands.first();
+    }
+
+    Command next(Integer floor) {
+        for (Command command : sortCommands(floor, NONE)) {
+            if (!command.floor.equals(floor)) {
+                return command;
+            }
         }
-        if (commands.size() == 1) {
-            return commands.iterator().next();
+        return null;
+    }
+
+    void reset() {
+        commands.clear();
+    }
+
+    void clear(Integer floor, ElevatorDirection direction) {
+        Set<Command> commandsToRemove = new HashSet<>(commands.size());
+        for (Command command : commands) {
+            if (command.floor.equals(floor) && (command.direction == NONE || command.direction == direction)) {
+                commandsToRemove.add(command);
+            }
         }
+        commands.removeAll(commandsToRemove);
+    }
+
+    private SortedSet<Command> sortCommands(final Integer floor, final ElevatorDirection elevatorDirection) {
         SortedSet<Command> sortedCommands = new TreeSet<>(new Comparator<Command>() {
             @Override
             public int compare(Command o1, Command o2) {
-                DistanceEvaluator distanceEvaluator = new DistanceEvaluator(commandFromElevator, lowerFloor, higherFloor);
+                DistanceEvaluator distanceEvaluator = new DistanceEvaluator(new Command(floor, elevatorDirection), lowerFloor, higherFloor);
                 Integer distance1 = distanceEvaluator.getDistance(o1);
                 Integer distance2 = distanceEvaluator.getDistance(o2);
                 return distance1 - distance2;
             }
         });
         sortedCommands.addAll(commands);
-        return sortedCommands.first();
-    }
-
-    private Direction getDirection(Integer floor) {
-        return commands.iterator().next().getDirection(floor);
+        return sortedCommands;
     }
 
 }

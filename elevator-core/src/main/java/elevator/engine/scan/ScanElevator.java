@@ -2,12 +2,12 @@ package elevator.engine.scan;
 
 import elevator.Direction;
 import elevator.Door;
-import elevator.user.User;
 import elevator.engine.ElevatorEngine;
+import elevator.user.User;
 
 import static elevator.Command.*;
-import static elevator.Direction.DOWN;
-import static elevator.Direction.UP;
+import static elevator.engine.scan.ElevatorDirection.NONE;
+import static elevator.engine.scan.ElevatorDirection.elevatorDirection;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -18,20 +18,27 @@ public class ScanElevator implements ElevatorEngine {
     private Integer floor = LOWER_FLOOR;
     private Door door = Door.CLOSE;
     private Boolean justClosing = FALSE;
+    private ElevatorDirection elevatorDirection = ElevatorDirection.UP;
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) {
-        commands.add(new Command(atFloor, to));
+        call(atFloor, elevatorDirection(to));
         return this;
+    }
+
+    private void call(Integer atFloor, ElevatorDirection to) {
+        commands.add(new Command(atFloor, to));
     }
 
     @Override
     public ElevatorEngine go(Integer floorToGo) {
-        final Direction direction;
-        if (floor > floorToGo) {
-            direction = DOWN;
+        final ElevatorDirection direction;
+        if (floor.equals(floorToGo)) {
+            direction = NONE;
+        } else if (floor > floorToGo) {
+            direction = !floorToGo.equals(LOWER_FLOOR) ? ElevatorDirection.DOWN : ElevatorDirection.UP;
         } else {
-            direction = UP;
+            direction = !floorToGo.equals(HIGHER_FLOOR) ? ElevatorDirection.UP : ElevatorDirection.DOWN;
         }
         call(floorToGo, direction);
         return this;
@@ -40,42 +47,58 @@ public class ScanElevator implements ElevatorEngine {
     @Override
     public elevator.Command nextCommand() {
         if (door == Door.OPEN) {
+            commands.clear(floor, elevatorDirection);
             door = Door.CLOSE;
             justClosing = TRUE;
             return CLOSE;
         }
 
-        Command nextCommand = commands.get(floor);
+        Command nextCommand = commands.get(floor, elevatorDirection);
+
         if (nextCommand == null) {
             justClosing = FALSE;
+            elevatorDirection = NONE;
             return NOTHING;
         }
 
-        if (justClosing && nextCommand.floor.equals(floor)) { // put nextCommand again because we can't satisfy this request yet
-            commands.add(nextCommand);
-        }
-
-        Direction direction = nextCommand.getDirection(floor);
-
-        if (!justClosing && (nextCommand.equals(new Command(floor, direction))
-                || (nextCommand.floor.equals(floor) && commands.commands().isEmpty()))) {
-            door = Door.OPEN;
-            return OPEN;
+        if (nextCommand.floor.equals(floor) && (elevatorDirection == NONE || nextCommand.direction.equals(elevatorDirection) || noCommandToDirection(nextCommand.direction))) {
+            if (justClosing) {
+                Command nextCommandOutsideGivenFloor = commands.next(floor);
+                if (nextCommandOutsideGivenFloor != null) {
+                    nextCommand = nextCommandOutsideGivenFloor;
+                } else {
+                    justClosing = FALSE;
+                }
+            }
+            if (!justClosing) {
+                door = Door.OPEN;
+                return OPEN;
+            }
         }
 
         justClosing = FALSE;
 
-        if (direction == Direction.UP) {
+        if (nextCommand.floor > floor) {
             floor++;
-            return elevator.Command.UP;
+            elevatorDirection = !floor.equals(HIGHER_FLOOR) ? ElevatorDirection.UP : ElevatorDirection.DOWN;
+            return UP;
         }
 
-        if (direction == Direction.DOWN) {
+        if (nextCommand.floor < floor) {
             floor--;
-            return elevator.Command.DOWN;
+            elevatorDirection = !floor.equals(LOWER_FLOOR) ? ElevatorDirection.DOWN : ElevatorDirection.UP;
+            System.out.println("commands : " + commands);
+            return DOWN;
         }
 
-        throw new IllegalArgumentException();
+        throw new IllegalStateException();
+    }
+
+    private Boolean noCommandToDirection(ElevatorDirection direction) {
+        Command nextCommand = commands.next(floor);
+        return nextCommand == null
+                || ((direction == ElevatorDirection.UP || floor.equals(HIGHER_FLOOR)) && floor < nextCommand.floor)
+                || ((direction == ElevatorDirection.DOWN || floor.equals(LOWER_FLOOR)) && floor > nextCommand.floor);
     }
 
     @Override
@@ -92,6 +115,9 @@ public class ScanElevator implements ElevatorEngine {
     public ScanElevator reset(String cause) {
         door = Door.CLOSE;
         floor = LOWER_FLOOR;
+        justClosing = FALSE;
+        elevatorDirection = ElevatorDirection.UP;
+        commands.reset();
         return this;
     }
 

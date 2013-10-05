@@ -2,6 +2,7 @@ package elevator.engine.scan.assertions;
 
 import elevator.engine.scan.Command;
 import elevator.engine.scan.Commands;
+import elevator.engine.scan.DistanceEvaluator;
 
 public class Assertions {
 
@@ -11,6 +12,10 @@ public class Assertions {
 
     public static CommandsAssert assertThat(Commands actual) {
         return new CommandsAssert(actual);
+    }
+
+    public static DistanceEvaluatorAssert assertThat(DistanceEvaluator actual) {
+        return new DistanceEvaluatorAssert(actual);
     }
 
 }
