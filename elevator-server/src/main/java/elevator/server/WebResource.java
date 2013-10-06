@@ -103,4 +103,11 @@ public class WebResource {
         return String.valueOf(server.decreaseMaxNumberOfUsers());
     }
 
+    @GET
+    @Path("/admin/removeElevatorGame")
+    @AdminAuthorization
+    public void removeElevatorGame(@QueryParam("email") String email) {
+        server.removeElevatorGame(email);
+    }
+
 }

@@ -4,6 +4,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
     $scope.maxNumberOfUsers = -1;
     $scope.user = null;
     $scope.password = null;
+    $scope.players = [];
 
     var cookieValue = null;
 
@@ -20,6 +21,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
         cookieValue = null;
         $scope.maxNumberOfUsers = -1;
         $scope.errorMessage = '';
+        $scope.players = [];
     };
 
     $scope.increaseMaxNumberOfUsers = function () {
@@ -40,10 +42,36 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
             success(function (data) {
                 $scope.maxNumberOfUsers = data;
                 $scope.errorMessage = '';
+                fetchPlayers();
             }).
             error(function () {
                 $scope.maxNumberOfUsers = -1;
                 $scope.errorMessage = 'You are not allowed to access to this page.';
+                fetchPlayers();
+            });
+    };
+
+    $scope.removeElevatorGame = function (email) {
+        $http({
+            'method': 'GET',
+            'url': '/resources/admin/removeElevatorGame?email=' + email,
+            'headers': {
+                'Authorization': 'Basic ' + cookieValue
+            }}).
+            success(function () {
+                $scope.errorMessage = '';
+                fetchPlayers();
+            }).
+            error(function () {
+                $scope.errorMessage = 'Error during removing player.';
+                fetchPlayers();
+            });
+    };
+
+    var fetchPlayers = function () {
+        $http.get('/resources/leaderboard')
+            .success(function (data) {
+                $scope.players = data;
             });
     };
 

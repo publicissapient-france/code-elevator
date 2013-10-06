@@ -33,6 +33,15 @@
             <button class="btn btn-large btn-danger" ng-click="decreaseMaxNumberOfUsers()" ng-disabled="maxNumberOfUsers == 0">decrease</button>
         </p>
         <p>
+            <ul>
+                <li ng-repeat="player in players | orderBy:'pseudo':true">
+                    <gravatar-image data-email="player.email" data-secure="true"></gravatar-image>
+                    {{player.pseudo}}
+                    <button class="btn btn-large btn-danger" ng-click="removeElevatorGame(player.email)">remove</button>
+                </li>
+            </ul>
+        </p>
+        <p>
             <button class="btn btn-large btn-warning" ng-click="logout()">logout</button>
         </p>
     </div>
