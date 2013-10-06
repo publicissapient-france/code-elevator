@@ -39,6 +39,11 @@ public class Building {
         }
 
         User newUser = new User(elevatorEngine, strategy);
+        if (door == Door.OPEN) {
+            newUser.elevatorIsOpen(floor);
+        } else {
+            newUser.elevatorIsAt(floor);
+        }
         users.add(newUser);
         return this;
     }

@@ -44,6 +44,17 @@ public class BuildingTest {
     }
 
     @Test
+    public void should_enter_to_elevator_if_doors_are_open_and_at_floor_when_creating() {
+        when(elevator.nextCommand()).thenReturn(OPEN);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
+        building.updateBuildingState();
+
+        building.addUser(new DeterministicUser(0, 1));
+
+        assertThat(building.travelingUsers()).isEqualTo(1);
+    }
+
+    @Test
     public void should_not_add_more_than_max_number_of_users() {
         final ConstantMaxNumberOfUsers maxNumberOfUsers = new ConstantMaxNumberOfUsers();
         final Integer MAX_NUMBER_OF_USERS = maxNumberOfUsers.value();
