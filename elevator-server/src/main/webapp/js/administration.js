@@ -52,7 +52,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
 
     $scope.removeElevatorGame = function (email) {
         $http({
-            'method': 'GET',
+            'method': 'POST',
             'url': '/resources/admin/removeElevatorGame?email=' + email,
             'headers': {
                 'Authorization': 'Basic ' + cookieValue
