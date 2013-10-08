@@ -87,7 +87,6 @@ public class ScanElevator implements ElevatorEngine {
         if (nextCommand.floor < floor) {
             floor--;
             elevatorDirection = !floor.equals(LOWER_FLOOR) ? ElevatorDirection.DOWN : ElevatorDirection.UP;
-            System.out.println("commands : " + commands);
             return DOWN;
         }
 
