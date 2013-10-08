@@ -34,15 +34,21 @@ Here is what you need to build and run a code elevator session :
     $ git clone git@github.com:xebia-france/code-elevator.git
     $ cd code-elevator
     $ mvn clean install
-    $ mvn --file elevator-server/pom.xml jetty:run
+    $ mvn --file elevator-server/pom.xml jetty:run [-DADMIN_PASSWORD=secret]
 
 Go to [http://localhost:8080](http://localhost:8080), subscribe to a session and start implementing your elevator
 server.
 
-Once already is ok for all participants, you should increase max number of users per building which is zero at first. To
-perform this go to [http://localhost:8080/#/administration](http://localhost:8080/#/administration), log in with user
-`admin` and password which has been logged out on standard output of server.
+If you run a public session you may modify admin password by starting server with system property `ADMIN_PASSWORD`. You
+can also control max number of users per building which is three at first or kick out some subscribers when going to
+[http://localhost:8080/#/administration](http://localhost:8080/#/administration).
 
 ## Running on a remote server
 
-Don't want to install Java nor fill up your hard drive with jar files you can try [Sebastian's online server](http://code-elevator.seblm.cloudbees.net/#/)
+Don't want to install Java nor fill up your hard drive with jar files you can try
+[Sebastian's online server](http://code-elevator.seblm.eu.cloudbees.net).
+
+To deploy to a cloudbees instance (example) :
+
+    $ mvn verify
+    $ bees app:deploy --appid seblm/code-elevator --endPoint eu [--message "informational message"] [-P ADMIN_PASSWORD=secret] --type tomcat7 elevator-server/target/elevator-server-1.0-SNAPSHOT.war
