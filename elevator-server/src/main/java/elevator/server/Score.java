@@ -26,9 +26,6 @@ class Score {
     }
 
     private Integer score(User user) throws IllegalStateException {
-        if (user.getTickToWait() < 1) {
-            throw new IllegalStateException("when done, user have to wait at least one tick");
-        }
         Integer bestTickToGo = bestTickToGo(user.getInitialFloor(), user.getFloorToGo());
         if (user.getTickToGo() < bestTickToGo) {
             throw new IllegalStateException("when done, user have to wait at least minimum amount of ticks");

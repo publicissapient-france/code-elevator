@@ -1,16 +1,24 @@
 package elevator.server;
 
 import elevator.Clock;
+import elevator.Direction;
+import elevator.user.ConstantMaxNumberOfUsers;
+import elevator.user.InitializationStrategy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Queue;
 
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElevatorGameTest {
@@ -67,6 +75,46 @@ public class ElevatorGameTest {
         elevatorGame.resume();
 
         verify(clock, times(2)).addClockListener(elevatorGame);
+    }
+
+    @Test
+    public void should_compute_score_even_if_user_have_not_wait_at_all() throws IOException, InterruptedException {
+        URLConnection urlConnection = mock(URLConnection.class);
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), new ConstantMaxNumberOfUsers(2), clock, new InitializationStrategy() {
+
+            private Queue<Integer> initialFloor = new ArrayDeque<>(Arrays.asList(4, 0, 4));
+
+            @Override
+            public Integer initialFloor() {
+                return initialFloor.poll();
+            }
+
+            @Override
+            public Direction initialDirection() {
+                return Direction.UP;
+            }
+
+            @Override
+            public Integer floorToGo() {
+                return 1;
+            }
+        }, new DontConnectURLStreamHandler(urlConnection));
+        Thread.sleep(100);
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
+        clock.tick();
+        Thread.sleep(100);
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("CLOSE".getBytes()));
+        clock.tick();
+        Thread.sleep(100);
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("UP".getBytes()));
+        clock.tick();
+        Thread.sleep(100);
+        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
+        clock.tick();
+        Thread.sleep(100);
+
+        assertThat(elevatorGame.score()).isEqualTo(20);
     }
 
 }

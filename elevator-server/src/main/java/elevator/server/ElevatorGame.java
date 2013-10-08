@@ -5,11 +5,14 @@ import elevator.Clock;
 import elevator.ClockListener;
 import elevator.Door;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.user.InitializationStrategy;
+import elevator.user.MaxNumberOfUsers;
 import elevator.user.RandomUser;
 import elevator.user.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Set;
 
 import static elevator.server.ElevatorGame.State.PAUSE;
@@ -28,16 +31,22 @@ class ElevatorGame implements ClockListener {
     private final HTTPElevator elevatorEngine;
     private final Building building;
     private final Score score;
+    private final InitializationStrategy userInitializationStrategy;
 
     ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock) throws MalformedURLException {
+        this(player, url, maxNumberOfUsers, clock, new RandomUser(), null);
+    }
+
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
         this.player = player;
-        this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE);
+        this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE, urlStreamHandler);
         this.building = new Building(elevatorEngine, maxNumberOfUsers);
         this.clock = clock;
         this.score = new Score();
+        this.userInitializationStrategy = userInitializationStrategy;
         this.lastErrorMessage = null;
         this.state = RESUME;
         this.resume();
@@ -83,7 +92,7 @@ class ElevatorGame implements ClockListener {
     @Override
     public ClockListener onTick() {
         try {
-            building.addUser(new RandomUser());
+            building.addUser(userInitializationStrategy);
             Set<User> doneUsers = building.updateBuildingState();
             for (User doneUser : doneUsers) {
                 score.success(doneUser);

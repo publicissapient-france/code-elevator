@@ -2,10 +2,10 @@ package elevator.server;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.user.User;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 import elevator.logging.ElevatorLogger;
+import elevator.user.User;
 
 import java.io.*;
 import java.net.*;
@@ -32,10 +32,6 @@ class HTTPElevator implements ElevatorEngine {
     private final Logger logger;
 
     private String transportErrorMessage;
-
-    HTTPElevator(URL server, ExecutorService executor) throws MalformedURLException {
-        this(server, executor, null);
-    }
 
     HTTPElevator(URL server, ExecutorService executor, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         this.executor = executor;

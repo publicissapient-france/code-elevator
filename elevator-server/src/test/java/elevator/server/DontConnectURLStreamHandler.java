@@ -17,9 +17,15 @@ class DontConnectURLStreamHandler extends URLStreamHandler {
         this.urlConnection = urlConnection;
     }
 
+    DontConnectURLStreamHandler(URLConnection urlConnection) {
+        this(null, urlConnection);
+    }
+
     @Override
     protected URLConnection openConnection(URL actualURL) throws IOException {
-        assertThat(actualURL.toExternalForm()).isEqualTo(expectedURL);
+        if (expectedURL != null) {
+            assertThat(actualURL.toString()).isEqualTo(expectedURL);
+        }
         return urlConnection;
     }
 
