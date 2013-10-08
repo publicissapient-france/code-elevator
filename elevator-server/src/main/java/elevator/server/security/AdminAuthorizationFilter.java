@@ -11,7 +11,7 @@ public class AdminAuthorizationFilter extends AuthorizationFilter implements Con
 
     private static class AdminPasswordValidator implements UserPasswordValidator {
 
-        private Password password = new RandomPassword();
+        private Password password = new AdminPassword();
 
         @Override
         public Boolean validate(String email, String password) {

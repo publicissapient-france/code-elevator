@@ -1,6 +1,5 @@
 package elevator.server.security;
 
-import elevator.logging.ElevatorLogger;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -12,9 +11,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.HttpHeaders;
 import java.io.IOException;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.junit.rules.ExpectedException.none;
@@ -49,25 +45,9 @@ public class AdminAuthorizationFilterTest {
 
     @Test
     public void should_authorize_if_good_authorization_has_been_provided() throws IOException {
-        Logger randomPasswordLogger = new ElevatorLogger("RandomPassword").logger();
-        final String[] password = new String[1];
-        randomPasswordLogger.addHandler(new Handler() {
-            @Override
-            public void publish(LogRecord record) {
-                password[0] = record.getMessage();
-            }
-
-            @Override
-            public void flush() {
-            }
-
-            @Override
-            public void close() throws SecurityException {
-            }
-        });
         AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-                .thenReturn("Basic " + printBase64Binary(("admin:" + password[0]).getBytes()));
+                .thenReturn("Basic " + printBase64Binary(("admin:admin").getBytes()));
         adminAuthorizationFilter.filter(containerRequestContext);
     }
 

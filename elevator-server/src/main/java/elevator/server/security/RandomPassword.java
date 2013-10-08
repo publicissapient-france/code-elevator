@@ -1,20 +1,13 @@
 package elevator.server.security;
 
-import elevator.logging.ElevatorLogger;
-
-import java.util.logging.Logger;
-
 import static java.lang.Math.random;
 
 public class RandomPassword implements Password {
 
-    private final Logger logger;
     private final String password;
 
     public RandomPassword() {
-        this.logger = new ElevatorLogger("RandomPassword").logger();
         this.password = generate();
-        this.logger.config(password);
     }
 
     private String generate() {
