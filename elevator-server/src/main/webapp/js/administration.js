@@ -2,7 +2,6 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
     $scope.maxNumberOfUsers = -1;
-    $scope.user = null;
     $scope.password = null;
     $scope.players = [];
 
@@ -13,7 +12,7 @@ function AdministrationCtrl($scope, $http, ElevatorAuth, Base64) {
     };
 
     $scope.login = function () {
-        cookieValue = Base64.encode($scope.user + ":" + $scope.password);
+        cookieValue = Base64.encode("admin:" + $scope.password);
         updateMaxNumberOfUsers('maxNumberOfUsers');
     };
 

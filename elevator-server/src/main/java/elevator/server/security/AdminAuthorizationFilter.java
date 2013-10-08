@@ -14,8 +14,8 @@ public class AdminAuthorizationFilter extends AuthorizationFilter implements Con
         private Password password = new AdminPassword();
 
         @Override
-        public Boolean validate(String email, String password) {
-            return "admin".equals(email) && this.password.value().equals(password);
+        public Boolean validate(String user, String password) {
+            return this.password.value().equals(password);
         }
 
     }
