@@ -18,3 +18,6 @@ body {
     font-size: 21px;
     padding: 14px 24px;
 }
+#apidoc dt {
+    margin-top: 17px;
+}

@@ -39,45 +39,40 @@
 
     <div class="span9 jumbotron">
 
-    <div class="well" style="vertical-align: middle;">
-        <gravatar-image data-email="player.email" data-size="120" data-rating="pg" data-default="404" data-secure="true"></gravatar-image>
-        <h3 style="text-align: center;">{{player.pseudo}}</h3>
-        <h5 style="text-align: center;">{{playerInfo.score}} points</h5>
-        <h5 style="text-align: center;">( {{playerInfo.averageScore}} points )</h5>
+        <div class="well" style="vertical-align: middle;">
+            <gravatar-image data-email="player.email" data-size="120" data-rating="pg" data-default="404" data-secure="true"></gravatar-image>
+            <h3 style="text-align: center;">{{player.pseudo}}</h3>
+            <h5 style="text-align: center;">{{playerInfo.score}} points</h5>
+            <h5 style="text-align: center;">( {{playerInfo.averageScore}} points )</h5>
 
-        <building player="playerInfo"></building>
-        <div ng-show="playerInfo.lastErrorMessage" class="alert alert-error">
-            <strong>Last error:</strong> {{playerInfo.lastErrorMessage}}
+            <building player="playerInfo"></building>
+            <div ng-show="playerInfo.lastErrorMessage" class="alert alert-error">
+                <strong>Last error:</strong> {{playerInfo.lastErrorMessage}}
+            </div>
         </div>
+
+        <div style="vertical-align: middle;">
+            <button class="btn btn-large btn-info" ng-show="playerInfo.state == 'RESUME'" ng-click="pause()">pause</button>
+            <button class="btn btn-large btn-info" ng-show="playerInfo.state == 'PAUSE'" ng-click="resume()">resume</button>
+            <button class="btn btn-large btn-warning" ng-click="reset()">reset</button>
+            <button class="btn btn-large btn-danger" ng-click="disconnect()">disconnect</button>
+        </div>
+
     </div>
 
-    <div style="vertical-align: middle;">
-        <button class="btn btn-large btn-info" ng-show="playerInfo.state == 'RESUME'" ng-click="pause()">pause</button>
-        <button class="btn btn-large btn-info" ng-show="playerInfo.state == 'PAUSE'" ng-click="resume()">resume</button>
-        <button class="btn btn-large btn-warning" ng-click="reset()">reset</button>
-        <button class="btn btn-large btn-danger" ng-click="disconnect()">disconnect</button>
-    </div>
-
-    </div>
-
-    <div class="span3">
+    <div id="apidoc" class="span3">
         <h3>API doc</h3>
-        <h4>Awaiting response</h4>
+        <span>All requests are expecting responses with HTTP <code class="label">200</code> status code.</span>
         <dl>
             <dt><span class="label label-info">GET</span> <code>/nextCommand</code></dt>
-            <dd>body of the request <strong>must</strong> contains <code>NOTHING</code>, <code>UP</code>, <code>DOWN</code>, <code>OPEN</code> or <code>CLOSE</code></dd>
-        </dl>
-        <h4>Events</h4>
-        <span>just respond HTTP 200 return code</span>
-        <dl>
-            <dt><span class="label label-info">GET</span> <code>/call</code></dt>
-            <dd><code>?atFloor=[0-5]&to=[UP|DOWN]</code></dd>
-            <dt><span class="label label-info">GET</span> <code>/go</code></dt>
-            <dd><code>?floorToGo=[0-5]</code></dd>
+            <dd>The response body <strong>must</strong> contain either <code class="label">NOTHING</code>,
+                <code class="label">UP</code>, <code class="label">DOWN</code>, <code class="label">OPEN</code> or
+                <code class="label">CLOSE</code></dd>
+            <dt><span class="label label-info">GET</span> <code>/call</code> <code>?atFloor=[0-5]&to=[UP|DOWN]</code></dt>
+            <dt><span class="label label-info">GET</span> <code>/go</code> <code>?floorToGo=[0-5]</code></dt>
             <dt><span class="label label-info">GET</span> <code>/userHasEntered</code></dt>
             <dt><span class="label label-info">GET</span> <code>/userHasExited</code></dt>
-            <dt><span class="label label-info">GET</span> <code>/reset</code></dt>
-            <dd><code>?cause=information+message</code></dd>
+            <dt><span class="label label-info">GET</span> <code>/reset</code> <code>?cause=information+message</code></dt>
         </dl>
     </div>
 
