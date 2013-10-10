@@ -1,6 +1,6 @@
 # Code Elevator
 
-This project is a live coding contest.
+This project is a live coding contest. [More info here](http://xebia-france.github.io/code-elevator).
 
 ## Rules
 
