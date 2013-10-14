@@ -4,7 +4,9 @@ import elevator.Clock;
 import elevator.Direction;
 import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.user.InitializationStrategy;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -26,8 +28,14 @@ public class ElevatorGameTest {
     @Spy
     private Clock clock;
 
-    @Test(expected = IllegalArgumentException.class)
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
     public void should_not_create_elevator_game_with_other_protocol_than_http() throws Exception {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("http is the only supported protocol");
+
         new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock);
     }
 

@@ -1,7 +1,9 @@
 package elevator.server;
 
 import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.net.URL;
 import java.util.Collection;
@@ -13,6 +15,9 @@ public class ElevatorServerTest {
 
     @ClassRule
     public static PlayerServerRule playerServerRule = new PlayerServerRule();
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void should_add_elevator_game() throws Exception {
@@ -26,18 +31,11 @@ public class ElevatorServerTest {
         assertThat(elevatorGames.iterator().next().player).isEqualTo(player);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void should_not_add_elevator_game_if_protocol_is_not_http() throws Exception {
-        ElevatorServer elevatorServer = new ElevatorServer();
-
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("https://127.0.0.1"));
-
-        fail();
-    }
-
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void should_not_add_elevator_game_with_same_email_twice() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
+        thrown.expect(IllegalStateException.class);
+        thrown.expectMessage("a game with player player@provider.com has already been added");
 
         elevatorServer.
                 addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1:8080")).
