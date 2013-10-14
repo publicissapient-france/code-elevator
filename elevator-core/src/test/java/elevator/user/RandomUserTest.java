@@ -12,6 +12,8 @@ import static java.lang.Boolean.TRUE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 public class RandomUserTest {
 
     @Test
