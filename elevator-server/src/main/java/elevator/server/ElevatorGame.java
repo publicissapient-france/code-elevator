@@ -33,11 +33,11 @@ class ElevatorGame implements ClockListener {
     private final Score score;
     private final InitializationStrategy userInitializationStrategy;
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock) throws MalformedURLException {
-        this(player, url, maxNumberOfUsers, clock, new RandomUser(), null);
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore) throws MalformedURLException {
+        this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null);
     }
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
@@ -45,7 +45,7 @@ class ElevatorGame implements ClockListener {
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE, urlStreamHandler);
         this.building = new Building(elevatorEngine, maxNumberOfUsers);
         this.clock = clock;
-        this.score = new Score();
+        this.score = initialScore;
         this.userInitializationStrategy = userInitializationStrategy;
         this.lastErrorMessage = null;
         this.state = RESUME;

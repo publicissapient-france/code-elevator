@@ -32,12 +32,16 @@ class ElevatorServer implements UserPasswordValidator {
     }
 
     public ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
+        addElevatorGame(player, server, new Score());
+        return this;
+    }
+
+    public void addElevatorGame(Player player, URL server, Score score) throws MalformedURLException {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already been added");
         }
-        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock);
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock, score);
         elevatorGames.put(player, elevatorGame);
-        return this;
     }
 
     @Override

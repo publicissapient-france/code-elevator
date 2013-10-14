@@ -36,6 +36,22 @@ public class WebResource {
     }
 
     @POST
+    @Path("/player/register-with-score")
+    @AdminAuthorization
+    public String newParticipantWithScore(@QueryParam("email") String email,
+                                          @QueryParam("pseudo") String pseudo,
+                                          @QueryParam("serverURL") String serverURL,
+                                          @QueryParam("score") Integer score) throws MalformedURLException {
+        try {
+            Player player = new Player(email, pseudo);
+            server.addElevatorGame(player, new URL(serverURL), new Score(score));
+            return player.password.value();
+        } catch (IllegalStateException | MalformedURLException e) {
+            throw new WebApplicationException(e, Response.status(FORBIDDEN).entity(e.getMessage()).build());
+        }
+    }
+
+    @POST
     @Path("/player/pause")
     @UserAuthorization
     public void pauseParticipant(@QueryParam("email") String email) {

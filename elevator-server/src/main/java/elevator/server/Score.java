@@ -12,7 +12,11 @@ class Score {
     DateTime started = new DateTime();
 
     Score() {
-        score = 0;
+        this(0);
+    }
+
+    Score(Integer initialValue) {
+        score = initialValue;
     }
 
     Score loose() {

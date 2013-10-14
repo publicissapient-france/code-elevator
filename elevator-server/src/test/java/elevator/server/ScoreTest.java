@@ -126,6 +126,15 @@ public class ScoreTest {
         assertThat(averageScore).isEqualTo(1000);
     }
 
+    @Test
+    public void should_initialize_score_with_amount() {
+        final Score score = new Score(29);
+
+        final Integer currentScore = score.score;
+
+        assertThat(currentScore).isEqualTo(29);
+    }
+
     private User user(int floor, int floorToGo, int tickToGo, int tickToWait) {
         User user = mock(User.class);
         doReturn(floor).when(user).getInitialFloor();

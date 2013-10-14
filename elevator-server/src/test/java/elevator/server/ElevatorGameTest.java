@@ -36,12 +36,12 @@ public class ElevatorGameTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("http is the only supported protocol");
 
-        new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock);
+        new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock, null);
     }
 
     @Test
     public void should_get_player_info() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock);
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(45));
 
         PlayerInfo playerInfo = elevatorGame.getPlayerInfo();
 
@@ -52,13 +52,13 @@ public class ElevatorGameTest {
         assertThat(playerInfo.peopleInTheElevator).isZero();
         assertThat(playerInfo.peopleWaitingTheElevator).isEqualTo(new int[]{0, 0, 0, 0, 0, 0});
         assertThat(playerInfo.pseudo).isEqualTo("player");
-        assertThat(playerInfo.score).isZero();
+        assertThat(playerInfo.score).isEqualTo(45);
         assertThat(playerInfo.state).isEqualTo("RESUME");
     }
 
     @Test
     public void should_loose_and_update_message_when_reset() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock);
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
 
         elevatorGame.reset("error message");
 
@@ -68,7 +68,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_stop() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock);
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
 
         elevatorGame.stop();
 
@@ -78,7 +78,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_resume() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock).stop();
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score()).stop();
 
         elevatorGame.resume();
 
@@ -89,7 +89,7 @@ public class ElevatorGameTest {
     public void should_compute_score_even_if_user_have_not_wait_at_all() throws IOException, InterruptedException {
         URLConnection urlConnection = mock(URLConnection.class);
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), new ConstantMaxNumberOfUsers(2), clock, new InitializationStrategy() {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), new ConstantMaxNumberOfUsers(2), clock, new Score(), new InitializationStrategy() {
 
             private Queue<Integer> initialFloor = new ArrayDeque<>(Arrays.asList(4, 0, 4));
 

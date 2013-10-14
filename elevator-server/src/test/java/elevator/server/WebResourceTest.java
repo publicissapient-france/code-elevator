@@ -142,6 +142,36 @@ public class WebResourceTest {
         }
     }
 
+    @Test
+    public void should_register_with_score() {
+        String password = null;
+        try {
+            password = elevatorServerRule.target.path("/player/register-with-score")
+                    .queryParam("email", "player@provider.com")
+                    .queryParam("pseudo", "player")
+                    .queryParam("serverURL", "http://localhost")
+                    .queryParam("score", 493).request()
+                    .header(AUTHORIZATION, credentials("admin", "admin"))
+                    .buildPost(null).invoke().readEntity(String.class);
+
+            final Response playerInfo = elevatorServerRule.target.path("/player/info")
+                    .queryParam("email", "player@provider.com")
+                    .request()
+                    .header(AUTHORIZATION, credentials("player@provider.com", password))
+                    .buildGet().invoke();
+
+            assertThat(playerInfo.readEntity(String.class)).contains("\"score\":493");
+        } finally {
+            if (password != null) {
+                elevatorServerRule.target
+                        .path("/player/unregister")
+                        .queryParam("email", "player@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player@provider.com", password))
+                        .buildPost(null).invoke();
+            }
+        }
+    }
+
     private String credentials(String user, String password) {
         return "Basic " + printBase64Binary((user + ":" + password).getBytes());
     }

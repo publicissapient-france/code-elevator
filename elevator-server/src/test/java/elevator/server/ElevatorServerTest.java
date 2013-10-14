@@ -32,6 +32,15 @@ public class ElevatorServerTest {
     }
 
     @Test
+    public void should_add_elevator_game_with_initial_score() throws Exception {
+        ElevatorServer elevatorServer = new ElevatorServer();
+
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"), new Score(43));
+
+        assertThat(elevatorServer.getUnmodifiableElevatorGames().iterator().next().score()).isEqualTo(43);
+    }
+
+    @Test
     public void should_not_add_elevator_game_with_same_email_twice() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
         thrown.expect(IllegalStateException.class);
