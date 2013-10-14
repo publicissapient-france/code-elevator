@@ -6,9 +6,9 @@ import java.util.Random;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
+import static elevator.user.assertions.Assertions.assertThat;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,9 +33,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser.initialFloor()).isEqualTo(0);
-        assertThat(randomUser.initialDirection()).isEqualTo(UP);
-        assertThat(randomUser.floorToGo()).isEqualTo(3);
+        assertThat(randomUser).initialFloor(0).initialDirection(UP).floorToGo(3);
     }
 
     @Test
@@ -46,7 +44,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser.floorToGo()).isEqualTo(3);
+        assertThat(randomUser).floorToGo(3);
     }
 
     @Test
@@ -57,9 +55,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser.initialFloor()).isEqualTo(4);
-        assertThat(randomUser.initialDirection()).isEqualTo(DOWN);
-        assertThat(randomUser.floorToGo()).isEqualTo(2);
+        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(2);
     }
 
     @Test
@@ -70,9 +66,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser.initialFloor()).isEqualTo(4);
-        assertThat(randomUser.initialDirection()).isEqualTo(DOWN);
-        assertThat(randomUser.floorToGo()).isEqualTo(0);
+        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(0);
     }
 
     @Test
@@ -86,9 +80,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser.initialFloor()).isEqualTo(4);
-        assertThat(randomUser.initialDirection()).isEqualTo(DOWN);
-        assertThat(randomUser.floorToGo()).isEqualTo(2);
+        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(2);
     }
 
 }
