@@ -47,7 +47,15 @@ public class AdminAuthorizationFilterTest {
     public void should_authorize_if_good_authorization_has_been_provided() throws IOException {
         AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
         when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
-                .thenReturn("Basic " + printBase64Binary(("admin:admin").getBytes()));
+                .thenReturn("Basic " + printBase64Binary("admin:admin".getBytes()));
+        adminAuthorizationFilter.filter(containerRequestContext);
+    }
+
+    @Test
+    public void should_authorize_even_without_user() throws IOException {
+        AdminAuthorizationFilter adminAuthorizationFilter = new AdminAuthorizationFilter();
+        when(containerRequestContext.getHeaderString(HttpHeaders.AUTHORIZATION))
+                .thenReturn("Basic " + printBase64Binary(":admin".getBytes()));
         adminAuthorizationFilter.filter(containerRequestContext);
     }
 
