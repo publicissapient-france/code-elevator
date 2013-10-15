@@ -4,6 +4,7 @@ import elevator.Building;
 import elevator.Clock;
 import elevator.ClockListener;
 import elevator.Door;
+import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.InitializationStrategy;
 import elevator.user.MaxNumberOfUsers;
@@ -23,12 +24,13 @@ class ElevatorGame implements ClockListener {
     private static final String HTTP = "http";
 
     final Player player;
+    final URL url;
 
     String lastErrorMessage;
     State state;
 
     private final Clock clock;
-    private final HTTPElevator elevatorEngine;
+    private final ElevatorEngine elevatorEngine;
     private final Building building;
     private final Score score;
     private final InitializationStrategy userInitializationStrategy;
@@ -42,6 +44,7 @@ class ElevatorGame implements ClockListener {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
         this.player = player;
+        this.url = url;
         this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE, urlStreamHandler);
         this.building = new Building(elevatorEngine, maxNumberOfUsers);
         this.clock = clock;

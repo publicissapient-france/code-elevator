@@ -2,10 +2,15 @@ package elevator.server;
 
 import elevator.server.security.AdminAuthorization;
 import elevator.server.security.UserAuthorization;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,6 +54,21 @@ public class WebResource {
         } catch (IllegalStateException | MalformedURLException e) {
             throw new WebApplicationException(e, Response.status(FORBIDDEN).entity(e.getMessage()).build());
         }
+    }
+
+    @GET
+    @Path("/players.csv")
+    @Produces("text/csv")
+    @AdminAuthorization
+    public String players() {
+        StringBuilder csv = new StringBuilder();
+        for (ElevatorGame elevatorGame : server.getUnmodifiableElevatorGames()) {
+            csv.append('\"').append(elevatorGame.getPlayerInfo().email).append('\"').append(',').
+                    append('\"').append(elevatorGame.getPlayerInfo().pseudo).append('\"').append(',').
+                    append('\"').append(elevatorGame.url).append('\"').append(',').
+                    append(elevatorGame.score());
+        }
+        return csv.toString();
     }
 
     @POST
