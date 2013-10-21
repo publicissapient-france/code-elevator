@@ -7,9 +7,7 @@ import elevator.exception.ElevatorIsBrokenException;
 public class User {
 
     private final ElevatorEngine elevatorEngine;
-    private final Integer initialFloor;
-    private final Direction initialDirection;
-    private final Integer floorToGo;
+    private final FloorsAndDirection initialState;
     private Integer currentFloor;
     private Integer tickToGo;
     private User.State state;
@@ -20,20 +18,18 @@ public class User {
         this.state = State.WAITING;
         this.tickToGo = 0;
         this.tickToWait = 0;
-        this.initialFloor = strategy.initialFloor();
-        this.initialDirection = strategy.initialDirection();
-        this.floorToGo = strategy.floorToGo();
-        this.currentFloor = initialFloor;
+        this.initialState = strategy.create();
+        this.currentFloor = initialState.initialFloor;
 
-        elevatorEngine.call(initialFloor, initialDirection);
+        elevatorEngine.call(initialState.initialFloor, initialState.initialDirection);
     }
 
     public void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
         if (waiting() && at(floor)) {
             elevatorEngine.userHasEntered(this);
-            elevatorEngine.go(floorToGo);
+            elevatorEngine.go(initialState.floorToGo);
             state = State.TRAVELLING;
-        } else if (traveling() && at(floorToGo)) {
+        } else if (traveling() && at(initialState.floorToGo)) {
             elevatorEngine.userHasExited(this);
             state = State.DONE;
         }
@@ -66,15 +62,15 @@ public class User {
     }
 
     public Integer getInitialFloor() {
-        return initialFloor;
+        return initialState.initialFloor;
     }
 
     public Direction getInitialDirection() {
-        return initialDirection;
+        return initialState.initialDirection;
     }
 
     public Integer getFloorToGo() {
-        return floorToGo;
+        return initialState.floorToGo;
     }
 
     public void tick() {
@@ -99,15 +95,15 @@ public class User {
         StringBuilder userToString = new StringBuilder("User ");
         switch (state) {
             case WAITING:
-                userToString.append("waiting at ").append(initialFloor).
+                userToString.append("waiting at ").append(initialState.initialFloor).
                         append(" since ").append(tickToWait).append(" tick").append((tickToWait > 0) ? "s" : "");
                 break;
             case TRAVELLING:
-                userToString.append("traveling from ").append(initialFloor).
-                        append(" to ").append(floorToGo);
+                userToString.append("traveling from ").append(initialState.initialFloor).
+                        append(" to ").append(initialState.floorToGo);
                 break;
             case DONE:
-                userToString.append("arrived at ").append(floorToGo).
+                userToString.append("arrived at ").append(initialState.floorToGo).
                         append(" with ").append(tickToWait + tickToGo).append(" ticks");
                 break;
         }

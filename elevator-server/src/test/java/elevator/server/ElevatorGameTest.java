@@ -1,8 +1,8 @@
 package elevator.server;
 
 import elevator.Clock;
-import elevator.Direction;
 import elevator.user.ConstantMaxNumberOfUsers;
+import elevator.user.FloorsAndDirection;
 import elevator.user.InitializationStrategy;
 import org.junit.Rule;
 import org.junit.Test;
@@ -94,19 +94,10 @@ public class ElevatorGameTest {
             private Queue<Integer> initialFloor = new ArrayDeque<>(Arrays.asList(4, 0, 4));
 
             @Override
-            public Integer initialFloor() {
-                return initialFloor.poll();
+            public FloorsAndDirection create() {
+                return new FloorsAndDirection(initialFloor.poll(), 1);
             }
 
-            @Override
-            public Direction initialDirection() {
-                return Direction.UP;
-            }
-
-            @Override
-            public Integer floorToGo() {
-                return 1;
-            }
         }, new DontConnectURLStreamHandler(urlConnection));
         Thread.sleep(100);
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
