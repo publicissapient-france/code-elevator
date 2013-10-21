@@ -6,26 +6,13 @@ import java.util.Random;
 
 import static elevator.Direction.DOWN;
 import static elevator.Direction.UP;
-import static elevator.user.assertions.Assertions.assertThat;
+import static elevator.user.Assertions.assertThat;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 public class RandomUserTest {
-
-    @Test
-    public void should_have_string_representation() {
-        final Random mock = mock(Random.class);
-        when(mock.nextBoolean()).thenReturn(FALSE);
-        when(mock.nextInt(6)).thenReturn(1);
-
-        final RandomUser randomUser = new RandomUser(mock);
-
-        assertThat(randomUser.toString()).isEqualTo("user from floor 0 to 1 UP");
-    }
 
     @Test
     public void should_create_random_user_at_floor_zero() {
@@ -35,7 +22,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser).initialFloor(0).initialDirection(UP).floorToGo(3);
+        assertThat(randomUser.create()).initialFloor(0).initialDirection(UP).floorToGo(3);
     }
 
     @Test
@@ -46,7 +33,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser).floorToGo(3);
+        assertThat(randomUser.create()).floorToGo(3);
     }
 
     @Test
@@ -57,7 +44,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(2);
+        assertThat(randomUser.create()).initialFloor(4).initialDirection(DOWN).floorToGo(2);
     }
 
     @Test
@@ -68,7 +55,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(0);
+        assertThat(randomUser.create()).initialFloor(4).initialDirection(DOWN).floorToGo(0);
     }
 
     @Test
@@ -82,7 +69,7 @@ public class RandomUserTest {
 
         final RandomUser randomUser = new RandomUser(mock);
 
-        assertThat(randomUser).initialFloor(4).initialDirection(DOWN).floorToGo(2);
+        assertThat(randomUser.create()).initialFloor(4).initialDirection(DOWN).floorToGo(2);
     }
 
 }
