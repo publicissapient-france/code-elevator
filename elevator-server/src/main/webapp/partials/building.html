@@ -1,14 +1,14 @@
 <table class="building">
-    <tr ng-repeat="people in player.peopleWaitingTheElevator">
+    <tr ng-repeat="floorState in player.floorState | orderBy:'-floor'">
         <td><img src="img/man.png" alt=""/></td>
         <td class='people'>
-            {{people}}
-            <i class="icon-chevron-up" ng-show="player.upButtonStateByFloor[$index]"></i>
-            <i class="icon-chevron-down" ng-show="player.downButtonStateByFloor[$index]"></i>
+            {{ floorState.waitingUsers }}
+            <i class="icon-chevron-up" ng-show="floorState.up"></i>
+            <i class="icon-chevron-down" ng-show="floorState.down"></i>
         </td>
-        <td class="elevator" ng-class="{'elevator-close': !player.doorIsOpen, 'elevator-at-floor': $index == player.elevatorAtFloor}">
-            <span ng-show="$index == player.elevatorAtFloor">{{player.peopleInTheElevator}}</span>
-            <i class="icon-star-empty" ng-show="player.floorButtonStatesInElevator[$index]"></i>
+        <td class="elevator" ng-class="{'elevator-close': !player.doorIsOpen, 'elevator-at-floor': floorState.floor == player.elevatorAtFloor}">
+            <span ng-show="floorState.floor == player.elevatorAtFloor">{{player.peopleInTheElevator}}</span>
+            <i class="icon-star-empty" ng-show="floorState.target"></i>
         </td>
     </tr>
 </table>
