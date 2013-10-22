@@ -2,19 +2,18 @@ package elevator.server;
 
 public class FloorState {
 
-    public final Integer floorNumber;
-    public final Integer peopleWaitingTheElevator;
-    public final Boolean upButtonState;
-    public final Boolean downButtonState;
-    public final Boolean floorButtonStateInElevator;
+    public final Integer floor;
+    public final Integer waitingUsers;
+    public final Boolean up;
+    public final Boolean down;
+    public final Boolean target;
 
-    public FloorState(Integer floor, Integer peopleWaitingTheElevator, Boolean upButtonState, Boolean downButtonState,
-                      Boolean floorButtonStateInElevator) {
-        this.floorNumber = floor;
-        this.peopleWaitingTheElevator = peopleWaitingTheElevator;
-        this.upButtonState = upButtonState;
-        this.downButtonState = downButtonState;
-        this.floorButtonStateInElevator = floorButtonStateInElevator;
+    public FloorState(Integer floor, Integer waitingUsers, Boolean up, Boolean down, Boolean target) {
+        this.floor = floor;
+        this.waitingUsers = waitingUsers;
+        this.up = up;
+        this.down = down;
+        this.target = target;
     }
 
 }
