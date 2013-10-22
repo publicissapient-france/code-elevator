@@ -176,28 +176,39 @@ public class WebResourceTest {
 
     @Test
     public void should_dump_players() {
-        String password = null;
+        String passwordPlayerOne = null, passwordPlayerTwo = null;
         try {
-            password = elevatorServerRule.target.path("/player/register")
-                    .queryParam("email", "player@provider.com")
-                    .queryParam("pseudo", "player")
-                    .queryParam("serverURL", "http://localhost").request()
+            passwordPlayerOne = elevatorServerRule.target.path("/player/register")
+                    .queryParam("email", "player1@provider.com")
+                    .queryParam("pseudo", "player1")
+                    .queryParam("serverURL", "http://localhost:8081").request()
+                    .buildPost(null).invoke().readEntity(String.class);
+            passwordPlayerTwo = elevatorServerRule.target.path("/player/register")
+                    .queryParam("email", "player2@provider.com")
+                    .queryParam("pseudo", "player2")
+                    .queryParam("serverURL", "http://localhost:8082").request()
                     .buildPost(null).invoke().readEntity(String.class);
 
             final Response playerAsCSV = elevatorServerRule.target.path("/players.csv")
-                    .queryParam("email", "player@provider.com")
                     .request()
                     .header(AUTHORIZATION, credentials("", "admin"))
                     .buildGet().invoke();
 
             assertThat(playerAsCSV.getHeaderString(CONTENT_TYPE)).isEqualTo("text/csv");
-            assertThat(playerAsCSV.readEntity(String.class)).isEqualTo("\"player@provider.com\",\"player\",\"http://localhost\",0");
+            assertThat(playerAsCSV.readEntity(String.class)).isEqualTo("\"player1@provider.com\",\"player1\",\"http://localhost:8081\",0\n\"player2@provider.com\",\"player2\",\"http://localhost:8082\",0");
         } finally {
-            if (password != null) {
+            if (passwordPlayerOne != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
-                        .header(AUTHORIZATION, credentials("player@provider.com", password))
+                        .queryParam("email", "player1@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player1@provider.com", passwordPlayerOne))
+                        .buildPost(null).invoke();
+            }
+            if (passwordPlayerTwo != null) {
+                elevatorServerRule.target
+                        .path("/player/unregister")
+                        .queryParam("email", "player2@provider.com").request()
+                        .header(AUTHORIZATION, credentials("player2@provider.com", passwordPlayerTwo))
                         .buildPost(null).invoke();
             }
         }

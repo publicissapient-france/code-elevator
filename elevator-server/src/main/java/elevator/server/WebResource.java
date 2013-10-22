@@ -1,5 +1,6 @@
 package elevator.server;
 
+import com.google.common.base.Function;
 import elevator.server.security.AdminAuthorization;
 import elevator.server.security.UserAuthorization;
 
@@ -11,6 +12,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.google.common.base.Joiner.on;
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/")
@@ -56,14 +60,16 @@ public class WebResource {
     @Produces("text/csv")
     @AdminAuthorization
     public String players() {
-        StringBuilder csv = new StringBuilder();
-        for (ElevatorGame elevatorGame : server.getUnmodifiableElevatorGames()) {
-            csv.append('\"').append(elevatorGame.getPlayerInfo().email).append('\"').append(',').
-                    append('\"').append(elevatorGame.getPlayerInfo().pseudo).append('\"').append(',').
-                    append('\"').append(elevatorGame.url).append('\"').append(',').
-                    append(elevatorGame.score());
-        }
-        return csv.toString();
+        return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(new Function<ElevatorGame, String>() {
+            @Override
+            public String apply(ElevatorGame input) {
+                return on(',').join(newArrayList(
+                        "\"" + input.getPlayerInfo().email + "\"",
+                        "\"" + input.getPlayerInfo().pseudo + "\"",
+                        "\"" + input.url + "\"",
+                        input.score().toString()));
+            }
+        }));
     }
 
     @POST
