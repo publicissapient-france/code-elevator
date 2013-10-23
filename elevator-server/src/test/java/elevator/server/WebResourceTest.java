@@ -194,7 +194,7 @@ public class WebResourceTest {
                     .header(AUTHORIZATION, credentials("", "admin"))
                     .buildGet().invoke();
 
-            assertThat(playerAsCSV.getHeaderString(CONTENT_TYPE)).isEqualTo("text/csv");
+            assertThat(playerAsCSV.getHeaderString(CONTENT_TYPE)).isEqualTo("text/csv; charset=UTF-8");
             assertThat(playerAsCSV.readEntity(String.class)).isEqualTo("\"player1@provider.com\",\"player1\",\"http://localhost:8081\",0\n\"player2@provider.com\",\"player2\",\"http://localhost:8082\",0");
         } finally {
             if (passwordPlayerOne != null) {

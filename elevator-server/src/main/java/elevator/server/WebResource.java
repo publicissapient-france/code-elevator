@@ -57,7 +57,7 @@ public class WebResource {
 
     @GET
     @Path("/players.csv")
-    @Produces("text/csv")
+    @Produces("text/csv; charset=UTF-8")
     @AdminAuthorization
     public String players() {
         return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(new Function<ElevatorGame, String>() {
