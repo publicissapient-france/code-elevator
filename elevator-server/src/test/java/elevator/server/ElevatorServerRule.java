@@ -2,6 +2,7 @@ package elevator.server;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -18,7 +19,8 @@ class ElevatorServerRule implements TestRule {
     @Override
     public Statement apply(Statement base, Description description) {
         this.base = base;
-        this.target = ClientBuilder.newClient().target("http://localhost:8080/resources");
+        this.target = ClientBuilder.newClient().register(MultiPartFeature.class)
+                .target("http://localhost:8080/resources");
 
         return new ElevatorServerStatement();
     }

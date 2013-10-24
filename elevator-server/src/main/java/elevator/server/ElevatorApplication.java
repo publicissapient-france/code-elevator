@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import elevator.server.security.AdminAuthorizationFilter;
 import elevator.server.security.UserAuthorizationFilter;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -25,7 +26,7 @@ public class ElevatorApplication extends Application {
 
     @Override
     public Set<Class<?>> getClasses() {
-        return Sets.<Class<?>>newHashSet(JacksonJsonProvider.class);
+        return Sets.<Class<?>>newHashSet(JacksonJsonProvider.class, MultiPartFeature.class);
     }
 
     @Override
