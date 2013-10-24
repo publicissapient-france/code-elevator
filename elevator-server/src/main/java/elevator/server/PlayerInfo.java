@@ -70,8 +70,8 @@ public class PlayerInfo implements Serializable {
         for (Integer floor = LOWER_FLOOR; floor <= HIGHER_FLOOR; floor++) { // FIXME things goes wrong if LOWER_FLOOR is not zero
             floorStates[floor] = new FloorState(floor,
                     game.waitingUsersByFloors()[floor],
-                    floorsWhereDownButtonIsLit.contains(floor),
                     floorsWhereUpButtonIsLit.contains(floor),
+                    floorsWhereDownButtonIsLit.contains(floor),
                     game.getFloorButtonStatesInElevator()[floor]);
         }
         return floorStates;
