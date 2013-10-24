@@ -5,8 +5,6 @@ import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.user.DeterministicUser;
 import elevator.user.RandomUser;
-import elevator.user.User;
-import org.fest.assertions.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -14,12 +12,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Collection;
-import java.util.Set;
-
+import static elevator.Assertions.assertThat;
 import static elevator.Command.*;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
@@ -190,66 +187,21 @@ public class BuildingTest {
     }
 
     @Test
-    public void should_know_how_many_users_are_waiting() {
-        Integer unsignifiantFloorToGo = 3;
-        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
-                addUser(new DeterministicUser(0, unsignifiantFloorToGo)).
-                addUser(new DeterministicUser(5, unsignifiantFloorToGo)).
-                addUser(new DeterministicUser(5, unsignifiantFloorToGo));
-
-        int[] waitingUsersByFloor = building.waitingUsersByFloors();
-
-        assertThat(waitingUsersByFloor).isEqualTo(new int[]{
-                1, 0, 0, 0, 0, 2
-        });
-    }
-
-    @Test
-    public void should_get_all_waiting_users() {
-        when(elevator.nextCommand()).thenReturn(Command.OPEN);
-        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
-                addUser(new DeterministicUser(0, 1)).
-                addUser(new DeterministicUser(1, 2)).
-                addUser(new DeterministicUser(1, 3));
-        building.updateBuildingState();
-
-        Set<User> waitingUsers = building.waitingUsers();
-
-        assertThat(waitingUsers).satisfies(new AllUsersAreWaiting());
-    }
-
-    @Test
-    public void should_get_floor_button_states_in_elevator() {
-        when(elevator.nextCommand()).thenReturn(OPEN);
-        Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
+    public void should_get_floor_states() throws Exception {
+        when(elevator.nextCommand()).thenReturn(UP);
+        final Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
                 addUser(new DeterministicUser(0, 3)).
                 addUser(new DeterministicUser(0, 4)).
-                addUser(new DeterministicUser(1, 5));
+                addUser(new DeterministicUser(4, 2));
         building.updateBuildingState();
 
-        boolean[] floorButtonStatesInElevator = building.getFloorButtonStatesInElevator();
-
-        assertThat(floorButtonStatesInElevator).isEqualTo(new boolean[]{
-                false,
-                false,
-                false,
-                true,
-                true,
-                false
-        });
-    }
-
-    private static class AllUsersAreWaiting extends Condition<Collection<?>> {
-
-        @Override
-        public boolean matches(Collection<?> users) {
-            Boolean allUsersAreWaiting = TRUE;
-            for (Object user : users) {
-                allUsersAreWaiting &= ((User) user).waiting();
-            }
-            return allUsersAreWaiting;
-        }
-
+        assertThat(building.floorStates()).
+                hasSize(6).
+                floors(0, 1, 2, 3, 4, 5).
+                waitingUsers(2, 0, 0, 0, 1, 0).
+                up(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE).
+                down(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE).
+                target(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
     }
 
 }

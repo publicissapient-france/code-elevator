@@ -1,9 +1,6 @@
 package elevator.server;
 
-import elevator.Building;
-import elevator.Clock;
-import elevator.ClockListener;
-import elevator.Door;
+import elevator.*;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.InitializationStrategy;
@@ -76,18 +73,6 @@ class ElevatorGame implements ClockListener {
         return building.travelingUsers();
     }
 
-    public int[] waitingUsersByFloors() {
-        return building.waitingUsersByFloors();
-    }
-
-    public Set<User> waitingUsers() {
-        return building.waitingUsers();
-    }
-
-    public boolean[] getFloorButtonStatesInElevator() {
-        return building.getFloorButtonStatesInElevator();
-    }
-
     Boolean doorIsOpen() {
         return Door.OPEN.equals(building.door());
     }
@@ -146,6 +131,10 @@ class ElevatorGame implements ClockListener {
         } catch (ElevatorIsBrokenException e) {
             score.loose();
         }
+    }
+
+    public Set<FloorState> floorStates() {
+        return building.floorStates();
     }
 
     enum State {

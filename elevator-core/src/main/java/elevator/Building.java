@@ -6,10 +6,9 @@ import elevator.user.InitializationStrategy;
 import elevator.user.MaxNumberOfUsers;
 import elevator.user.User;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
+import static elevator.Direction.DOWN;
 import static elevator.Door.CLOSE;
 import static elevator.Door.OPEN;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
@@ -66,45 +65,6 @@ public class Building {
         }
 
         return count;
-    }
-
-    public synchronized int[] waitingUsersByFloors() {
-        int[] count = new int[ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1];
-
-        for (int i = ElevatorEngine.LOWER_FLOOR; i <= ElevatorEngine.HIGHER_FLOOR; i++) {
-            count[i] = 0;
-            for (User user : users) {
-                if (user.waiting() && user.at(i)) {
-                    count[i]++;
-                }
-            }
-        }
-
-        return count;
-    }
-
-    public synchronized Set<User> waitingUsers() {
-        Set<User> waitingUsers = new HashSet<>();
-
-        for (User user : users) {
-            if (user.waiting()) {
-                waitingUsers.add(user);
-            }
-        }
-
-        return waitingUsers;
-    }
-
-    public synchronized boolean[] getFloorButtonStatesInElevator() {
-        boolean[] states = new boolean[ElevatorEngine.HIGHER_FLOOR - ElevatorEngine.LOWER_FLOOR + 1];
-
-        for (User user : users) {
-            if (user.traveling()) {
-                states[user.getFloorToGo()] = true;
-            }
-        }
-
-        return states;
     }
 
     public Door door() {
@@ -198,6 +158,38 @@ public class Building {
         for (User user : users) {
             user.elevatorIsAt(floor);
         }
+    }
+
+    public Set<FloorState> floorStates() {
+        final Set<Integer> floorsWhereDownButtonIsLit = new HashSet<>();
+        final Set<Integer> floorsWhereUpButtonIsLit = new HashSet<>();
+        final Set<Integer> targetedFloors = new HashSet<>();
+        final Map<Integer, Integer> waitingUserByFloorSet = new HashMap<>();
+        for (Integer floor = ElevatorEngine.LOWER_FLOOR; floor <= ElevatorEngine.HIGHER_FLOOR; floor++) {
+            waitingUserByFloorSet.put(floor, 0);
+        }
+        for (User user : users) {
+            if (user.waiting()) {
+                if (user.getInitialDirection().equals(DOWN)) {
+                    floorsWhereDownButtonIsLit.add(user.getInitialFloor());
+                } else {
+                    floorsWhereUpButtonIsLit.add(user.getInitialFloor());
+                }
+                waitingUserByFloorSet.put(user.getInitialFloor(), waitingUserByFloorSet.get(user.getInitialFloor()) + 1);
+            } else if (user.traveling()) {
+                targetedFloors.add(user.getFloorToGo());
+            }
+        }
+
+        final Set<FloorState> floorStates = new HashSet<>();
+        for (Integer floor = LOWER_FLOOR; floor <= HIGHER_FLOOR; floor++) {
+            floorStates.add(new FloorState(floor,
+                    waitingUserByFloorSet.get(floor),
+                    floorsWhereUpButtonIsLit.contains(floor),
+                    floorsWhereDownButtonIsLit.contains(floor),
+                    targetedFloors.contains(floor)));
+        }
+        return floorStates;
     }
 
 }

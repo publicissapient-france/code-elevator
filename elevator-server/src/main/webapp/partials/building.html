@@ -1,5 +1,5 @@
 <table class="building">
-    <tr ng-repeat="floorState in player.floorState | orderBy:'-floor'">
+    <tr ng-repeat="floorState in player.floorStates | orderBy:'-floor'">
         <td><img src="img/man.png" alt=""/></td>
         <td class='people'>
             {{ floorState.waitingUsers }}

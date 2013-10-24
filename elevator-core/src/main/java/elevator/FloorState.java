@@ -1,4 +1,4 @@
-package elevator.server;
+package elevator;
 
 public class FloorState {
 

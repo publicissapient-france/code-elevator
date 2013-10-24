@@ -50,7 +50,6 @@ public class ElevatorGameTest {
         assertThat(playerInfo.email).isEqualTo("player@provider.com");
         assertThat(playerInfo.lastErrorMessage).isNull();
         assertThat(playerInfo.peopleInTheElevator).isZero();
-        assertThat(playerInfo.peopleWaitingTheElevator).isEqualTo(new int[]{0, 0, 0, 0, 0, 0});
         assertThat(playerInfo.pseudo).isEqualTo("player");
         assertThat(playerInfo.score).isEqualTo(45);
         assertThat(playerInfo.state).isEqualTo("RESUME");
