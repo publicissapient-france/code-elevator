@@ -1,5 +1,6 @@
 package elevator.participant;
 
+import elevator.Command;
 import elevator.Direction;
 import elevator.engine.ElevatorEngine;
 import elevator.engine.scan.ScanElevator;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.String.format;
 
 @WebServlet("/*")
 public class ParticipantServlet extends HttpServlet {
@@ -27,16 +29,25 @@ public class ParticipantServlet extends HttpServlet {
         synchronized (elevator) {
             switch (req.getPathInfo()) {
                 case "/reset":
-                    elevator.reset(req.getParameter("cause"));
+                    String cause = req.getParameter("cause");
+                    getServletContext().log(format("/reset?cause=%s", cause));
+                    elevator.reset(cause);
                     break;
                 case "/call":
-                    elevator.call(parseInt(req.getParameter("atFloor")), Direction.valueOf(req.getParameter("to")));
+                    Integer atFloor = parseInt(req.getParameter("atFloor"));
+                    Direction to = Direction.valueOf(req.getParameter("to"));
+                    getServletContext().log(format("/call?atFloor=%d&to=%s", atFloor, to));
+                    elevator.call(atFloor, to);
                     break;
                 case "/go":
-                    elevator.go(parseInt(req.getParameter("floorToGo")));
+                    Integer floorToGo = parseInt(req.getParameter("floorToGo"));
+                    getServletContext().log(format("/go?floorToGo=%d", floorToGo));
+                    elevator.go(floorToGo);
                     break;
                 case "/nextCommand":
-                    resp.getWriter().print(elevator.nextCommand());
+                    Command nextCommand = elevator.nextCommand();
+                    getServletContext().log(format("/nextCommand %s", nextCommand));
+                    resp.getWriter().print(nextCommand);
             }
         }
     }
