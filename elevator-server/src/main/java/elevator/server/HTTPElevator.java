@@ -53,7 +53,7 @@ class HTTPElevator implements ElevatorEngine {
             @Override
             public void run() {
                 URL url = null;
-                do {
+                while (url == null || !url.getPath().equals(format("/%s", SHUTDOWN_URL))) {
                     try {
                         url = requests.take();
                         URLConnection urlConnection = getUrlConnection(url);
@@ -65,7 +65,7 @@ class HTTPElevator implements ElevatorEngine {
                     } catch (InterruptedException e) {
                         logger.log(WARNING, "Error occured when waiting for new URL", e);
                     }
-                } while (url != null && !url.getPath().equals(format("/%s", SHUTDOWN_URL)));
+                }
             }
         });
     }
