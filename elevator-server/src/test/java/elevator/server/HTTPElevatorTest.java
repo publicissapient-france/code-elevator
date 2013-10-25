@@ -1,17 +1,14 @@
 package elevator.server;
 
 import elevator.Command;
-import elevator.user.User;
 import elevator.exception.ElevatorIsBrokenException;
-import org.junit.Before;
+import elevator.user.User;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -20,12 +17,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,22 +31,10 @@ public class HTTPElevatorTest {
     @Mock
     private URLConnection urlConnection;
 
-    @Mock
-    private ExecutorService executorService;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Rule
     public ExpectedException expectedException = none();
-
-    @Before
-    public void initExecutorServiceToRunInCurrentThread() {
-        doAnswer(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                ((Runnable) invocationOnMock.getArguments()[0]).run();
-                return null;
-            }
-        }).when(executorService).execute(any(Runnable.class));
-    }
 
     @Test
     public void should_call_server_with_call() throws Exception {
@@ -58,6 +43,7 @@ public class HTTPElevatorTest {
 
         httpElevator.call(4, UP);
 
+        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
@@ -68,6 +54,7 @@ public class HTTPElevatorTest {
 
         httpElevator.go(3);
 
+        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
@@ -78,6 +65,7 @@ public class HTTPElevatorTest {
 
         httpElevator.reset("reason");
 
+        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
@@ -86,8 +74,9 @@ public class HTTPElevatorTest {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasEntered", urlConnection));
 
-        httpElevator.userHasEntered(any(User.class));
+        httpElevator.userHasEntered(mock(User.class));
 
+        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
@@ -101,6 +90,7 @@ public class HTTPElevatorTest {
         doReturn(1).when(user).getFloorToGo();
         httpElevator.userHasExited(user);
 
+        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
@@ -165,6 +155,7 @@ public class HTTPElevatorTest {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
                 new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
         httpElevator.call(4, UP);
+        waitForHTTPSenderThread();
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
@@ -177,6 +168,7 @@ public class HTTPElevatorTest {
         HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
                 new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
         httpElevator.call(4, UP);
+        waitForHTTPSenderThread();
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("Resource \"http://localhost:8080/context/call\" is not found");
@@ -190,6 +182,7 @@ public class HTTPElevatorTest {
                 new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
         httpElevator.call(4, UP);
 
+        waitForHTTPSenderThread();
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call");
         httpElevator.call(4, UP);
@@ -204,6 +197,14 @@ public class HTTPElevatorTest {
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
         httpElevator.nextCommand();
+    }
+
+    private void waitForHTTPSenderThread() {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

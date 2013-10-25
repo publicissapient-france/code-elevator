@@ -57,13 +57,13 @@ class ElevatorServer implements UserPasswordValidator {
     void removeElevatorGame(String email) {
         ElevatorGame elevatorGame = elevatorGame(email, FALSE);
         if (elevatorGame != null) {
-            elevatorGame.stop();
+            elevatorGame.stop(TRUE);
             elevatorGames.remove(elevatorGame.player);
         }
     }
 
     void pauseElevatorGame(String email) {
-        elevatorGame(email).stop();
+        elevatorGame(email).stop(FALSE);
     }
 
     void resumeElevatorGame(String email) {

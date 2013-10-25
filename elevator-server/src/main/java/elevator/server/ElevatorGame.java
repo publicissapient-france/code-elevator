@@ -53,8 +53,11 @@ class ElevatorGame implements ClockListener {
         this.resetElevatorEngine("the elevator is at the lowest level and its doors are closed");
     }
 
-    ElevatorGame stop() {
+    ElevatorGame stop(Boolean shutdown) {
         clock.removeClockListener(this);
+        if (shutdown) {
+            ((HTTPElevator) elevatorEngine).shutdown();
+        }
         state = PAUSE;
         return this;
     }

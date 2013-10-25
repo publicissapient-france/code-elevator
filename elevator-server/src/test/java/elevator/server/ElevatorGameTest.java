@@ -19,6 +19,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
+import static java.lang.Boolean.FALSE;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -69,7 +70,7 @@ public class ElevatorGameTest {
     public void should_stop() throws Exception {
         ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
 
-        elevatorGame.stop();
+        elevatorGame.stop(FALSE);
 
         verify(clock, times(1)).removeClockListener(elevatorGame);
         assertThat(elevatorGame.getPlayerInfo().state).isEqualTo("PAUSE");
@@ -77,7 +78,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_resume() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score()).stop();
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score()).stop(FALSE);
 
         elevatorGame.resume();
 
