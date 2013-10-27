@@ -3,8 +3,8 @@ package elevator.engine.queue;
 import elevator.Command;
 import elevator.Direction;
 import elevator.Door;
-import elevator.user.User;
 import elevator.engine.ElevatorEngine;
+import elevator.user.User;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -15,7 +15,7 @@ public class QueueElevator implements ElevatorEngine {
 
     final Queue<Integer> floorsToStop = new ArrayDeque<>();
 
-    private Integer floor = LOWER_FLOOR;
+    private Integer floor = 0;
     private Door door = Door.CLOSE;
 
     @Override

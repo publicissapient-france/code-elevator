@@ -18,7 +18,7 @@ public class RandomUser implements InitializationStrategy {
 
     RandomUser(Random random) {
         this.random = random;
-        this.numberOfFloors = abs(HIGHER_FLOOR - LOWER_FLOOR) + ((LOWER_FLOOR <= 0 && 0 <= HIGHER_FLOOR) ? 1 : 0);
+        this.numberOfFloors = abs(HIGHER_FLOOR - LOWER_FLOOR) + 1;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RandomUser implements InitializationStrategy {
     }
 
     private Integer randomFloorExcept(Integer... exceptions) {
-        final Integer randomFloor = random.nextInt(numberOfFloors) - LOWER_FLOOR;
+        final Integer randomFloor = random.nextInt(numberOfFloors) + LOWER_FLOOR;
         if (asList(exceptions).contains(randomFloor)) {
             return randomFloorExcept(exceptions);
         }

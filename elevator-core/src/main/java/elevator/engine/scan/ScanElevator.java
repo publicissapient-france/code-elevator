@@ -15,7 +15,7 @@ public class ScanElevator implements ElevatorEngine {
 
     private final Commands commands = new Commands(LOWER_FLOOR, HIGHER_FLOOR);
 
-    private Integer floor = LOWER_FLOOR;
+    private Integer floor = 0;
     private Door door = Door.CLOSE;
     private Boolean justClosing = FALSE;
     private ElevatorDirection elevatorDirection = ElevatorDirection.UP;
@@ -113,7 +113,7 @@ public class ScanElevator implements ElevatorEngine {
     @Override
     public ScanElevator reset(String cause) {
         door = Door.CLOSE;
-        floor = LOWER_FLOOR;
+        floor = 0;
         justClosing = FALSE;
         elevatorDirection = ElevatorDirection.UP;
         commands.reset();

@@ -111,7 +111,7 @@ public class Building {
     }
 
     public synchronized void reset() {
-        floor = LOWER_FLOOR;
+        floor = 0;
         door = CLOSE;
         users.clear();
     }

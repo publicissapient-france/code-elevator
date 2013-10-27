@@ -2,14 +2,14 @@ package elevator.engine.naive;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.user.User;
 import elevator.engine.ElevatorEngine;
+import elevator.user.User;
 
 import static elevator.Command.*;
 
 public class NaiveElevator implements ElevatorEngine {
 
-    private Integer floor = LOWER_FLOOR;
+    private Integer floor = 0;
     private Direction direction = Direction.UP;
     private State nextState = State.OPEN;
 
@@ -60,7 +60,7 @@ public class NaiveElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine reset(String cause) {
-        floor = LOWER_FLOOR;
+        floor = 0;
         direction = Direction.UP;
         nextState = State.OPEN;
         return this;

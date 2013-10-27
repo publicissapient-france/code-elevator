@@ -50,7 +50,7 @@ class ElevatorGame implements ClockListener {
         this.lastErrorMessage = null;
         this.state = RESUME;
         this.resume();
-        this.resetElevatorEngine("the elevator is at the lowest level and its doors are closed");
+        this.resetElevatorEngine("the elevator is at floor 0 and its doors are closed");
     }
 
     ElevatorGame stop(Boolean shutdown) {

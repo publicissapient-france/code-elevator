@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static elevator.Assertions.assertThat;
 import static elevator.Command.*;
-import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -79,7 +78,7 @@ public class BuildingTest {
     public void should_have_an_initial_state() throws Exception {
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
 
-        assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR);
+        assertThat(building).doorIs(Door.CLOSE).floorIs(0);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class BuildingTest {
 
         building.reset();
 
-        assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR).users().isEmpty();
+        assertThat(building).doorIs(Door.CLOSE).floorIs(0).users().isEmpty();
     }
 
     @Test
@@ -101,7 +100,7 @@ public class BuildingTest {
 
         building.updateBuildingState();
 
-        assertThat(building).doorIs(Door.CLOSE).floorIs(LOWER_FLOOR);
+        assertThat(building).doorIs(Door.CLOSE).floorIs(0);
     }
 
     @Test
