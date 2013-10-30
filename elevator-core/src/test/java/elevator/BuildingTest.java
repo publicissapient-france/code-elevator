@@ -173,6 +173,42 @@ public class BuildingTest {
     }
 
     @Test
+    public void should_close_doors() throws Exception {
+        when(elevator.nextCommand()).thenReturn(OPEN, CLOSE);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
+        building.updateBuildingState();
+
+        building.updateBuildingState();
+
+        assertThat(building).doorIs(Door.CLOSE);
+    }
+
+    @Test
+    public void should_go_down() throws Exception {
+        when(elevator.nextCommand()).thenReturn(UP, DOWN);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers());
+        building.updateBuildingState();
+
+        building.updateBuildingState();
+
+        assertThat(building).floorIs(0);
+    }
+
+    @Test
+    public void should_deliver_user() throws Exception {
+        when(elevator.nextCommand()).thenReturn(OPEN, CLOSE, UP, OPEN);
+        Building building = new Building(elevator, new ConstantMaxNumberOfUsers(1)).
+                addUser(new DeterministicUser(0, 1));
+        building.updateBuildingState();
+        building.updateBuildingState();
+        building.updateBuildingState();
+
+        building.updateBuildingState();
+
+        assertThat(building).users().isEmpty();
+    }
+
+    @Test
     public void shoud_count_traveling_users() {
         when(elevator.nextCommand()).thenReturn(OPEN);
         Building building = new Building(elevator, new ConstantMaxNumberOfUsers())
@@ -187,20 +223,21 @@ public class BuildingTest {
 
     @Test
     public void should_get_floor_states() throws Exception {
-        when(elevator.nextCommand()).thenReturn(UP);
-        final Building building = new Building(elevator, new ConstantMaxNumberOfUsers()).
+        when(elevator.nextCommand()).thenReturn(OPEN);
+        final Building building = new Building(elevator, new ConstantMaxNumberOfUsers(4)).
                 addUser(new DeterministicUser(0, 3)).
-                addUser(new DeterministicUser(0, 4)).
+                addUser(new DeterministicUser(4, 5)).
+                addUser(new DeterministicUser(1, 4)).
                 addUser(new DeterministicUser(4, 2));
         building.updateBuildingState();
 
         assertThat(building.floorStates()).
                 hasSize(6).
                 floors(0, 1, 2, 3, 4, 5).
-                waitingUsers(2, 0, 0, 0, 1, 0).
-                up(TRUE, FALSE, FALSE, FALSE, FALSE, FALSE).
+                waitingUsers(0, 1, 0, 0, 2, 0).
+                up(FALSE, TRUE, FALSE, FALSE, TRUE, FALSE).
                 down(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE).
-                target(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE);
+                target(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE);
     }
 
 }

@@ -38,11 +38,7 @@ public class Building {
         }
 
         User newUser = new User(elevatorEngine, strategy);
-        if (door == Door.OPEN) {
-            newUser.elevatorIsOpen(floor);
-        } else {
-            newUser.elevatorIsAt(floor);
-        }
+        notifyNewUser(newUser);
         users.add(newUser);
         return this;
     }
@@ -146,6 +142,12 @@ public class Building {
                 break;
         }
         return doneUsers;
+    }
+
+    private void notifyNewUser(User newUser) {
+        if (door == Door.OPEN) {
+            newUser.elevatorIsOpen(floor);
+        }
     }
 
     private synchronized void notifyUsers() {

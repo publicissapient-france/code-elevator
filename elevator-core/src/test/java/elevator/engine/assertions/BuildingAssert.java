@@ -14,7 +14,7 @@ public class BuildingAssert extends GenericAssert<BuildingAssert, Building> {
     }
 
     public CollectionAssert users() {
-        return assertThat(actual.users());
+        return assertThat(actual.users()).as("building users (delivered users are gone)");
     }
 
     public BuildingAssert doorIs(Door door) {
