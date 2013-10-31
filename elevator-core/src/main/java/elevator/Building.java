@@ -37,7 +37,7 @@ public class Building {
             return this;
         }
 
-        User newUser = new User(elevatorEngine, strategy);
+        User newUser = new User(elevatorEngine, strategy.create());
         notifyNewUser(newUser);
         users.add(newUser);
         return this;

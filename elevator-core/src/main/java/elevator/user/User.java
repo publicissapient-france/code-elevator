@@ -13,15 +13,15 @@ public class User {
     private User.State state;
     private Integer tickToWait;
 
-    public User(ElevatorEngine elevatorEngine, InitializationStrategy strategy) throws ElevatorIsBrokenException {
+    public User(ElevatorEngine elevatorEngine, FloorsAndDirection floorsAndDirection) throws ElevatorIsBrokenException {
         this.elevatorEngine = elevatorEngine;
         this.state = State.WAITING;
         this.tickToGo = 0;
         this.tickToWait = 0;
-        this.initialState = strategy.create();
-        this.currentFloor = initialState.initialFloor;
+        this.initialState = floorsAndDirection;
+        this.currentFloor = floorsAndDirection.initialFloor;
 
-        elevatorEngine.call(initialState.initialFloor, initialState.initialDirection);
+        elevatorEngine.call(floorsAndDirection.initialFloor, floorsAndDirection.initialDirection);
     }
 
     public void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
