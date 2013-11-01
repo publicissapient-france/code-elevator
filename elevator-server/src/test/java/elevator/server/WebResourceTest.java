@@ -49,6 +49,15 @@ public class WebResourceTest {
     }
 
     @Test
+    public void should_decrease_maxNumberOfUsers() {
+        Response response = elevatorServerRule.target
+                .path("/admin/decreaseMaxNumberOfUsers").request()
+                .header(AUTHORIZATION, credentials("admin", "admin"))
+                .buildGet().invoke();
+        assertThat(response.readEntity(String.class)).isEqualTo("2");
+    }
+
+    @Test
     public void should_not_reset_with_unknow_user() {
         String password = null;
         try {
