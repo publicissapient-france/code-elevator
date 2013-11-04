@@ -53,8 +53,8 @@ public class HTTPElevatorTest {
 
     @Test
     public void should_call_server_with_call() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080"), executorService,
-                new DontConnectURLStreamHandler("http://localhost:8080/call?atFloor=4&to=UP", urlConnection));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:9999"), executorService,
+                new DontConnectURLStreamHandler("http://localhost:9999/call?atFloor=4&to=UP", urlConnection));
 
         httpElevator.call(4, UP);
 
@@ -173,25 +173,25 @@ public class HTTPElevatorTest {
 
     @Test
     public void should_handle_404_error() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new FileNotFoundException("http://localhost:8080/context/call?atFloor=4&to=UP"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
-                new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
+        when(urlConnection.getInputStream()).thenThrow(new FileNotFoundException("http://localhost:9999/context/call?atFloor=4&to=UP"));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:9999/context/"), executorService,
+                new DontConnectURLStreamHandler("http://localhost:9999/context/call?atFloor=4&to=UP", urlConnection));
         httpElevator.call(4, UP);
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("Resource \"http://localhost:8080/context/call\" is not found");
+        expectedException.expectMessage("Resource \"http://localhost:9999/context/call\" is not found");
         httpElevator.call(4, UP);
     }
 
     @Test
     public void should_return_url_without_query_when_server_respond_with_HTTP_status_code_error() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call?atFloor=4&to=UP"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
-                new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
+        when(urlConnection.getInputStream()).thenThrow(new IOException("Server returned HTTP response code: 500 for URL: http://localhost:9999/context/call?atFloor=4&to=UP"));
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:9999/context/"), executorService,
+                new DontConnectURLStreamHandler("http://localhost:9999/context/call?atFloor=4&to=UP", urlConnection));
         httpElevator.call(4, UP);
 
         expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call");
+        expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:9999/context/call");
         httpElevator.call(4, UP);
     }
 

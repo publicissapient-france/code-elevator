@@ -13,6 +13,7 @@
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.version>9.0.4.v20130625</jetty.version>
+        <jetty.port>9999</jetty.port>
     </properties>
     <modules>
         <module>elevator-core</module>

@@ -19,7 +19,7 @@ class ElevatorServerRule implements TestRule {
     @Override
     public Statement apply(Statement base, Description description) {
         this.base = base;
-        this.target = ClientBuilder.newClient().target("http://localhost:8080/resources");
+        this.target = ClientBuilder.newClient().target("http://localhost:9999/resources");
 
         return new ElevatorServerStatement();
     }
@@ -33,7 +33,7 @@ class ElevatorServerRule implements TestRule {
 
         @Override
         public void evaluate() throws Throwable {
-            InetSocketAddress address = new InetSocketAddress("localhost", 8080);
+            InetSocketAddress address = new InetSocketAddress("localhost", 9999);
             Server server = new Server(address);
             server.setHandler(new WebAppContext("src/main/webapp", "/"));
             try {

@@ -19,7 +19,7 @@ public class ElevatorServerTest {
         Player player = new Player("player@provider.com", "pseudo");
         ElevatorServer elevatorServer = new ElevatorServer();
 
-        elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1:8080"));
+        elevatorServer.addElevatorGame(player, new URL("http://127.0.0.1:9999"));
 
         Collection<ElevatorGame> elevatorGames = elevatorServer.getUnmodifiableElevatorGames();
         assertThat(elevatorGames).hasSize(1);
@@ -40,14 +40,14 @@ public class ElevatorServerTest {
         ElevatorServer elevatorServer = new ElevatorServer();
 
         elevatorServer.
-                addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1:8080")).
-                addElevatorGame(new Player("player@provider.com", "pseudo2"), new URL("http://127.0.0.1:8080/myApp"));
+                addElevatorGame(new Player("player@provider.com", "pseudo1"), new URL("http://127.0.0.1:9999")).
+                addElevatorGame(new Player("player@provider.com", "pseudo2"), new URL("http://127.0.0.1:9999/myApp"));
     }
 
     @Test
     public void should_loose_and_give_message_when_user_wants_to_reset() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:9999"));
 
         elevatorServer.resetPlayer("player@provider.com");
 
@@ -59,7 +59,7 @@ public class ElevatorServerTest {
     @Test
     public void should_remove_elevator_game() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:9999"));
 
         elevatorServer.removeElevatorGame("player@provider.com");
 
@@ -69,7 +69,7 @@ public class ElevatorServerTest {
     @Test
     public void should_resume_elevator_game() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080")).pauseElevatorGame("player@provider.com");
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:9999")).pauseElevatorGame("player@provider.com");
 
         elevatorServer.resumeElevatorGame("player@provider.com");
 

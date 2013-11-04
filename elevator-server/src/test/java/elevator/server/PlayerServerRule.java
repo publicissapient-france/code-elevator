@@ -32,7 +32,7 @@ class PlayerServerRule implements TestRule {
 
         @Override
         public void evaluate() throws Throwable {
-            InetSocketAddress address = new InetSocketAddress("localhost", 8080);
+            InetSocketAddress address = new InetSocketAddress("localhost", 9999);
             Server server = new Server(address);
             server.setHandler(new AlwaysOkHandler());
             try {
