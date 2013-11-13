@@ -32,7 +32,7 @@ public class Building {
         reset();
     }
 
-    public synchronized Building addUser(InitializationStrategy strategy) throws ElevatorIsBrokenException {
+    public Building addUser(InitializationStrategy strategy) throws ElevatorIsBrokenException {
         if (users.size() >= maxNumberOfUsers.value()) {
             return this;
         }
@@ -43,7 +43,7 @@ public class Building {
         return this;
     }
 
-    public synchronized Set<User> users() {
+    public Set<User> users() {
         return unmodifiableSet(users);
     }
 
@@ -51,7 +51,7 @@ public class Building {
         return floor;
     }
 
-    public synchronized int travelingUsers() {
+    public int travelingUsers() {
         int count = 0;
 
         for (User user : users) {
@@ -106,13 +106,13 @@ public class Building {
         }
     }
 
-    public synchronized void reset() {
+    public void reset() {
         floor = 0;
         door = CLOSE;
         users.clear();
     }
 
-    private synchronized Set<User> applyCommand(Command command) throws ElevatorIsBrokenException {
+    private Set<User> applyCommand(Command command) throws ElevatorIsBrokenException {
         Set<User> doneUsers = emptySet();
         notifyUsers();
         switch (command) {
@@ -150,13 +150,13 @@ public class Building {
         }
     }
 
-    private synchronized void notifyUsers() {
+    private void notifyUsers() {
         for (User user : users) {
             user.tick();
         }
     }
 
-    private synchronized void notifyUsers(Integer floor) {
+    private void notifyUsers(Integer floor) {
         for (User user : users) {
             user.elevatorIsAt(floor);
         }
