@@ -1,5 +1,6 @@
 package elevator.user;
 
+import elevator.Elevator;
 import elevator.engine.ElevatorEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,9 @@ public class UserTest {
     @Mock
     private ElevatorEngine mockElevatorEngine;
 
+    @Mock
+    private Elevator mockElevator;
+
     @Test
     public void should_not_count_tick_to_go_when_not_traveling() {
         User user = new User(mockElevatorEngine, new FloorsAndDirection(0, 1));
@@ -29,7 +33,7 @@ public class UserTest {
     public void should_count_tick_to_go_when_traveling() {
         User user = new User(mockElevatorEngine, new FloorsAndDirection(LOWER_FLOOR, HIGHER_FLOOR));
         // Make the user entering the elevator => traveling
-        user.elevatorIsOpen(LOWER_FLOOR);
+        user.elevatorIsOpen(mockElevator, LOWER_FLOOR);
 
         user.tick();
 
@@ -40,7 +44,7 @@ public class UserTest {
     public void should_not_count_tick_to_wait_when_not_waiting() {
         User user = new User(mockElevatorEngine, new FloorsAndDirection(LOWER_FLOOR, HIGHER_FLOOR));
         // Make the user entering the elevator => traveling
-        user.elevatorIsOpen(LOWER_FLOOR);
+        user.elevatorIsOpen(mockElevator, LOWER_FLOOR);
 
         user.tick();
 

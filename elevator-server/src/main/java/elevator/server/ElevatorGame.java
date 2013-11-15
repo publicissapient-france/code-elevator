@@ -50,7 +50,6 @@ class ElevatorGame implements ClockListener {
         this.lastErrorMessage = null;
         this.state = RESUME;
         this.resume();
-        this.resetElevatorEngine("the elevator is at floor 0 and its doors are closed");
     }
 
     ElevatorGame stop(Boolean shutdown) {
@@ -122,18 +121,13 @@ class ElevatorGame implements ClockListener {
     }
 
     void reset(String message) {
-        building.reset();
         score.loose();
-        lastErrorMessage = message;
-        resetElevatorEngine(lastErrorMessage);
-    }
-
-    private void resetElevatorEngine(String cause) {
         try {
-            elevatorEngine.reset(cause);
+            building.reset(message);
         } catch (ElevatorIsBrokenException e) {
             score.loose();
         }
+        lastErrorMessage = message;
     }
 
     public Set<FloorState> floorStates() {

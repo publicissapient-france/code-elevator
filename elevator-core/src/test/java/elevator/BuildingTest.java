@@ -88,7 +88,7 @@ public class BuildingTest {
         building.updateBuildingState();
         building.addUser(new RandomUser());
 
-        building.reset();
+        building.reset("cause");
 
         assertThat(building).doorIs(Door.CLOSE).floorIs(0).users().isEmpty();
     }

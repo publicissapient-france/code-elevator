@@ -9,27 +9,23 @@ import elevator.user.User;
 import java.util.*;
 
 import static elevator.Direction.DOWN;
-import static elevator.Door.CLOSE;
-import static elevator.Door.OPEN;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
-import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 public class Building {
 
     private final Set<User> users;
     private final ElevatorEngine elevatorEngine;
+    private final Elevator elevator;
     private final MaxNumberOfUsers maxNumberOfUsers;
-
-    private Door door;
-    private Integer floor;
 
     public Building(ElevatorEngine elevatorEngine, MaxNumberOfUsers maxNumberOfUsers) {
         this.users = Collections.synchronizedSet(new HashSet<User>());
         this.elevatorEngine = elevatorEngine;
         this.maxNumberOfUsers = maxNumberOfUsers;
-        reset();
+        this.elevator = new Elevator(this);
+        reset("the elevator is at floor 0 and its doors are closed");
     }
 
     public Building addUser(InitializationStrategy strategy) throws ElevatorIsBrokenException {
@@ -38,7 +34,7 @@ public class Building {
         }
 
         User newUser = new User(elevatorEngine, strategy.create());
-        notifyNewUser(newUser);
+        elevator.notifyNewUser(newUser);
         users.add(newUser);
         return this;
     }
@@ -48,7 +44,7 @@ public class Building {
     }
 
     public Integer floor() {
-        return floor;
+        return elevator.floor();
     }
 
     public int travelingUsers() {
@@ -64,102 +60,38 @@ public class Building {
     }
 
     public Door door() {
-        return door;
+        return elevator.door();
     }
 
     public Set<User> updateBuildingState() throws ElevatorIsBrokenException {
         Command command = elevatorEngine.nextCommand();
-        validateCommand(command);
-        return applyCommand(command);
+        elevator.validateCommand(command);
+        notifyUsersWithTick();
+        return elevator.applyCommand(command);
     }
 
-    private void validateCommand(Command command) throws ElevatorIsBrokenException {
-        switch (command) {
-            case CLOSE:
-                if (door != OPEN) {
-                    throw new ElevatorIsBrokenException("can't close doors because they aren't opened");
-                }
-                break;
-            case OPEN:
-                if (door != CLOSE) {
-                    throw new ElevatorIsBrokenException("can't open doors because they aren't closed");
-                }
-                break;
-            case DOWN:
-                if (door == OPEN) {
-                    throw new ElevatorIsBrokenException("can't go down because doors are opened");
-                }
-                if (floor.equals(LOWER_FLOOR)) {
-                    throw new ElevatorIsBrokenException("can't go down because current floor is the lowest floor");
-                }
-                break;
-            case UP:
-                if (door == OPEN) {
-                    throw new ElevatorIsBrokenException("can't go up because doors are opened");
-                }
-                if (floor.equals(HIGHER_FLOOR)) {
-                    throw new ElevatorIsBrokenException("can't go up because current floor is the highest floor");
-                }
-                break;
-            case NOTHING:
-                break;
-        }
-    }
-
-    public void reset() {
-        floor = 0;
-        door = CLOSE;
+    public void reset(String cause) throws ElevatorIsBrokenException {
+        elevator.reset();
         users.clear();
+        elevatorEngine.reset(cause);
     }
 
-    private Set<User> applyCommand(Command command) throws ElevatorIsBrokenException {
-        Set<User> doneUsers = emptySet();
-        notifyUsers();
-        switch (command) {
-            case CLOSE:
-                door = CLOSE;
-                break;
-            case OPEN:
-                door = OPEN;
-                doneUsers = new HashSet<>();
-                for (User user : users) {
-                    user.elevatorIsOpen(floor);
-                    if (user.done()) {
-                        doneUsers.add(user);
-                    }
-                }
-                users.removeAll(doneUsers);
-                break;
-            case UP:
-                floor++;
-                notifyUsers(floor);
-                break;
-            case DOWN:
-                floor--;
-                notifyUsers(floor);
-                break;
-            case NOTHING:
-                break;
-        }
-        return doneUsers;
-    }
-
-    private void notifyNewUser(User newUser) {
-        if (door == Door.OPEN) {
-            newUser.elevatorIsOpen(floor);
-        }
-    }
-
-    private void notifyUsers() {
+    private void notifyUsersWithTick() {
         for (User user : users) {
             user.tick();
         }
     }
 
-    private void notifyUsers(Integer floor) {
+    Set<User> notifyUsersWithOpenElevatorDoor(Integer floor) {
+        Set<User> doneUsers = new HashSet<>();
         for (User user : users) {
-            user.elevatorIsAt(floor);
+            user.elevatorIsOpen(elevator, floor);
+            if (user.done()) {
+                doneUsers.add(user);
+            }
         }
+        users.removeAll(doneUsers);
+        return doneUsers;
     }
 
     public Set<FloorState> floorStates() {

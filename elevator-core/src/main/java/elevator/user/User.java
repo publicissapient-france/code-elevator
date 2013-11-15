@@ -1,6 +1,7 @@
 package elevator.user;
 
 import elevator.Direction;
+import elevator.Elevator;
 import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 
@@ -24,12 +25,14 @@ public class User {
         elevatorEngine.call(floorsAndDirection.initialFloor, floorsAndDirection.initialDirection);
     }
 
-    public void elevatorIsOpen(Integer floor) throws ElevatorIsBrokenException {
+    public void elevatorIsOpen(Elevator elevator, Integer floor) throws ElevatorIsBrokenException {
         if (waiting() && at(floor)) {
+            elevator.userHasEntered(this);
             elevatorEngine.userHasEntered(this);
             elevatorEngine.go(initialState.floorToGo);
             state = State.TRAVELLING;
         } else if (traveling() && at(initialState.floorToGo)) {
+            elevator.userHasExited(this);
             elevatorEngine.userHasExited(this);
             state = State.DONE;
         }
