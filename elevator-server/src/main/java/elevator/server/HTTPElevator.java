@@ -144,7 +144,7 @@ class HTTPElevator implements ElevatorEngine {
         httpGet(SHUTDOWN_URL);
     }
 
-    private void httpGet(String pathAndParameters) throws ElevatorIsBrokenException {
+    private void httpGet(String pathAndParameters) {
         try {
             httpGet(new URL(server, pathAndParameters, urlStreamHandler));
         } catch (MalformedURLException e) {
@@ -152,7 +152,7 @@ class HTTPElevator implements ElevatorEngine {
         }
     }
 
-    private void httpGet(final URL url) throws ElevatorIsBrokenException {
+    private void httpGet(final URL url) {
         logger.info(url.toString());
         requests.offer(url);
     }

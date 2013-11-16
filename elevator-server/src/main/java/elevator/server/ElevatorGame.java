@@ -122,11 +122,7 @@ class ElevatorGame implements ClockListener {
 
     void reset(String message) {
         score.loose();
-        try {
-            building.reset(message);
-        } catch (ElevatorIsBrokenException e) {
-            score.loose();
-        }
+        building.reset(message);
         lastErrorMessage = message;
     }
 

@@ -70,7 +70,7 @@ public class Building {
         return elevator.applyCommand(command);
     }
 
-    public void reset(String cause) throws ElevatorIsBrokenException {
+    public void reset(String cause) {
         elevator.reset();
         users.clear();
         elevatorEngine.reset(cause);

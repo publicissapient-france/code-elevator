@@ -2,8 +2,8 @@ package elevator.engine;
 
 import elevator.Command;
 import elevator.Direction;
-import elevator.user.User;
 import elevator.exception.ElevatorIsBrokenException;
+import elevator.user.User;
 
 public interface ElevatorEngine {
 
@@ -20,6 +20,6 @@ public interface ElevatorEngine {
 
     public ElevatorEngine userHasExited(User user) throws ElevatorIsBrokenException;
 
-    public ElevatorEngine reset(String cause) throws ElevatorIsBrokenException;
+    public ElevatorEngine reset(String cause);
 
 }
