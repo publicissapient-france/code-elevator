@@ -115,5 +115,6 @@ public class Elevator {
     public void reset() {
         floor = 0;
         door = CLOSE;
+        users.clear();
     }
 }
