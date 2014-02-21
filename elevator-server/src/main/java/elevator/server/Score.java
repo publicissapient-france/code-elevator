@@ -74,7 +74,7 @@ class Score {
 
     protected int getAverageScore(DateTime now) {
         long elapsed = (int) new Duration(started, now).getStandardSeconds();
-        return (int) (score * (10f * 60 / elapsed));
+        return (int) (score * (15f * 60 / elapsed));
     }
 
 }

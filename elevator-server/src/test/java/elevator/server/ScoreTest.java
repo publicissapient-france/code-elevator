@@ -101,7 +101,7 @@ public class ScoreTest {
 
         Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 1));
 
-        assertThat(averageScore).isEqualTo(1000);
+        assertThat(averageScore).isEqualTo(1500);
     }
 
     @Test
@@ -112,18 +112,18 @@ public class ScoreTest {
 
         Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 2));
 
-        assertThat(averageScore).isEqualTo(1010);
+        assertThat(averageScore).isEqualTo(1515);
     }
 
     @Test
-    public void should_compute_average_score_after_10min() {
+    public void should_compute_average_score_after_15min() {
         Score score = new Score();
-        score.score = 1100;
+        score.score = 1600;
         score.started = new DateTime(2013, 9, 28, 9, 0);
 
-        Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 11));
+        Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 16));
 
-        assertThat(averageScore).isEqualTo(1000);
+        assertThat(averageScore).isEqualTo(1500);
     }
 
     @Test
