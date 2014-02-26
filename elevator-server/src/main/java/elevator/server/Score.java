@@ -4,9 +4,11 @@ import elevator.user.User;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
+import java.util.Observable;
+
 import static java.lang.Math.*;
 
-class Score {
+class Score extends Observable {
 
     Integer score;
     DateTime started = new DateTime();
@@ -26,7 +28,15 @@ class Score {
 
     Score success(User user) throws IllegalStateException {
         score += score(user);
+        if (isYoungerThan15Minutes()) {
+            setChanged();
+            notifyObservers();
+        }
         return this;
+    }
+
+    private boolean isYoungerThan15Minutes() {
+        return started.plusMinutes(15).isAfterNow();
     }
 
     private Integer score(User user) throws IllegalStateException {

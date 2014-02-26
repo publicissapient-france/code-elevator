@@ -31,6 +31,7 @@ class ElevatorGame implements ClockListener {
     private final Building building;
     private final Score score;
     private final InitializationStrategy userInitializationStrategy;
+    private final SaveMaxScore saveMaxScore;
 
     ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore) throws MalformedURLException {
         this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null);
@@ -49,6 +50,7 @@ class ElevatorGame implements ClockListener {
         this.userInitializationStrategy = userInitializationStrategy;
         this.lastErrorMessage = null;
         this.state = RESUME;
+        this.saveMaxScore = new SaveMaxScore(score, player);
         this.resume();
     }
 

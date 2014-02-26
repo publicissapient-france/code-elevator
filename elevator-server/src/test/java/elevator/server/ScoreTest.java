@@ -4,10 +4,13 @@ import elevator.user.User;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import static java.lang.String.format;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 public class ScoreTest {
 
@@ -133,6 +136,32 @@ public class ScoreTest {
         final Integer currentScore = score.score;
 
         assertThat(currentScore).isEqualTo(29);
+    }
+
+    @Test
+    public void should_notify_observer_when_success() {
+        Score score = new Score();
+        Observer scoreObserver = mock(Observer.class);
+        score.addObserver(scoreObserver);
+        User user = user(0, 1, 3, 0);
+
+        score.success(user);
+
+        verify(scoreObserver).update(eq(score), isNull());
+    }
+
+    @Test
+    public void should_not_notify_observer_when_score_is_older_than_15_minutes() {
+        Score score = new Score();
+        Observer scoreObserver = mock(Observer.class);
+        score.addObserver(scoreObserver);
+        DateTime now = new DateTime();
+        score.started = now.minusMinutes(15).minusSeconds(1);
+        User user = user(0, 1, 3, 0);
+
+        score.success(user);
+
+        verify(scoreObserver, never()).update(any(Observable.class), any());
     }
 
     private User user(int floor, int floorToGo, int tickToGo, int tickToWait) {

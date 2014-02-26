@@ -30,6 +30,7 @@ class JettyServerStatement extends Statement {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            SaveMaxScore.SCORES_FILE.delete();
         }
     }
 
