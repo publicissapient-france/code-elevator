@@ -1,10 +1,7 @@
 package elevator.server;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 class SaveMaxScore implements Observer {
     static final File SCORES_FILE = new File("scores");
@@ -35,7 +32,7 @@ class SaveMaxScore implements Observer {
         }
     }
 
-    private Map<String, Integer> readScores() throws IOException, ClassNotFoundException {
+    private static Map<String, Integer> readScores() throws IOException, ClassNotFoundException {
         if (!SCORES_FILE.exists()) {
             return new HashMap<>();
         }
@@ -49,5 +46,24 @@ class SaveMaxScore implements Observer {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SCORES_FILE))) {
             out.writeObject(playerAndScores);
         }
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        for (Map.Entry<Integer, Set<String>> scoreAndPlayers : orderByScore(SaveMaxScore.readScores()).entrySet()) {
+            for (String email : scoreAndPlayers.getValue()) {
+                System.out.format("%45s %d%n", email, scoreAndPlayers.getKey());
+            }
+        }
+    }
+
+    private static Map<Integer, Set<String>> orderByScore(Map<String, Integer> scoresByPlayer) {
+        Map<Integer, Set<String>> playersByScore = new TreeMap<>();
+        for (Map.Entry<String, Integer> playerAndScore : scoresByPlayer.entrySet()) {
+            if (!playersByScore.containsKey(playerAndScore.getValue())) {
+                playersByScore.put(playerAndScore.getValue(), new HashSet<String>());
+            }
+            playersByScore.get(playerAndScore.getValue()).add(playerAndScore.getKey());
+        }
+        return playersByScore;
     }
 }
