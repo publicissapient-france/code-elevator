@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
+import static java.util.concurrent.Executors.newCachedThreadPool;
 
 public class ParticipantsServer implements HttpHandler {
     public static final Pattern PATH_PATTERN = Pattern.compile("^(.*)(/.+)$");
@@ -120,6 +121,7 @@ public class ParticipantsServer implements HttpHandler {
     public static void main(String[] args) throws IOException {
         final HttpServer httpServer = HttpServer.create(new InetSocketAddress(8081), 0);
         httpServer.createContext("/", new ParticipantsServer());
+        httpServer.setExecutor(newCachedThreadPool());
         httpServer.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
