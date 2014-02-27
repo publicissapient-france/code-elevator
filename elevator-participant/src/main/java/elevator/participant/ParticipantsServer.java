@@ -127,7 +127,7 @@ public class ParticipantsServer implements HttpHandler {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                httpServer.stop(1000);
+                httpServer.stop(0);
             }
         }));
     }
