@@ -59,6 +59,7 @@ When you redeploy the application, all users are lost in the operation. You can 
 
 - export
 
+
     $ curl --basic --user :secret --url http://localhost:8080/resources/players.csv > players.csv
 
 Csv is user email, user login, server url and score:
@@ -69,6 +70,7 @@ Csv is user email, user login, server url and score:
 
 - import
 
+
     $ curl --basic --user :secret --url http://localhost:8080/resources/players.csv --form players=@players.csv > uploadResult.txt
 
 Upload result is a json file where the key is the user email and the value is the import result. Import is successful when the password is defined:
@@ -77,3 +79,7 @@ Upload result is a json file where the key is the user email and the value is th
       "foo@exemple.org":["password","a game with player foo@exemple.org has already been added"],
       "bar@exemple.org":["password"]
     }
+
+## TODO
+
+ - When define authorization, use `javax.ws.rs.core.SecurityContext` to get `Principal` instead of `QueryParam`
