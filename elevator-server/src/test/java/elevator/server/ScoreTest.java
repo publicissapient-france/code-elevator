@@ -5,12 +5,11 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.lang.String.format;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 public class ScoreTest {
-
     @Test
     public void should_compute_scores_with_max_amplitude() {
         String scores = scores(0, 5);
@@ -166,5 +165,4 @@ public class ScoreTest {
         }
         return out.toString();
     }
-
 }

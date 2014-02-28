@@ -2,10 +2,9 @@ package elevator.server;
 
 import org.junit.Test;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class MaxNumberOfUsersTest {
-
     @Test
     public void should_start_at_three() throws Exception {
         MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();

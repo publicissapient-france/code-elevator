@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Collection;
 
 import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ElevatorServerTest {
     @ClassRule

@@ -4,10 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static elevator.server.port.PortFactory.ELEVATOR_SERVER_PORT_PROPERTY;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class PortFactoryTest {
-
     @Rule
     public SystemPropertyRule systemPropertyRule = new SystemPropertyRule(ELEVATOR_SERVER_PORT_PROPERTY);
 
@@ -27,5 +26,4 @@ public class PortFactoryTest {
 
         assertThat(port).isInstanceOf(RandomPort.class);
     }
-
 }

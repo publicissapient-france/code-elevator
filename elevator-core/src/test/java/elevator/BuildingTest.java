@@ -17,13 +17,12 @@ import static elevator.Command.*;
 import static elevator.engine.assertions.Assertions.assertThat;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BuildingTest {
-
     @Mock
     public ElevatorEngine elevator;
 
@@ -239,5 +238,4 @@ public class BuildingTest {
                 down(FALSE, FALSE, FALSE, FALSE, TRUE, FALSE).
                 target(FALSE, FALSE, FALSE, TRUE, FALSE, FALSE);
     }
-
 }

@@ -2,18 +2,17 @@ package elevator.engine.assertions;
 
 import elevator.Building;
 import elevator.Door;
-import org.fest.assertions.CollectionAssert;
-import org.fest.assertions.GenericAssert;
+import org.assertj.core.api.AbstractObjectAssert;
+import org.assertj.core.api.IterableAssert;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class BuildingAssert extends GenericAssert<BuildingAssert, Building> {
-
+public class BuildingAssert extends AbstractObjectAssert<BuildingAssert, Building> {
     public BuildingAssert(Building actual) {
-        super(BuildingAssert.class, actual);
+        super(actual, BuildingAssert.class);
     }
 
-    public CollectionAssert users() {
+    public IterableAssert users() {
         return assertThat(actual.users()).as("building users (delivered users are gone)");
     }
 

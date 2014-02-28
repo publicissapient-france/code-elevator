@@ -5,10 +5,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import static elevator.server.security.AdminPassword.PASSWORD_PROPERTY;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AdminPasswordTest {
-
     @Rule
     public SystemPropertyRule systemPropertyRule = new SystemPropertyRule("ADMIN_PASSWORD");
 
@@ -27,5 +26,4 @@ public class AdminPasswordTest {
 
         assertThat(password.value()).isEqualTo("an admin password");
     }
-
 }

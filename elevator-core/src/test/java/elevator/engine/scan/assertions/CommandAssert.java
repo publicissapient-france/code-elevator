@@ -1,14 +1,13 @@
 package elevator.engine.scan.assertions;
 
 import elevator.engine.scan.Command;
-import org.fest.assertions.GenericAssert;
+import org.assertj.core.api.AbstractObjectAssert;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class CommandAssert extends GenericAssert<CommandAssert, Command> {
-
+public class CommandAssert extends AbstractObjectAssert<CommandAssert, Command> {
     CommandAssert(Command actual) {
-        super(CommandAssert.class, actual);
+        super(actual, CommandAssert.class);
     }
 
     public CommandAssert isEqualTo(String expectedCommandAsString) {
@@ -16,5 +15,4 @@ public class CommandAssert extends GenericAssert<CommandAssert, Command> {
         assertThat(actual.toString()).isEqualTo(expectedCommandAsString);
         return this;
     }
-
 }

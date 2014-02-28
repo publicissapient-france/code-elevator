@@ -16,7 +16,7 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebResourceTest {
     @Rule

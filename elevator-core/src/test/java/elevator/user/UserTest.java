@@ -9,11 +9,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserTest {
-
     @Mock
     private ElevatorEngine mockElevatorEngine;
 
@@ -68,5 +67,4 @@ public class UserTest {
 
         assertThat(user.at(3)).isFalse();
     }
-
 }
