@@ -43,4 +43,17 @@ class ElevatorServerRule extends ExternalResource {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) throws Throwable {
+        final ElevatorServerRule elevatorServer = new ElevatorServerRule();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                elevatorServer.after();
+            }
+        }));
+
+        elevatorServer.before();
+    }
 }
