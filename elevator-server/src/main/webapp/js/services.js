@@ -19,7 +19,7 @@ angular.module('elevatorApp.services', ['ngCookies']).
                 }
                 return $http({
                     'method': 'GET',
-                    'url': '/resources/player/info?email=' + this.player().email,
+                    'url': '/resources/player/info',
                     'headers': {
                         'Authorization': 'Basic ' + $cookieStore.get('isLogged').cookieValue
                     }
@@ -43,7 +43,7 @@ angular.module('elevatorApp.services', ['ngCookies']).
             "unregister": function (player) {
                 $http({
                     'method': 'POST',
-                    'url': '/resources/player/unregister?email=' + player.email,
+                    'url': '/resources/player/unregister',
                     'headers': {
                         'Authorization': 'Basic ' + $cookieStore.get('isLogged').cookieValue
                     }
@@ -60,8 +60,8 @@ angular.module('elevatorApp.services', ['ngCookies']).
     factory('Base64', function () {
         // based on http://www.webtoolkit.info/javascript-base64.html
         return {
-            "_keyStr" : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
-            "encode" : function (input) {
+            "_keyStr": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+            "encode": function (input) {
                 var output = "";
                 var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
                 var i = 0;
@@ -91,8 +91,8 @@ angular.module('elevatorApp.services', ['ngCookies']).
 
                 return output;
             },
-            "_utf8_encode" : function (string) {
-                string = string.replace(/\r\n/g,"\n");
+            "_utf8_encode": function (string) {
+                string = string.replace(/\r\n/g, "\n");
                 var utftext = "";
 
                 for (var n = 0; n < string.length; n++) {
@@ -101,7 +101,7 @@ angular.module('elevatorApp.services', ['ngCookies']).
                     if (c < 128) {
                         utftext += String.fromCharCode(c);
                     }
-                    else if((c > 127) && (c < 2048)) {
+                    else if ((c > 127) && (c < 2048)) {
                         utftext += String.fromCharCode((c >> 6) | 192);
                         utftext += String.fromCharCode((c & 63) | 128);
                     }

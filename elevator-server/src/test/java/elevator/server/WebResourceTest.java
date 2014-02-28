@@ -10,17 +10,15 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.net.URISyntaxException;
-import java.util.regex.Matcher;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.Response.Status.*;
+import static javax.ws.rs.core.Response.Status.NO_CONTENT;
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.fest.assertions.Assertions.assertThat;
 
 public class WebResourceTest {
-
     @Rule
     public ElevatorServerRule elevatorServerRule = new ElevatorServerRule();
 
@@ -58,33 +56,6 @@ public class WebResourceTest {
     }
 
     @Test
-    public void should_not_reset_with_unknow_user() {
-        String password = null;
-        try {
-            password = elevatorServerRule.target.path("/player/register")
-                    .queryParam("email", "player@provider.com")
-                    .queryParam("pseudo", "player")
-                    .queryParam("serverURL", "http://localhost").request()
-                    .buildPost(null).invoke().readEntity(String.class);
-
-            Response response = elevatorServerRule.target
-                    .path("/player/reset")
-                    .queryParam("email", "unkown@provider.com").request()
-                    .header(AUTHORIZATION, credentials("player@provider.com", password))
-                    .buildPost(null).invoke();
-
-            assertThat(response.getStatus()).isEqualTo(NOT_FOUND.getStatusCode());
-        } finally {
-            if (password != null) {
-                elevatorServerRule.target.path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
-                        .header(AUTHORIZATION, credentials("player@provider.com", password))
-                        .buildPost(null).invoke();
-            }
-        }
-    }
-
-    @Test
     public void should_reset() {
         String password = null;
         try {
@@ -96,7 +67,7 @@ public class WebResourceTest {
 
             Response response = elevatorServerRule.target
                     .path("/player/reset")
-                    .queryParam("email", "player@provider.com").request()
+                    .request()
                     .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
@@ -104,7 +75,7 @@ public class WebResourceTest {
         } finally {
             if (password != null) {
                 elevatorServerRule.target.path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player@provider.com", password))
                         .buildPost(null).invoke();
             }
@@ -121,7 +92,7 @@ public class WebResourceTest {
 
         Response response = elevatorServerRule.target
                 .path("/player/unregister")
-                .queryParam("email", "player@provider.com").request()
+                .request()
                 .header(AUTHORIZATION, credentials("player@provider.com", password))
                 .buildPost(null).invoke();
 
@@ -138,13 +109,11 @@ public class WebResourceTest {
                     .queryParam("serverURL", "http://localhost").request()
                     .buildPost(null).invoke().readEntity(String.class);
 
-            elevatorServerRule.target.path("/player/pause")
-                    .queryParam("email", "player@provider.com").request()
+            elevatorServerRule.target.path("/player/pause").request()
                     .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
-            Response response = elevatorServerRule.target.path("/player/resume")
-                    .queryParam("email", "player@provider.com").request()
+            Response response = elevatorServerRule.target.path("/player/resume").request()
                     .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildPost(null).invoke();
 
@@ -153,7 +122,7 @@ public class WebResourceTest {
             if (password != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player@provider.com", password))
                         .buildPost(null).invoke();
             }
@@ -173,7 +142,6 @@ public class WebResourceTest {
                     .buildPost(null).invoke().readEntity(String.class);
 
             final Response playerInfo = elevatorServerRule.target.path("/player/info")
-                    .queryParam("email", "player@provider.com")
                     .request()
                     .header(AUTHORIZATION, credentials("player@provider.com", password))
                     .buildGet().invoke();
@@ -183,7 +151,7 @@ public class WebResourceTest {
             if (password != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player@provider.com", password))
                         .buildPost(null).invoke();
             }
@@ -216,14 +184,14 @@ public class WebResourceTest {
             if (passwordPlayerOne != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player1@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player1@provider.com", passwordPlayerOne))
                         .buildPost(null).invoke();
             }
             if (passwordPlayerTwo != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player2@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player2@provider.com", passwordPlayerTwo))
                         .buildPost(null).invoke();
             }
@@ -250,7 +218,6 @@ public class WebResourceTest {
             String jsonPlayer = playerAsCSV.readEntity(String.class);
             assertThat(jsonPlayer).isEqualTo("{\"player@provider.com\":[\"a game with player player@provider.com has already been added\"]}");
             final Response playerInfo = elevatorServerRule.target.path("/player/info")
-                    .queryParam("email", "player@provider.com")
                     .request()
                     .header(AUTHORIZATION, credentials("player@provider.com", passwordPlayer))
                     .buildGet().invoke();
@@ -259,7 +226,7 @@ public class WebResourceTest {
             if (passwordPlayer != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player@provider.com", passwordPlayer))
                         .buildPost(null).invoke();
             }
@@ -282,7 +249,6 @@ public class WebResourceTest {
             assertThat(jsonPlayer).startsWith("{\"player@provider.com\":[\"").endsWith("\"]}");
             passwordPlayer = jsonPlayer.substring("{\"player@provider.com\":[\"".length(), jsonPlayer.length() - "\"]}".length());
             final Response playerInfo = elevatorServerRule.target.path("/player/info")
-                    .queryParam("email", "player@provider.com")
                     .request()
                     .header(AUTHORIZATION, credentials("player@provider.com", passwordPlayer))
                     .buildGet().invoke();
@@ -291,7 +257,7 @@ public class WebResourceTest {
             if (passwordPlayer != null) {
                 elevatorServerRule.target
                         .path("/player/unregister")
-                        .queryParam("email", "player@provider.com").request()
+                        .request()
                         .header(AUTHORIZATION, credentials("player@provider.com", passwordPlayer))
                         .buildPost(null).invoke();
             }
@@ -301,5 +267,4 @@ public class WebResourceTest {
     private String credentials(String user, String password) {
         return "Basic " + printBase64Binary((user + ":" + password).getBytes());
     }
-
 }

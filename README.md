@@ -79,7 +79,3 @@ Upload result is a json file where the key is the user email and the value is th
       "foo@exemple.org":["password","a game with player foo@exemple.org has already been added"],
       "bar@exemple.org":["password"]
     }
-
-## TODO
-
- - When define authorization, use `javax.ws.rs.core.SecurityContext` to get `Principal` instead of `QueryParam`

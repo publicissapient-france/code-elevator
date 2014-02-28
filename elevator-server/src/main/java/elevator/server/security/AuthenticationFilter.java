@@ -9,11 +9,10 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 
-abstract class AuthorizationFilter implements ContainerRequestFilter {
-
+abstract class AuthenticationFilter implements ContainerRequestFilter {
     private final UserPasswordValidator userPasswordValidator;
 
-    protected AuthorizationFilter(UserPasswordValidator userPasswordValidator) {
+    protected AuthenticationFilter(UserPasswordValidator userPasswordValidator) {
         this.userPasswordValidator = userPasswordValidator;
     }
 
@@ -29,12 +28,13 @@ abstract class AuthorizationFilter implements ContainerRequestFilter {
         if (!userAndPassword.contains(":")) {
             throw new WebApplicationException(UNAUTHORIZED);
         }
-        String user = userAndPassword.split(":")[0];
+        final String email = userAndPassword.split(":")[0];
         String password = userAndPassword.split(":")[1];
 
-        if (!userPasswordValidator.validate(user, password)) {
+        if (!userPasswordValidator.validate(email, password)) {
             throw new WebApplicationException(UNAUTHORIZED);
         }
-    }
 
+        requestContext.setSecurityContext(new ElevatorSecurityContext(email));
+    }
 }

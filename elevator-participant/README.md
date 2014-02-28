@@ -29,7 +29,7 @@ Password of current session is in requestBody of this response.
 
 ### More actions
 
-    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/pause\?email\=<email>
-    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/resume\?email\=<email>
-    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/reset\?email\=<email>
-    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/unregister\?email\=<email>
+    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/pause
+    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/resume
+    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/reset
+    $ curl --basic --user "<email>:<password>" --request post --url http://localhost:8080/resources/player/unregister
