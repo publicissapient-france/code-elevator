@@ -1,8 +1,8 @@
 package elevator.server;
 
 import com.google.common.collect.Sets;
-import elevator.server.security.AdminAuthorizationFilter;
-import elevator.server.security.UserAuthorizationFilter;
+import elevator.server.security.AdminAuthenticationFilter;
+import elevator.server.security.UserAuthenticationFilter;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
@@ -13,15 +13,14 @@ import java.util.Set;
 import static com.google.common.collect.Sets.newHashSet;
 
 public class ElevatorApplication extends Application {
-
     private final HashSet<Object> singletons;
 
     public ElevatorApplication() {
         ElevatorServer server = new ElevatorServer();
         singletons = newHashSet(
                 new WebResource(server),
-                new UserAuthorizationFilter(server),
-                new AdminAuthorizationFilter());
+                new UserAuthenticationFilter(server),
+                new AdminAuthenticationFilter());
     }
 
     @Override
@@ -33,5 +32,4 @@ public class ElevatorApplication extends Application {
     public Set<Object> getSingletons() {
         return singletons;
     }
-
 }

@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import static elevator.engine.scan.ElevatorDirection.*;
 import static elevator.engine.scan.assertions.Assertions.assertThat;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DistanceEvaluatorTest {
-
     private static final int LOWER_FLOOR = 0;
     private static final int HIGHER_FLOOR = 5;
 
@@ -125,5 +124,4 @@ public class DistanceEvaluatorTest {
 
         assertThat(comparator.getDistance(new Command(4, DOWN))).isEqualTo(4);
     }
-
 }

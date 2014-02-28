@@ -8,10 +8,9 @@ import java.util.Set;
 
 import static elevator.engine.scan.ElevatorDirection.*;
 import static java.lang.String.format;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DistanceEvaluatorAssert {
-
     private final DistanceEvaluator actual;
 
     DistanceEvaluatorAssert(DistanceEvaluator actual) {
@@ -46,6 +45,4 @@ public class DistanceEvaluatorAssert {
 
         assertThat(actualDistances.toString()).isEqualTo(expectedDistances);
     }
-
-
 }

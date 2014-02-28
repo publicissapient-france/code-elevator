@@ -16,7 +16,6 @@ import static java.lang.Boolean.TRUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class ElevatorServer implements UserPasswordValidator {
-
     private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
     private final Clock clock = new Clock();
 
@@ -45,10 +44,10 @@ class ElevatorServer implements UserPasswordValidator {
     }
 
     @Override
-    public Boolean validate(String email, String password) {
+    public boolean validate(String email, String password) {
         ElevatorGame elevatorGame = elevatorGame(email, FALSE);
         if (elevatorGame == null) {
-            return FALSE;
+            return false;
         }
         Player player = elevatorGame.player;
         return player.email.equals(email) && player.password.value().equals(password);
@@ -108,5 +107,4 @@ class ElevatorServer implements UserPasswordValidator {
         }
         return elevatorGames.get(player);
     }
-
 }

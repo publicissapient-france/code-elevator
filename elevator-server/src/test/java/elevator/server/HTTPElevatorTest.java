@@ -21,20 +21,17 @@ import java.util.concurrent.Executors;
 
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HTTPElevatorTest {
-
-    @Mock
-    private URLConnection urlConnection;
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     @Rule
     public ExpectedException expectedException = none();
+    @Mock
+    private URLConnection urlConnection;
+    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Test
     public void should_call_server_with_call() throws Exception {
@@ -206,5 +203,4 @@ public class HTTPElevatorTest {
             throw new RuntimeException(e);
         }
     }
-
 }

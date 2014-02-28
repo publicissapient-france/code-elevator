@@ -8,12 +8,12 @@ import java.util.Observable;
 import java.util.Observer;
 
 import static java.lang.String.format;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
 
 public class ScoreTest {
-
     @Test
     public void should_compute_scores_with_max_amplitude() {
         String scores = scores(0, 5);
@@ -195,5 +195,4 @@ public class ScoreTest {
         }
         return out.toString();
     }
-
 }

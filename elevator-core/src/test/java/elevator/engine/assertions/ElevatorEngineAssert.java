@@ -4,7 +4,6 @@ import elevator.Command;
 import elevator.Direction;
 import elevator.Door;
 import elevator.engine.ElevatorEngine;
-import org.fest.assertions.GenericAssert;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,10 +12,10 @@ import static elevator.Door.CLOSE;
 import static elevator.Door.OPEN;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.format;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
-public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, ElevatorEngine> {
-
+public class ElevatorEngineAssert extends org.assertj.core.api.AbstractObjectAssert<ElevatorEngineAssert, ElevatorEngine> {
     private static final Pattern PATTERN = Pattern.compile("(OPEN|CLOSE)?(?: )*(\\d+)?");
 
     private final StringBuilder expectedStates;
@@ -27,7 +26,7 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
     private Door actualDoor = CLOSE;
 
     ElevatorEngineAssert(ElevatorEngine actual) {
-        super(ElevatorEngineAssert.class, actual);
+        super(actual, ElevatorEngineAssert.class);
         expectedStates = new StringBuilder();
     }
 
@@ -55,7 +54,8 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
         Matcher matcher = PATTERN.matcher(expectedState);
 
         if (!matcher.matches()) {
-            throw fail(format("\"%s\" is not recognized as a state expression", expectedState));
+            fail(format("\"%s\" is not recognized as a state expression", expectedState));
+            return matcher;
         }
 
         expectedStates.append('\n');
@@ -113,5 +113,4 @@ public class ElevatorEngineAssert extends GenericAssert<ElevatorEngineAssert, El
 
         return this;
     }
-
 }

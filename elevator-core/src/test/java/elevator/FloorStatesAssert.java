@@ -5,10 +5,9 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FloorStatesAssert {
-
     private final SortedSet<FloorState> actual;
 
     FloorStatesAssert(Set<FloorState> actual) {
@@ -75,5 +74,4 @@ class FloorStatesAssert {
         assertThat(actualTarget).as("target").isEqualTo(expectedTargets);
         return this;
     }
-
 }

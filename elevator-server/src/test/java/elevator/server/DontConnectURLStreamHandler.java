@@ -5,10 +5,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DontConnectURLStreamHandler extends URLStreamHandler {
-
     private final URLConnection urlConnection;
     private final String expectedURL;
 
@@ -28,5 +27,4 @@ class DontConnectURLStreamHandler extends URLStreamHandler {
         }
         return urlConnection;
     }
-
 }

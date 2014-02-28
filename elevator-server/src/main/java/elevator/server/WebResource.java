@@ -4,12 +4,14 @@ import com.google.common.base.Function;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import elevator.server.security.AdminAuthorization;
-import elevator.server.security.UserAuthorization;
+import elevator.server.security.AdminAuthentication;
+import elevator.server.security.UserAuthentication;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +34,6 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/")
 public class WebResource {
-
     private final ElevatorServer server;
 
     public WebResource(ElevatorServer server) {
@@ -54,7 +55,7 @@ public class WebResource {
 
     @POST
     @Path("/player/register-with-score")
-    @AdminAuthorization
+    @AdminAuthentication
     public String newParticipantWithScore(@QueryParam("email") String email,
                                           @QueryParam("pseudo") String pseudo,
                                           @QueryParam("serverURL") String serverURL,
@@ -71,7 +72,7 @@ public class WebResource {
     @GET
     @Path("/players.csv")
     @Produces("text/csv; charset=UTF-8")
-    @AdminAuthorization
+    @AdminAuthentication
     public String players() {
         return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(new Function<ElevatorGame, String>() {
             @Override
@@ -88,7 +89,7 @@ public class WebResource {
     @POST
     @Path("/players.csv")
     @Consumes(MULTIPART_FORM_DATA)
-    @AdminAuthorization
+    @AdminAuthentication
     public Map<String, Collection<String>> importPlayers(
             @FormDataParam("players") InputStream uploadedInputStream) throws IOException {
         List<String> fileContent;
@@ -113,38 +114,38 @@ public class WebResource {
 
     @POST
     @Path("/player/pause")
-    @UserAuthorization
-    public void pauseParticipant(@QueryParam("email") String email) {
-        server.pauseElevatorGame(email);
+    @UserAuthentication
+    public void pauseParticipant(@Context SecurityContext securityContext) {
+        server.pauseElevatorGame(securityContext.getUserPrincipal().getName());
     }
 
     @POST
     @Path("/player/resume")
-    @UserAuthorization
-    public void resumeParticipant(@QueryParam("email") String email) {
-        server.resumeElevatorGame(email);
+    @UserAuthentication
+    public void resumeParticipant(@Context SecurityContext securityContext) {
+        server.resumeElevatorGame(securityContext.getUserPrincipal().getName());
     }
 
     @POST
     @Path("/player/unregister")
-    @UserAuthorization
-    public void unregisterParticipant(@QueryParam("email") String email) {
-        server.removeElevatorGame(email);
+    @UserAuthentication
+    public void unregisterParticipant(@Context SecurityContext securityContext) {
+        server.removeElevatorGame(securityContext.getUserPrincipal().getName());
     }
 
     @POST
     @Path("/player/reset")
-    @UserAuthorization
-    public void resetPlayer(@QueryParam("email") String email) {
-        server.resetPlayer(email);
+    @UserAuthentication
+    public void resetPlayer(@Context SecurityContext securityContext) {
+        server.resetPlayer(securityContext.getUserPrincipal().getName());
     }
 
     @GET
     @Path("/player/info")
     @Produces(APPLICATION_JSON)
-    @UserAuthorization
-    public PlayerInfo playerInfo(@QueryParam("email") String email) {
-        return server.getPlayerInfo(email);
+    @UserAuthentication
+    public PlayerInfo playerInfo(@Context SecurityContext securityContext) {
+        return server.getPlayerInfo(securityContext.getUserPrincipal().getName());
     }
 
     @GET
@@ -160,30 +161,29 @@ public class WebResource {
 
     @GET
     @Path("/admin/maxNumberOfUsers")
-    @AdminAuthorization
+    @AdminAuthentication
     public String getMaxNumberOfUsers() {
         return String.valueOf(server.getMaxNumberOfUsers());
     }
 
     @GET
     @Path("/admin/increaseMaxNumberOfUsers")
-    @AdminAuthorization
+    @AdminAuthentication
     public String increaseMaxNumberOfUsers() {
         return String.valueOf(server.increaseMaxNumberOfUsers());
     }
 
     @GET
     @Path("/admin/decreaseMaxNumberOfUsers")
-    @AdminAuthorization
+    @AdminAuthentication
     public String decreaseMaxNumberOfUsers() {
         return String.valueOf(server.decreaseMaxNumberOfUsers());
     }
 
     @POST
     @Path("/admin/removeElevatorGame")
-    @AdminAuthorization
+    @AdminAuthentication
     public void removeElevatorGame(@QueryParam("email") String email) {
         server.removeElevatorGame(email);
     }
-
 }

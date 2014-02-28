@@ -10,9 +10,9 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
         doorIsOpen: false,
         lastErrorMessage: null,
         state: 'RESUME',
-        upButtonStateByFloor: new Array(),
-        downButtonStateByFloor: new Array(),
-        floorButtonStatesInElevator: new Array(),
+        upButtonStateByFloor: [],
+        downButtonStateByFloor: [],
+        floorButtonStatesInElevator: []
     };
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
@@ -54,7 +54,7 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     $scope.reset = function () {
         $http({
             'method': 'POST',
-            'url': '/resources/player/reset?email=' + $scope.player.email,
+            'url': '/resources/player/reset',
             'headers': {
                 'Authorization': 'Basic ' + $scope.player.cookieValue
             }
@@ -64,7 +64,7 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     $scope.pause = function () {
         $http({
             'method': 'POST',
-            'url': '/resources/player/pause?email=' + $scope.player.email,
+            'url': '/resources/player/pause',
             'headers': {
                 'Authorization': 'Basic ' + $scope.player.cookieValue
             }
@@ -77,7 +77,7 @@ function ElevatorCtrl($scope, $timeout, $http, ElevatorAuth) {
     $scope.resume = function () {
         $http({
             'method': 'POST',
-            'url': '/resources/player/resume?email=' + $scope.player.email,
+            'url': '/resources/player/resume',
             'headers': {
                 'Authorization': 'Basic ' + $scope.player.cookieValue
             }

@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static elevator.server.SaveMaxScore.SCORES_FILE;
-import static org.fest.assertions.Assertions.assertThat;
-import static org.fest.assertions.MapAssert.entry;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -36,7 +36,7 @@ public class SaveMaxScoreTest {
 
         score.success(user(0, 5, 7, 0));
 
-        assertThat(scoresFromFile()).as("scores from file").includes(entry("email@provider.net", 20));
+        assertThat(scoresFromFile()).as("scores from file").containsOnly(entry("email@provider.net", 20));
     }
 
     private Map<String, Integer> scoresFromFile() throws IOException, ClassNotFoundException {

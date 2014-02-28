@@ -2,10 +2,9 @@ package elevator.user;
 
 import elevator.Direction;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FloorsAndDirectionAssert {
-
     private final FloorsAndDirection actual;
 
     FloorsAndDirectionAssert(FloorsAndDirection actual) {
@@ -26,6 +25,4 @@ class FloorsAndDirectionAssert {
         assertThat(expectedFloorToGo).as("floor to go").isEqualTo(actual.floorToGo);
         return this;
     }
-
-
 }
