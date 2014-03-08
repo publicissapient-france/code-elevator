@@ -10,7 +10,6 @@ import java.util.Observer;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.*;
 
 public class ScoreTest {
@@ -147,7 +146,7 @@ public class ScoreTest {
 
         score.success(user);
 
-        verify(scoreObserver).update(eq(score), isNull());
+        verify(scoreObserver).update(eq(score), eq(score));
     }
 
     @Test

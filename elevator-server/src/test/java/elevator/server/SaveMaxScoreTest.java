@@ -1,48 +1,49 @@
 package elevator.server;
 
 import elevator.user.User;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
-import static elevator.server.SaveMaxScore.SCORES_FILE;
+import static elevator.server.PlainFileStorage.SCORE_FILE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 public class SaveMaxScoreTest {
-    @Before
-    public void clearScores() throws IOException {
-        try (ObjectOutputStream in = new ObjectOutputStream(new FileOutputStream(SCORES_FILE))) {
-            in.writeObject(new HashMap<String, Integer>());
-        }
-    }
+	private static StorageService storageSvc;
+	@BeforeClass
+	public static void serviceSetup(){
+		Iterator<StorageService> storageServices = ServiceLoader.load(StorageService.class).iterator();
+		if(storageServices.hasNext()){
+			storageSvc = storageServices.next();
+		}else{
+			throw new ServiceNotFoundException("No service implementation found for "+StorageService.class.getName());
+		}
+	}
 
-    @After
-    public void deleteScores() {
-        boolean isDeleted = SCORES_FILE.delete();
-        assertThat(isDeleted).as("scores files is deleted").isTrue();
-    }
+	@AfterClass
+	public static void vleanUp(){
+		assertThat(SCORE_FILE.exists()).as("Score file should exists after each test").isTrue();
+		assertThat(SCORE_FILE.delete()).as("Score file should be deleted after each test").isTrue();
+	}
 
     @Test
     public void should_save_score_when_success() throws IOException, ClassNotFoundException {
         Score score = new Score();
-        new SaveMaxScore(score, new Player("email@provider.net"));
+		Player player = new Player("email@provider.net");
+        new SaveMaxScore(score, player, storageSvc);
 
         score.success(user(0, 5, 7, 0));
 
-        assertThat(scoresFromFile()).as("scores from file").containsOnly(entry("email@provider.net", 20));
-    }
+		assertThat(storageSvc.getAllScores()).containsOnly(entry("email@provider.net", score));
+		assertThat(storageSvc.getScore(player).score).isEqualTo(20);
 
-    private Map<String, Integer> scoresFromFile() throws IOException, ClassNotFoundException {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(SCORES_FILE))) {
-            return (Map<String, Integer>) in.readObject();
-        }
     }
 
     private User user(int floor, int floorToGo, int tickToGo, int tickToWait) {

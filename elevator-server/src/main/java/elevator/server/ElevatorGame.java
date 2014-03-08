@@ -23,7 +23,9 @@ class ElevatorGame implements ClockListener {
     final Player player;
     final URL url;
 
-    String lastErrorMessage;
+	private final StorageService storageSvc;
+
+	String lastErrorMessage;
     State state;
 
     private final Clock clock;
@@ -33,11 +35,11 @@ class ElevatorGame implements ClockListener {
     private final InitializationStrategy userInitializationStrategy;
     private final SaveMaxScore saveMaxScore;
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore) throws MalformedURLException {
-        this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null);
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore, StorageService storageSvc) throws MalformedURLException {
+        this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null, storageSvc);
     }
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler, StorageService storageSvc) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
@@ -50,7 +52,8 @@ class ElevatorGame implements ClockListener {
         this.userInitializationStrategy = userInitializationStrategy;
         this.lastErrorMessage = null;
         this.state = RESUME;
-        this.saveMaxScore = new SaveMaxScore(score, player);
+		this.storageSvc = storageSvc;
+        this.saveMaxScore = new SaveMaxScore(score, player, storageSvc);
         this.resume();
     }
 
@@ -135,4 +138,8 @@ class ElevatorGame implements ClockListener {
     enum State {
         RESUME, PAUSE
     }
+
+	public StorageService getStorageSvc() {
+		return storageSvc;
+	}
 }

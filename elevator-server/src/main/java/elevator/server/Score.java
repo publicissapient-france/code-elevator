@@ -21,6 +21,11 @@ class Score extends Observable {
         score = initialValue;
     }
 
+	Score(Integer initialValue, DateTime started){
+		this.score = initialValue;
+		this.started = started;
+	}
+
     Score loose() {
         score -= 10;
         return this;
@@ -30,7 +35,7 @@ class Score extends Observable {
         score += score(user);
         if (isYoungerThan15Minutes()) {
             setChanged();
-            notifyObservers();
+            notifyObservers(this);
         }
         return this;
     }

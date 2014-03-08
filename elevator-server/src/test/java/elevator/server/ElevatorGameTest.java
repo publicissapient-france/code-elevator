@@ -4,6 +4,7 @@ import elevator.Clock;
 import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.user.FloorsAndDirection;
 import elevator.user.InitializationStrategy;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,9 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Queue;
+import java.util.*;
 
 import static java.lang.Boolean.FALSE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,17 +30,28 @@ public class ElevatorGameTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
+	private static StorageService storageSvc;
+	@BeforeClass
+	public static void serviceSetup(){
+		Iterator<StorageService> storageServices = ServiceLoader.load(StorageService.class).iterator();
+		if(storageServices.hasNext()){
+			storageSvc = storageServices.next();
+		}else{
+			throw new ServiceNotFoundException("No service implementation found for "+StorageService.class.getName());
+		}
+	}
+
     @Test
     public void should_not_create_elevator_game_with_other_protocol_than_http() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("http is the only supported protocol");
 
-        new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock, null);
+        new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock, null, storageSvc);
     }
 
     @Test
     public void should_get_player_info() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(45));
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(45), storageSvc);
 
         PlayerInfo playerInfo = elevatorGame.getPlayerInfo();
 
@@ -57,7 +67,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_loose_and_update_message_when_reset() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(), storageSvc);
 
         elevatorGame.reset("error message");
 
@@ -67,7 +77,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_stop() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(), storageSvc);
 
         elevatorGame.stop(FALSE);
 
@@ -77,7 +87,7 @@ public class ElevatorGameTest {
 
     @Test
     public void should_resume() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score()).stop(FALSE);
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(), storageSvc).stop(FALSE);
 
         elevatorGame.resume();
 
@@ -97,7 +107,7 @@ public class ElevatorGameTest {
                 return new FloorsAndDirection(initialFloor.poll(), 1);
             }
 
-        }, new DontConnectURLStreamHandler(urlConnection));
+        }, new DontConnectURLStreamHandler(urlConnection), storageSvc);
         Thread.sleep(100);
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
         clock.tick();

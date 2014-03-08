@@ -5,10 +5,7 @@ import elevator.server.security.UserPasswordValidator;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 import static java.lang.Boolean.FALSE;
@@ -20,8 +17,15 @@ class ElevatorServer implements UserPasswordValidator {
     private final Clock clock = new Clock();
 
     private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
+	private final StorageService storageSvc;
 
     ElevatorServer() {
+		Iterator<StorageService> storageServices = ServiceLoader.load(StorageService.class).iterator();
+		if(storageServices.hasNext()){
+			storageSvc = storageServices.next();
+		}else{
+			throw new ServiceNotFoundException("No service implementation found for "+StorageService.class.getName());
+		}
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -39,7 +43,7 @@ class ElevatorServer implements UserPasswordValidator {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already been added");
         }
-        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock, score);
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock, score, storageSvc);
         elevatorGames.put(player, elevatorGame);
     }
 
