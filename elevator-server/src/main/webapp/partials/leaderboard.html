@@ -15,11 +15,24 @@
 </div>
 
 <div class="container-fluid">
+	<div id="hallOfFame" class="well" style="display:block; float:left; margin: 0 5px 5px -20px;">
+		<table id="scoreTable">
+			<thead><tr><th colspan="2">Player</th><th>Best score</th></tr></thead>
+			<tbody>
+				<tr ng-repeat="famousOne in famousPlayers">
+					<td><gravatar-image data-email="famousOne.email" data-size="120" data-rating="pg" data-default="http://www.gravatar.com/avatar/" data-secure="true"></gravatar-image></td>
+					<td><strong>{{famousOne.pseudo}}</strong></td>
+					<td class="number">{{famousOne.score}}</td>
+				</tr>
+			</tbody>
+			<tfoot></tfoot>
+		</table>
+	</div>
     <div class="well" style="margin: 5px; display: inline-block" ng-repeat="player in players | orderBy:'score':true">
         <gravatar-image data-email="player.email" data-size="120" data-rating="pg" data-default="http://www.gravatar.com/avatar/" data-secure="true"></gravatar-image>
         <h3 style="text-align: center;">{{player.pseudo}}</h3>
         <h5 style="text-align: center;">{{player.score}} points</h5>
         <building id="building" player="player"></building>
     </div>
-    <div class="well" ng-show="players.length == 0">No player has been registered yet! Why don't you <a href="#/">register</a> yourself?</div>
+    <div class="well" style="float:left" ng-show="players.length == 0">No player has been registered yet! Why don't you <a href="#/">register</a> yourself?</div>
 </div>

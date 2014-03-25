@@ -85,6 +85,12 @@ class ElevatorServer implements UserPasswordValidator {
         return Collections.unmodifiableCollection(elevatorGames.values());
     }
 
+	public List<ScoreInfo> getMaxScores(){
+		List<ScoreInfo> scores = storageSvc.getAllScores();
+		Collections.sort(scores, ScoreInfo.byScore());
+		return scores;
+	}
+
     Integer getMaxNumberOfUsers() {
         return maxNumberOfUsers.value();
     }

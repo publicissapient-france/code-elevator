@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.FileChannel;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.*;
 
 import static elevator.server.PlainFileStorage.SCORE_FILE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,7 +67,8 @@ public class PlainFileStorageTest {
 		new SaveMaxScore(score1, p1, storageSvc);
 		assertThat(storageSvc.hasScored(p1)).as("hasScored() when SaveMaxScore just registered for p1").isTrue();
 		assertThat(storageSvc.hasScored(p2)).as("hasScored() for p2").isFalse();
-		assertThat(storageSvc.getScore(p1)).as("p1 score when when SaveMaxScore just registered for p1").isEqualTo(score1);
+		assertThat(storageSvc.getScore(p1).score).as("p1 score when when SaveMaxScore just registered for p1").isEqualTo(score1.score);
+		assertThat(storageSvc.getScore(p1).startTime).as("p1 score when when SaveMaxScore just registered for p1").isEqualTo(score1.started);
 
 		Thread.sleep(1000);
 		assertThat(SCORE_FILE.lastModified()).as("File last modified time").isEqualTo(scoreFileLastModified0);
@@ -77,7 +76,8 @@ public class PlainFileStorageTest {
 
 		Thread.sleep(((PlainFileStorage) storageSvc).syncDelay);
 		score1.success(user(0, 5, 7, 0));
-		assertThat(storageSvc.getScore(p1)).as("p1 score when success").isEqualTo(score1);
+		assertThat(storageSvc.getScore(p1).score).as("p1 score when success").isEqualTo(score1.score);
+		assertThat(storageSvc.getScore(p1).startTime).as("p1 score when success").isEqualTo(score1.started);
 		Thread.sleep(1000);
 		assertThat(SCORE_FILE.lastModified()).as("File last modified time").isGreaterThan(scoreFileLastModified0);
 		assertThat(SCORE_FILE.length()).as("File length").isGreaterThan(scoreFileLength0);
@@ -89,21 +89,22 @@ public class PlainFileStorageTest {
 
 		generate4scoresFile();
 		((PlainFileStorage) storageSvc).forceScoreReload();
-		Map<String, Score> expectedScores = new HashMap<>();
-		expectedScores.put("sally.sfaction@yopmail.com", new Score(20, new DateTime(2014,3,14,20,54,43)));
-		expectedScores.put("john.doe@yopmail.com", new Score(40, new DateTime(2014,3,14,20,20,20)));
-		expectedScores.put("jane.doe@yopmail.com", new Score(80, new DateTime(2014,3,15,10,10,10)));
-		expectedScores.put("marc.asmerged@yopmail.com", new Score(50, new DateTime(2014,3,15,11,11,11)));
+		List<ScoreInfo> expectedScores = new ArrayList<>();
+		expectedScores.add(new ScoreInfo("sally", "sally.sfaction@yopmail.com", 20, new DateTime(2014, 3, 14, 20, 54, 43)));
+		expectedScores.add(new ScoreInfo("john", "john.doe@yopmail.com", 40, new DateTime(2014, 3, 14, 20, 20, 20)));
+		expectedScores.add(new ScoreInfo("jane", "jane.doe@yopmail.com", 80, new DateTime(2014, 3, 15, 10, 10, 10)));
+		expectedScores.add(new ScoreInfo("marco", "marc.asmerged@yopmail.com", 50, new DateTime(2014, 3, 15, 11, 11, 11)));
 
-		Map<String, Score> allScores = storageSvc.getAllScores();
+		List<ScoreInfo> allScores = storageSvc.getAllScores();
 		assertThat(allScores.size()).as("Score count in cache after 4 scores file reload").isEqualTo(expectedScores.size());
-		String[] expectedKeys = expectedScores.keySet().toArray(new String[expectedScores.size()]);
-		assertThat(allScores).containsKeys(expectedKeys);
-		for(String expectedKey: expectedKeys){
-			Score expectedScore = expectedScores.get(expectedKey);
-			Score actualScore = allScores.get(expectedKey);
+
+		for(ScoreInfo expectedScore: expectedScores){
+			assertThat(allScores.contains(expectedScore));
+			ScoreInfo actualScore = allScores.get(allScores.indexOf(expectedScore));
+			assertThat(actualScore.pseudo).isEqualTo(expectedScore.pseudo);
+			assertThat(actualScore.email).isEqualTo(expectedScore.email);
 			assertThat(actualScore.score).isEqualTo(expectedScore.score);
-			assertThat(actualScore.started).isEqualTo(expectedScore.started);
+			assertThat(actualScore.startTime).isEqualTo(expectedScore.startTime);
 		}
 	}
 

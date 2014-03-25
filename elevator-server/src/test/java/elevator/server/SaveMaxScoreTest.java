@@ -28,7 +28,7 @@ public class SaveMaxScoreTest {
 	}
 
 	@AfterClass
-	public static void vleanUp(){
+	public static void cleanUp(){
 		assertThat(SCORE_FILE.exists()).as("Score file should exists after each test").isTrue();
 		assertThat(SCORE_FILE.delete()).as("Score file should be deleted after each test").isTrue();
 	}
@@ -41,7 +41,7 @@ public class SaveMaxScoreTest {
 
         score.success(user(0, 5, 7, 0));
 
-		assertThat(storageSvc.getAllScores()).containsOnly(entry("email@provider.net", score));
+		assertThat(storageSvc.getAllScores()).containsOnly(new ScoreInfo("", "email@provider.net", score.score, score.started));
 		assertThat(storageSvc.getScore(player).score).isEqualTo(20);
 
     }

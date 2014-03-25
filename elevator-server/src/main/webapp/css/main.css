@@ -81,3 +81,28 @@ td.people .icon-chevron-down {
   bottom: 2px;
   right: 0;
 }
+
+td.number{
+	text-align: right;
+}
+
+#scoreTable{
+	border-collapse: collapse;
+	border: 0;
+}
+
+#scoreTable td, #scoreTable th{
+	border: 0;
+	padding-left: 1ex;
+	padding-right: 1ex;
+}
+#scoreTable td{
+	font-size: 1.5em;
+}
+#scoreTable th{
+	font-size: 1.1em;
+	padding: 0 0 0.5em 0;
+}
+#scoreTable > tbody > tr:nth-child(odd){
+	background-color: #fafafa; /*f5f5f5*/
+}

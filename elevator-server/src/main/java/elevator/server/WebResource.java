@@ -159,6 +159,13 @@ public class WebResource {
         return players;
     }
 
+	@GET
+	@Path("/leaderboard/hallOfFame")
+	@Produces(APPLICATION_JSON)
+	public List<ScoreInfo> hallOfFame() {
+		return server.getMaxScores();
+	}
+
     @GET
     @Path("/admin/maxNumberOfUsers")
     @AdminAuthentication
