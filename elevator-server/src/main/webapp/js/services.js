@@ -29,9 +29,9 @@ angular.module('elevatorApp.services', ['ngCookies']).
                     });
             },
             "register": function (player) {
-                return $http.post('/resources/player/register?email=' + player.email
-                        + "&pseudo=" + player.pseudo
-                        + "&serverURL=http://" + player.serverURL).
+                return $http.post('/resources/player/register?email=' + encodeURIComponent(player.email)
+                        + "&pseudo=" + encodeURIComponent(player.pseudo)
+                        + "&serverURL=" + encodeURIComponent("http://" + player.serverURL)).
                     success(function (data) {
                         $cookieStore.put('isLogged', {
                             "pseudo": player.pseudo,
