@@ -24,6 +24,7 @@ import static java.lang.String.format;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 
 public class ParticipantsServer implements HttpHandler {
+	static final Integer DEFAULT_PORT = 8081;
     public static final Pattern PATH_PATTERN = Pattern.compile("^(.*)(/.+)$");
 
     private final HashMap<String, ElevatorEngine> elevators;
@@ -119,7 +120,13 @@ public class ParticipantsServer implements HttpHandler {
     }
 
     public static void main(String[] args) throws IOException {
-        final HttpServer httpServer = HttpServer.create(new InetSocketAddress(8081), 0);
+		Integer port;
+		try{
+			port = args.length >= 1 ? Integer.valueOf(args[0], 10) : DEFAULT_PORT;
+		}catch(NumberFormatException e){
+			port = DEFAULT_PORT;
+		}
+		final HttpServer httpServer = HttpServer.create(new InetSocketAddress(port), 0);
         httpServer.createContext("/", new ParticipantsServer());
         httpServer.setExecutor(newCachedThreadPool());
         httpServer.start();
