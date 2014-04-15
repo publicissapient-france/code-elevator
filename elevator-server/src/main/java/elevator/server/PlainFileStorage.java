@@ -40,7 +40,11 @@ public class PlainFileStorage implements StorageService {
 			String line;
 			while((line = reader.readLine()) != null){
 				final ScoreInfo record = ScoreInfo.fromString(line);
-				cache.put(record.email, record);
+				if(record!=null){
+					cache.put(record.email, record);
+				}else{
+					LOG.log(Level.WARNING, "Didn't returned a ScoreInfo: "+line);
+				}
 			}
 		}catch (IOException e){
 			LOG.log(Level.SEVERE, "Could not read score file", e);

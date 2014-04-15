@@ -87,6 +87,7 @@ public class ScoreInfo {
 		} catch (IllegalArgumentException e) {
 			LOG.log(Level.SEVERE, "Cannot parse line: " + line, e);
 		}
+		LOG.log(Level.SEVERE, "Bad line format (expected: \"%s\\t%s\\t%s\\t%s\\n\"): " + line);
 		return null;
 	}
 
