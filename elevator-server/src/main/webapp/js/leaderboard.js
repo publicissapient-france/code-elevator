@@ -16,7 +16,7 @@ function LeaderboardCtrl($scope, ElevatorAuth, $http, $timeout) {
 
 	function fetchHallOfFame($scope, $http, $timeout){
     	(function fetch(){
-    		$http.get('/resources/leaderboard/hallOfFame')
+    		$http.get('/resources/leaderboard/hallOfFame/0:10')
     			.success(function(data){
     				$scope.famousPlayers = data;
     			});

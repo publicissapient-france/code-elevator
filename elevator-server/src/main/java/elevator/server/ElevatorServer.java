@@ -91,6 +91,22 @@ class ElevatorServer implements UserPasswordValidator {
 		return scores;
 	}
 
+	/**
+	 *
+	 * @param startIdx (inclusive)
+	 * @param endIdx (exclusive)
+	 * @return the list of max score from containing {@link elevator.server.ScoreInfo} whose index intersects [startIdx, endIdx[
+	 */
+	public List<ScoreInfo> getMaxScores(Integer startIdx, Integer endIdx){
+		List<ScoreInfo> scores = storageSvc.getAllScores();
+		if(startIdx>= scores.size() || endIdx<=0 || startIdx>=endIdx){
+			return Collections.EMPTY_LIST;
+		}
+		Collections.sort(scores, ScoreInfo.byScore());
+
+		return scores.subList(startIdx, Math.min(endIdx, scores.size()));
+	}
+
     Integer getMaxNumberOfUsers() {
         return maxNumberOfUsers.value();
     }

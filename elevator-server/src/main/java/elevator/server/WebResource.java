@@ -34,6 +34,8 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/")
 public class WebResource {
+	public static final String ZERO = "0";
+	public static final String INT_MAX_VALUE = "2147483647";
     private final ElevatorServer server;
 
     public WebResource(ElevatorServer server) {
@@ -164,6 +166,16 @@ public class WebResource {
 	@Produces(APPLICATION_JSON)
 	public List<ScoreInfo> hallOfFame() {
 		return server.getMaxScores();
+	}
+
+	@GET
+	@Path("/leaderboard/hallOfFame/{startOfRange}:{endOfRange}")
+	@Produces(APPLICATION_JSON)
+	public List<ScoreInfo> hallOfFame(
+			@PathParam("startOfRange") @DefaultValue("0") int startOfRange,
+			@PathParam("endOfRange") @DefaultValue(INT_MAX_VALUE) int endOfRange) {
+
+		return server.getMaxScores(startOfRange, endOfRange);
 	}
 
     @GET
