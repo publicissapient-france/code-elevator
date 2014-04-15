@@ -1,4 +1,5 @@
 function LeaderboardCtrl($scope, ElevatorAuth, $http, $timeout) {
+    //TODO fetch 10 by 10 ? (with rank displayed)
 
     $scope.players = [];
     $scope.famousPlayers = [];
@@ -30,7 +31,6 @@ function LeaderboardCtrl($scope, ElevatorAuth, $http, $timeout) {
         $timeout.cancel($scope.nextFetchLeaderboard);
         $timeout.cancel($scope.nextFetchHallOfFame);
     });
-
 
     $scope.loggedIn = ElevatorAuth.loggedIn;
 

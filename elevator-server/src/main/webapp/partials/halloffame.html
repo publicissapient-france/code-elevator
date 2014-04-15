@@ -1,0 +1,33 @@
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container" style="width: auto; padding: 0 20px;">
+            <span class="brand">Code Elevator</span>
+            <ul class="nav">
+                <li><a href="#/">
+                    <span ng-hide="loggedIn()">Subscribe</span>
+                    <span ng-show="loggedIn()">My elevator</span></a>
+                </li>
+                <li><a href="#/leaderboard">Leaderboard</a></li>
+				<li class="active"><a>Hall of fame</a></li>
+                <li><a href="#/administration">Administration</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+	<div id="hallOfFame" class="well" style="display:block; float:left; margin: 0 5px 5px -20px;">
+		<table id="scoreTable" class="wider">
+			<thead><tr><th colspan="2">Player</th><th>Best score</th><th>Best score session start</th></tr></thead>
+			<tbody>
+			<tr ng-repeat="famousOne in famousPlayers">
+				<td><gravatar-image data-email="famousOne.email" data-size="120" data-rating="pg" data-default="http://www.gravatar.com/avatar/" data-secure="true"></gravatar-image></td>
+				<td><strong>{{famousOne.pseudo}}</strong></td>
+				<td class="number">{{famousOne.score}}</td>
+				<td class="date">{{famousOne.startTime | date : 'dd/MM/yyyy HH:mm:ss'}}</td>
+			</tr>
+			</tbody>
+			<tfoot></tfoot>
+		</table>
+	</div>
+</div>

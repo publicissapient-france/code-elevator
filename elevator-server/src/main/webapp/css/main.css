@@ -85,6 +85,18 @@ td.people .icon-chevron-down {
 td.number{
 	text-align: right;
 }
+td.date{
+    text-align: right;
+    padding: 0 2ex 0 2ex;
+}
+
+#scoreTable.wider td, #scoreTable.wider th, table.wider td, table.wider th {
+    padding-left: 2ex;
+    padding-right: 2ex;
+}
+#scoreTable.wider td:first-child, #scoreTable.wider th:first-child, table.wider td:first-child, table.wider th:first-child{
+    padding-left: 0;
+}
 
 #scoreTable{
 	border-collapse: collapse;
@@ -103,6 +115,14 @@ td.number{
 	font-size: 1.1em;
 	padding: 0 0 0.5em 0;
 }
+#scoreTable td:first-child, #scoreTable th:first-child, table td:first-child, table th:first-child{
+    padding-left: 0;
+}
 #scoreTable > tbody > tr:nth-child(odd){
 	background-color: #fafafa; /*f5f5f5*/
+}
+
+#scoreTable:not(.wider) img.gravatar-icon{
+    max-width: 2em;
+    max-height: 2em;
 }
