@@ -43,13 +43,16 @@ body {
 
 .elevator {
   border-left: 2px solid white;
-  position: relative;
+  position: relative !important;
 }
 
 .elevator i {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -20px;
+  right: -7px;
+}
+.elevator.elevator-at-floor i{
+    top: -9px;
 }
 
 .elevator-at-floor {
@@ -63,23 +66,29 @@ body {
   border-left: 2px solid black;
 }
 
-td.people {
+td.people{
   color: rgb(248, 0, 0);
   font-weight: bold;
   position: relative;
   text-align: left;
 }
+td.people div.FF-fix{
+    position:relative;
+}
+.elevator div.FF-fix{
+    position:relative;
+}
 
 td.people .icon-chevron-up {
   position: absolute;
-  top: 2px;
-  right: 0;
+  top: -9px;
+  right: -7px;
 }
 
 td.people .icon-chevron-down {
   position: absolute;
-  bottom: 2px;
-  right: 0;
+  bottom: -9px;
+  right: -7px;
 }
 
 td.number{
