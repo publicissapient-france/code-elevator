@@ -22,12 +22,7 @@ class ElevatorServer implements UserPasswordValidator {
     private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
 
     ElevatorServer() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                clock.tick();
-            }
-        }, 0, 1, SECONDS);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
     }
 
     public ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {

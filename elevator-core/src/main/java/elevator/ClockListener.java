@@ -1,7 +1,8 @@
 package elevator;
 
+@FunctionalInterface
 public interface ClockListener {
 
-    public ClockListener onTick();
+    public void onTick();
 
 }

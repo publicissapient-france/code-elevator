@@ -21,7 +21,7 @@ public class Building {
     private final MaxNumberOfUsers maxNumberOfUsers;
 
     public Building(ElevatorEngine elevatorEngine, MaxNumberOfUsers maxNumberOfUsers) {
-        this.users = Collections.synchronizedSet(new HashSet<User>());
+        this.users = Collections.synchronizedSet(new HashSet<>());
         this.elevatorEngine = elevatorEngine;
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.elevator = new Elevator(this);

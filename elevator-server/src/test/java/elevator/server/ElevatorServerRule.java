@@ -27,6 +27,14 @@ class ElevatorServerRule extends ExternalResource {
                 .target("http://localhost:8080/resources");
     }
 
+    public static void main(String[] args) throws Throwable {
+        final ElevatorServerRule elevatorServer = new ElevatorServerRule();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(elevatorServer::after));
+
+        elevatorServer.before();
+    }
+
     @Override
     protected void before() throws Throwable {
         InetSocketAddress address = new InetSocketAddress("localhost", 8080);
@@ -42,18 +50,5 @@ class ElevatorServerRule extends ExternalResource {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) throws Throwable {
-        final ElevatorServerRule elevatorServer = new ElevatorServerRule();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                elevatorServer.after();
-            }
-        }));
-
-        elevatorServer.before();
     }
 }

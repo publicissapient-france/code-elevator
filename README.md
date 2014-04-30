@@ -26,7 +26,7 @@ server :
 
 Here is what you need to build and run a code elevator session :
 
-- JDK 1.7
+- JDK 1.8
 - maven 3.x
 
 ### Steps
@@ -51,7 +51,7 @@ Don't want to install Java nor fill up your hard drive with jar files you can tr
 To deploy to a cloudbees instance (example) :
 
     $ mvn verify
-    $ bees app:deploy --appid seblm/code-elevator --endPoint eu [--message "informational message"] [-P ADMIN_PASSWORD=secret] --type tomcat7 elevator-server/target/elevator-server-1.0-SNAPSHOT.war
+    $ bees app:deploy --appid seblm/code-elevator --endPoint eu [--message "informational message"] [-P ADMIN_PASSWORD=secret] --type tomcat7 elevator-server/target/elevator-server-1.1-SNAPSHOT.war
 
 ## Export / Import users
 

@@ -2,9 +2,8 @@ package elevator.ui;
 
 import elevator.Building;
 import elevator.Clock;
-import elevator.ClockListener;
-import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.engine.ElevatorEngine;
+import elevator.user.ConstantMaxNumberOfUsers;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,13 +31,7 @@ public class ElevatorUI extends JFrame {
 
         for (ElevatorEngine elevatorEngine : ServiceLoader.load(ElevatorEngine.class)) {
             final Building building = new Building(elevatorEngine, new ConstantMaxNumberOfUsers());
-            clock.addClockListener(new ClockListener() {
-                @Override
-                public ClockListener onTick() {
-                    building.updateBuildingState();
-                    return this;
-                }
-            });
+            clock.addClockListener(building::updateBuildingState);
             buildings.add(new BuildingAndElevator(building, elevatorEngine));
         }
 
@@ -47,28 +40,17 @@ public class ElevatorUI extends JFrame {
 
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
-        Runnable periodicTask = new Runnable() {
-            @Override
-            public void run() {
-                clock.tick();
-                interactionPanel.update();
-            }
-
-        };
-
-        executor.scheduleAtFixedRate(periodicTask, 0, 1, SECONDS);
+        executor.scheduleAtFixedRate(() -> {
+            clock.tick();
+            interactionPanel.update();
+        }, 0, 1, SECONDS);
 
         pack();
         setVisible(true);
     }
 
     public static void main(String[] args) {
-        invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ElevatorUI();
-            }
-        });
+        invokeLater(ElevatorUI::new);
     }
 
 }

@@ -1,6 +1,9 @@
 package elevator.engine.scan;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static elevator.engine.scan.ElevatorDirection.NONE;
 import static java.lang.Math.abs;
@@ -49,24 +52,15 @@ public class Commands {
     }
 
     void clear(Integer floor, ElevatorDirection direction) {
-        Set<Command> commandsToRemove = new HashSet<>(commands.size());
-        for (Command command : commands) {
-            if (command.floor.equals(floor) && (command.direction == NONE || command.direction == direction)) {
-                commandsToRemove.add(command);
-            }
-        }
-        commands.removeAll(commandsToRemove);
+        commands.removeIf(command -> command.floor.equals(floor) && (command.direction == NONE || command.direction == direction));
     }
 
     private SortedSet<Command> sortCommands(final Integer floor, final ElevatorDirection elevatorDirection) {
-        SortedSet<Command> sortedCommands = new TreeSet<>(new Comparator<Command>() {
-            @Override
-            public int compare(Command o1, Command o2) {
-                DistanceEvaluator distanceEvaluator = new DistanceEvaluator(new Command(floor, elevatorDirection), lowerFloor, higherFloor);
-                Integer distance1 = distanceEvaluator.getDistance(o1);
-                Integer distance2 = distanceEvaluator.getDistance(o2);
-                return distance1 - distance2;
-            }
+        SortedSet<Command> sortedCommands = new TreeSet<>((o1, o2) -> {
+            DistanceEvaluator distanceEvaluator = new DistanceEvaluator(new Command(floor, elevatorDirection), lowerFloor, higherFloor);
+            Integer distance1 = distanceEvaluator.getDistance(o1);
+            Integer distance2 = distanceEvaluator.getDistance(o2);
+            return distance1 - distance2;
         });
         sortedCommands.addAll(commands);
         return sortedCommands;

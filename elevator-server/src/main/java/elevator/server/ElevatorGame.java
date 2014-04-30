@@ -6,7 +6,6 @@ import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.InitializationStrategy;
 import elevator.user.MaxNumberOfUsers;
 import elevator.user.RandomUser;
-import elevator.user.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,15 +21,14 @@ class ElevatorGame implements ClockListener {
 
     final Player player;
     final URL url;
-
-    String lastErrorMessage;
-    State state;
-
     private final Clock clock;
     private final ElevatorEngine elevatorEngine;
     private final Building building;
     private final Score score;
     private final InitializationStrategy userInitializationStrategy;
+
+    String lastErrorMessage;
+    State state;
 
     ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore) throws MalformedURLException {
         this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null);
@@ -80,17 +78,13 @@ class ElevatorGame implements ClockListener {
     }
 
     @Override
-    public ClockListener onTick() {
+    public void onTick() {
         try {
             building.addUser(userInitializationStrategy);
-            Set<User> doneUsers = building.updateBuildingState();
-            for (User doneUser : doneUsers) {
-                score.success(doneUser);
-            }
+            building.updateBuildingState().forEach(score::success);
         } catch (ElevatorIsBrokenException e) {
             reset(e.getMessage());
         }
-        return this;
     }
 
     @Override

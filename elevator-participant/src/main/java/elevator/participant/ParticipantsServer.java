@@ -37,6 +37,29 @@ public class ParticipantsServer implements HttpHandler {
         elevators.put("", new ScanElevator());
     }
 
+    public static void main(String[] args) throws IOException {
+        final HttpServer httpServer = HttpServer.create(new InetSocketAddress(8081), 0);
+        httpServer.createContext("/", new ParticipantsServer());
+        httpServer.setExecutor(newCachedThreadPool());
+        httpServer.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.stop(0)));
+    }
+
+    private static Map<String, String> extractParameters(URI uri) {
+        String query = uri.getQuery();
+        Map<String, String> parametersAndValues = new HashMap<>();
+        if (query == null) {
+            return parametersAndValues;
+        }
+        Scanner scanner = new Scanner(query).useDelimiter("&");
+        while (scanner.hasNext()) {
+            String[] parameterAndValue = scanner.next().split("=");
+            parametersAndValues.put(parameterAndValue[0], parameterAndValue[1].replace('+', ' '));
+        }
+        return parametersAndValues;
+    }
+
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         String path = httpExchange.getRequestURI().getPath();
@@ -116,33 +139,5 @@ public class ParticipantsServer implements HttpHandler {
             }
         }
         httpExchange.close();
-    }
-
-    public static void main(String[] args) throws IOException {
-        final HttpServer httpServer = HttpServer.create(new InetSocketAddress(8081), 0);
-        httpServer.createContext("/", new ParticipantsServer());
-        httpServer.setExecutor(newCachedThreadPool());
-        httpServer.start();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                httpServer.stop(0);
-            }
-        }));
-    }
-
-    private static Map<String, String> extractParameters(URI uri) {
-        String query = uri.getQuery();
-        Map<String, String> parametersAndValues = new HashMap<>();
-        if (query == null) {
-            return parametersAndValues;
-        }
-        Scanner scanner = new Scanner(query).useDelimiter("&");
-        while (scanner.hasNext()) {
-            String[] parameterAndValue = scanner.next().split("=");
-            parametersAndValues.put(parameterAndValue[0], parameterAndValue[1].replace('+', ' '));
-        }
-        return parametersAndValues;
     }
 }

@@ -49,25 +49,23 @@ class HTTPElevator implements ElevatorEngine {
         this.validCommands = "valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive";
         this.logger = new ElevatorLogger("HTTPElevator").logger();
         this.requests = new LinkedBlockingQueue<>();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                URL url = null;
-                while (url == null || !url.getPath().equals(format("/%s", SHUTDOWN_URL))) {
-                    try {
-                        url = requests.take();
-                        URLConnection urlConnection = getUrlConnection(url);
-                        try (InputStream in = urlConnection.getInputStream()) {
-                            transportErrorMessage = null;
+        executor.execute(() -> {
+                    URL url = null;
+                    while (url == null || !url.getPath().equals(format("/%s", SHUTDOWN_URL))) {
+                        try {
+                            url = requests.take();
+                            URLConnection urlConnection = getUrlConnection(url);
+                            try (InputStream in = urlConnection.getInputStream()) {
+                                transportErrorMessage = null;
+                            }
+                        } catch (IOException e) {
+                            transportErrorMessage = createErrorMessage(url, e);
+                        } catch (InterruptedException e) {
+                            logger.log(WARNING, "Error occured when waiting for new URL", e);
                         }
-                    } catch (IOException e) {
-                        transportErrorMessage = createErrorMessage(url, e);
-                    } catch (InterruptedException e) {
-                        logger.log(WARNING, "Error occured when waiting for new URL", e);
                     }
                 }
-            }
-        });
+        );
     }
 
     @Override

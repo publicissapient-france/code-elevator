@@ -1,6 +1,5 @@
 package elevator;
 
-import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -11,12 +10,7 @@ class FloorStatesAssert {
     private final SortedSet<FloorState> actual;
 
     FloorStatesAssert(Set<FloorState> actual) {
-        this.actual = new TreeSet<>(new Comparator<FloorState>() {
-            @Override
-            public int compare(FloorState floorState1, FloorState floorState2) {
-                return Integer.compare(floorState1.floor, floorState2.floor);
-            }
-        });
+        this.actual = new TreeSet<>((floorState1, floorState2) -> Integer.compare(floorState1.floor, floorState2.floor));
         this.actual.addAll(actual);
     }
 
