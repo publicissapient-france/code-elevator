@@ -6,15 +6,19 @@ import elevator.user.InitializationStrategy;
 import elevator.user.MaxNumberOfUsers;
 import elevator.user.User;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import static elevator.Direction.DOWN;
+import static elevator.Direction.UP;
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.stream.Collectors.toSet;
 
 public class Building {
-
     private final Set<User> users;
     private final ElevatorEngine elevatorEngine;
     private final Elevator elevator;
@@ -47,16 +51,8 @@ public class Building {
         return elevator.floor();
     }
 
-    public int travelingUsers() {
-        int count = 0;
-
-        for (User user : users) {
-            if (user.traveling()) {
-                count++;
-            }
-        }
-
-        return count;
+    public long travelingUsers() {
+        return users.stream().filter(user -> user.traveling()).count();
     }
 
     public Door door() {
@@ -66,7 +62,7 @@ public class Building {
     public Set<User> updateBuildingState() throws ElevatorIsBrokenException {
         Command command = elevatorEngine.nextCommand();
         elevator.validateCommand(command);
-        notifyUsersWithTick();
+        users.forEach(User::tick);
         return elevator.applyCommand(command);
     }
 
@@ -76,54 +72,22 @@ public class Building {
         elevatorEngine.reset(cause);
     }
 
-    private void notifyUsersWithTick() {
-        for (User user : users) {
-            user.tick();
-        }
-    }
-
     Set<User> notifyUsersWithOpenElevatorDoor(Integer floor) {
-        Set<User> doneUsers = new HashSet<>();
-        for (User user : users) {
-            user.elevatorIsOpen(elevator, floor);
-            if (user.done()) {
-                doneUsers.add(user);
-            }
-        }
+        Set<User> doneUsers = users.stream()
+                .peek(user -> user.elevatorIsOpen(elevator, floor))
+                .filter(user -> user.done())
+                .collect(toSet());
         users.removeAll(doneUsers);
         return doneUsers;
     }
 
     public Set<FloorState> floorStates() {
-        final Set<Integer> floorsWhereDownButtonIsLit = new HashSet<>();
-        final Set<Integer> floorsWhereUpButtonIsLit = new HashSet<>();
-        final Set<Integer> targetedFloors = new HashSet<>();
-        final Map<Integer, Integer> waitingUserByFloorSet = new HashMap<>();
-        for (Integer floor = ElevatorEngine.LOWER_FLOOR; floor <= ElevatorEngine.HIGHER_FLOOR; floor++) {
-            waitingUserByFloorSet.put(floor, 0);
-        }
-        for (User user : users) {
-            if (user.waiting()) {
-                if (user.getInitialDirection().equals(DOWN)) {
-                    floorsWhereDownButtonIsLit.add(user.getInitialFloor());
-                } else {
-                    floorsWhereUpButtonIsLit.add(user.getInitialFloor());
-                }
-                waitingUserByFloorSet.put(user.getInitialFloor(), waitingUserByFloorSet.get(user.getInitialFloor()) + 1);
-            } else if (user.traveling()) {
-                targetedFloors.add(user.getFloorToGo());
-            }
-        }
-
-        final Set<FloorState> floorStates = new HashSet<>();
-        for (Integer floor = LOWER_FLOOR; floor <= HIGHER_FLOOR; floor++) {
-            floorStates.add(new FloorState(floor,
-                    waitingUserByFloorSet.get(floor),
-                    floorsWhereUpButtonIsLit.contains(floor),
-                    floorsWhereDownButtonIsLit.contains(floor),
-                    targetedFloors.contains(floor)));
-        }
-        return floorStates;
+        return IntStream.range(LOWER_FLOOR, HIGHER_FLOOR + 1)
+                .mapToObj(floor -> new FloorState(floor,
+                        users.stream().filter(user -> user.waiting() && user.getInitialFloor().equals(floor)).count(),
+                        users.stream().filter(user -> user.waiting() && user.getInitialFloor().equals(floor)).anyMatch(user -> user.getInitialDirection().equals(UP)),
+                        users.stream().filter(user -> user.waiting() && user.getInitialFloor().equals(floor)).anyMatch(user -> user.getInitialDirection().equals(DOWN)),
+                        users.stream().filter(user -> user.traveling()).anyMatch(user -> user.getFloorToGo().equals(floor))))
+                .collect(toSet());
     }
-
 }

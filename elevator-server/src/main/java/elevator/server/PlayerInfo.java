@@ -6,13 +6,12 @@ import java.io.Serializable;
 import java.util.Set;
 
 public class PlayerInfo implements Serializable {
-
     public final String pseudo;
     public final String email;
     public final int score;
     public final int averageScore;
     public final int elevatorAtFloor;
-    public final int peopleInTheElevator;
+    public final long peopleInTheElevator;
     public final boolean doorIsOpen;
     public final String lastErrorMessage;
     public final String state;
@@ -30,5 +29,4 @@ public class PlayerInfo implements Serializable {
         state = game.state.toString();
         floorStates = game.floorStates();
     }
-
 }

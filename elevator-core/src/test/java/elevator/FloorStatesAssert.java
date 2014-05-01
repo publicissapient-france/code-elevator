@@ -1,9 +1,11 @@
 package elevator;
 
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FloorStatesAssert {
@@ -20,52 +22,47 @@ class FloorStatesAssert {
     }
 
     FloorStatesAssert floors(Integer... expectedFloors) {
-        Integer[] actualFloors = new Integer[actual.size()];
-        Integer i = 0;
-        for (FloorState floorState : actual) {
-            actualFloors[i++] = floorState.floor;
-        }
+        Integer[] actualFloors = actual.stream()
+                .map(floorState -> floorState.floor)
+                .collect(toCollection(() -> new LinkedList<>()))
+                .toArray(new Integer[actual.size()]);
         assertThat(actualFloors).as("floors").isEqualTo(expectedFloors);
         return this;
     }
 
-    FloorStatesAssert waitingUsers(Integer... expectedWaitingUsers) {
-        Integer[] actualWaitingUsers = new Integer[actual.size()];
-        Integer i = 0;
-        for (FloorState floorState : actual) {
-            actualWaitingUsers[i++] = floorState.waitingUsers;
-        }
+    FloorStatesAssert waitingUsers(long... expectedWaitingUsers) {
+        Long[] actualWaitingUsers = actual.stream()
+                .map(floorState -> floorState.waitingUsers)
+                .collect(toCollection(() -> new LinkedList<>()))
+                .toArray(new Long[actual.size()]);
         assertThat(actualWaitingUsers).as("waiting users").isEqualTo(expectedWaitingUsers);
         return this;
     }
 
     FloorStatesAssert up(Boolean... expectedUp) {
-        Boolean[] actualUp = new Boolean[actual.size()];
-        Integer i = 0;
-        for (FloorState floorState : actual) {
-            actualUp[i++] = floorState.up;
-        }
+        Boolean[] actualUp = actual.stream()
+                .map(floorState -> floorState.up)
+                .collect(toCollection(() -> new LinkedList<>()))
+                .toArray(new Boolean[actual.size()]);
         assertThat(actualUp).as("up").isEqualTo(expectedUp);
         return this;
     }
 
     FloorStatesAssert down(Boolean... expectedDown) {
-        Boolean[] actualDown = new Boolean[actual.size()];
-        Integer i = 0;
-        for (FloorState floorState : actual) {
-            actualDown[i++] = floorState.down;
-        }
+        Boolean[] actualDown = actual.stream()
+                .map(floorState -> floorState.down)
+                .collect(toCollection(() -> new LinkedList<>()))
+                .toArray(new Boolean[actual.size()]);
         assertThat(actualDown).as("down").isEqualTo(expectedDown);
         return this;
     }
 
-    FloorStatesAssert target(Boolean... expectedTargets) {
-        Boolean[] actualTarget = new Boolean[actual.size()];
-        Integer i = 0;
-        for (FloorState floorState : actual) {
-            actualTarget[i++] = floorState.target;
-        }
-        assertThat(actualTarget).as("target").isEqualTo(expectedTargets);
+    FloorStatesAssert target(Boolean... expectedTarget) {
+        Boolean[] actualTarget = actual.stream()
+                .map(floorState -> floorState.target)
+                .collect(toCollection(() -> new LinkedList<>()))
+                .toArray(new Boolean[actual.size()]);
+        assertThat(actualTarget).as("target").isEqualTo(expectedTarget);
         return this;
     }
 }

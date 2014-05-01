@@ -16,7 +16,6 @@ import static elevator.server.ElevatorGame.State.PAUSE;
 import static elevator.server.ElevatorGame.State.RESUME;
 
 class ElevatorGame implements ClockListener {
-
     private static final String HTTP = "http";
 
     final Player player;
@@ -69,7 +68,7 @@ class ElevatorGame implements ClockListener {
         return building.floor();
     }
 
-    public int travelingUsers() {
+    public long travelingUsers() {
         return building.travelingUsers();
     }
 

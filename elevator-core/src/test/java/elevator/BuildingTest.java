@@ -215,7 +215,7 @@ public class BuildingTest {
                 .addUser(new DeterministicUser(5, 3));
         building.updateBuildingState();
 
-        int travelingUsers = building.travelingUsers();
+        long travelingUsers = building.travelingUsers();
 
         assertThat(travelingUsers).isEqualTo(1);
     }
