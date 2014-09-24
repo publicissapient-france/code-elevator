@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.CharMatcher.is;
 import static com.google.common.base.Charsets.UTF_8;
@@ -28,6 +29,8 @@ import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.io.CharStreams.readLines;
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static javax.ws.rs.core.Response.Status.FORBIDDEN;
@@ -74,16 +77,11 @@ public class WebResource {
     @Produces("text/csv; charset=UTF-8")
     @AdminAuthentication
     public String players() {
-        return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(new Function<ElevatorGame, String>() {
-            @Override
-            public String apply(ElevatorGame input) {
-                return on(',').join(newArrayList(
-                        "\"" + input.getPlayerInfo().email + "\"",
-                        "\"" + input.getPlayerInfo().pseudo + "\"",
-                        "\"" + input.url + "\"",
-                        input.score().toString()));
-            }
-        }));
+        return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(input -> on(',').join(newArrayList(
+                "\"" + input.getPlayerInfo().email + "\"",
+                "\"" + input.getPlayerInfo().pseudo + "\"",
+                "\"" + input.url + "\"",
+                input.score().toString()))));
     }
 
     @POST
@@ -151,12 +149,11 @@ public class WebResource {
     @GET
     @Path("/leaderboard")
     @Produces(APPLICATION_JSON)
-    public Collection<PlayerInfo> leaderboard() {
-        Collection<PlayerInfo> players = new ArrayList<>();
-        for (ElevatorGame game : server.getUnmodifiableElevatorGames()) {
-            players.add(game.getPlayerInfo());
-        }
-        return players;
+    public List<PlayerInfo> leaderboard() {
+        return server.getUnmodifiableElevatorGames()
+                .stream()
+                .map(ElevatorGame::getPlayerInfo)
+                .collect(toList());
     }
 
     @GET
