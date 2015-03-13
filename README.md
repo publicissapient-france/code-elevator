@@ -53,6 +53,23 @@ To deploy to a cloudbees instance (example) :
     $ mvn verify
     $ bees app:deploy --appid seblm/code-elevator --endPoint eu [--message "informational message"] [-P ADMIN_PASSWORD=secret] --type tomcat7 elevator-server/target/elevator-server-1.1-SNAPSHOT.war
 
+## Running with Docker
+
+There are multiple ways of making this kind of project running with Docker, but here's the one we chose: a first container will actually deal with the Maven build, and put the result of it (the generated WAR) in a volume. That volume will then be used by a Jetty container allowing to run the application.
+
+The only addition in this project is the Dockerfile describing what the maven container is supposed to do. Please notice that with this configuration, it's not even mandatory for you to have Maven installed anywhere. You can trigger the build directly with Docker which will take care of retrieving the correct version of Maven and JDK.
+
+The commands to run are:
+
+- Build the Docker image for the Maven build: `docker build -t code_elevator .`
+- Run a container based on the previously created image: `docker run --name code_elevator_container code_elevator`
+
+At this point, the Maven build of code-elevator will be managed, and the result of the build will be available in a volume managed by the container. The only remaining thing is to execute a Jetty container allowing to run our application:
+
+- `docker run -d -p 8080:8080 --volumes-from code_elevator_container jetty:9.2.9-jre8`
+
+That's all! The server is now up and running in a Docker container!
+
 ## Export / Import users
 
 When you redeploy the application, all users are lost in the operation. You can then save all users and re-import after redeployment.
