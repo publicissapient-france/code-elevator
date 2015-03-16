@@ -34,6 +34,7 @@ Here is what you need to build and run a code elevator session :
 ## Simple start with Docker
 
     $ git clone git@github.com:xebia-france/code-elevator.git
+    $ cd code-elevator
     $ ./build.sh
     $ ./run.sh
 
