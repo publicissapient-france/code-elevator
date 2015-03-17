@@ -20,7 +20,8 @@ public class ElevatorApplication extends Application {
         singletons = newHashSet(
                 new WebResource(server),
                 new UserAuthenticationFilter(server),
-                new AdminAuthenticationFilter());
+                new AdminAuthenticationFilter(),
+                new ServerStarter(server));
     }
 
     @Override

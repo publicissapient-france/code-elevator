@@ -1,7 +1,6 @@
 package elevator.server;
 
 import elevator.*;
-import elevator.engine.ElevatorEngine;
 import elevator.exception.ElevatorIsBrokenException;
 import elevator.user.InitializationStrategy;
 import elevator.user.MaxNumberOfUsers;
@@ -12,16 +11,15 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Set;
 
+import static elevator.server.ElevatorGame.State.INIT;
 import static elevator.server.ElevatorGame.State.PAUSE;
 import static elevator.server.ElevatorGame.State.RESUME;
 
-class ElevatorGame implements ClockListener {
+class ElevatorGame {
     private static final String HTTP = "http";
 
     final Player player;
     final URL url;
-    private final Clock clock;
-    private final ElevatorEngine elevatorEngine;
     private final Building building;
     private final Score score;
     private final InitializationStrategy userInitializationStrategy;
@@ -29,37 +27,29 @@ class ElevatorGame implements ClockListener {
     String lastErrorMessage;
     State state;
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore) throws MalformedURLException {
-        this(player, url, maxNumberOfUsers, clock, initialScore, new RandomUser(), null);
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Score initialScore) throws MalformedURLException {
+        this(player, url, maxNumberOfUsers, initialScore, new RandomUser(), null);
     }
 
-    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Clock clock, Score initialScore, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+    ElevatorGame(Player player, URL url, MaxNumberOfUsers maxNumberOfUsers, Score initialScore, InitializationStrategy userInitializationStrategy, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         if (!HTTP.equals(url.getProtocol())) {
             throw new IllegalArgumentException("http is the only supported protocol");
         }
         this.player = player;
         this.url = url;
-        this.elevatorEngine = new HTTPElevator(url, clock.EXECUTOR_SERVICE, urlStreamHandler);
-        this.building = new Building(elevatorEngine, maxNumberOfUsers);
-        this.clock = clock;
+        this.building = new Building(new HTTPElevator(url, urlStreamHandler), maxNumberOfUsers);
         this.score = initialScore;
         this.userInitializationStrategy = userInitializationStrategy;
         this.lastErrorMessage = null;
-        this.state = RESUME;
-        this.resume();
+        this.state = INIT;
     }
 
-    ElevatorGame stop(Boolean shutdown) {
-        clock.removeClockListener(this);
-        if (shutdown) {
-            ((HTTPElevator) elevatorEngine).shutdown();
-        }
+    ElevatorGame stop() {
         state = PAUSE;
         return this;
     }
 
     ElevatorGame resume() {
-        clock.addClockListener(this);
         state = RESUME;
         return this;
     }
@@ -76,8 +66,15 @@ class ElevatorGame implements ClockListener {
         return Door.OPEN.equals(building.door());
     }
 
-    @Override
-    public void onTick() {
+    public void updateState() {
+        if (state == PAUSE) {
+            return;
+        }
+        if (init()) {
+            reset("the elevator is at floor 0 and its doors are closed");
+            state = RESUME;
+            return;
+        }
         try {
             building.addUser(userInitializationStrategy);
             building.updateBuildingState().forEach(score::success);
@@ -114,7 +111,9 @@ class ElevatorGame implements ClockListener {
     }
 
     void reset(String message) {
-        score.loose();
+        if (!init()) {
+            score.loose();
+        }
         building.reset(message);
         lastErrorMessage = message;
     }
@@ -124,6 +123,10 @@ class ElevatorGame implements ClockListener {
     }
 
     enum State {
-        RESUME, PAUSE
+        INIT, RESUME, PAUSE;
+    }
+
+    private boolean init() {
+        return state == INIT;
     }
 }

@@ -9,9 +9,6 @@ import elevator.user.User;
 
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,11 +16,8 @@ import java.util.regex.Pattern;
 import static java.lang.String.format;
 import static java.net.URLEncoder.encode;
 import static java.nio.charset.Charset.defaultCharset;
-import static java.util.logging.Level.WARNING;
 
 class HTTPElevator implements ElevatorEngine {
-
-    private static final String SHUTDOWN_URL = "shutdown";
 
     private final URL server;
     private final URLStreamHandler urlStreamHandler;
@@ -34,11 +28,8 @@ class HTTPElevator implements ElevatorEngine {
     private final Pattern errorStatusMessage;
     private final String validCommands;
     private final Logger logger;
-    private final BlockingQueue<URL> requests;
 
-    private String transportErrorMessage;
-
-    HTTPElevator(URL server, ExecutorService executor, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+    HTTPElevator(URL server, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         this.urlStreamHandler = urlStreamHandler;
         this.server = new URL(server, "", urlStreamHandler);
         this.nextCommand = new URL(server, "nextCommand", urlStreamHandler);
@@ -48,50 +39,22 @@ class HTTPElevator implements ElevatorEngine {
         this.errorStatusMessage = Pattern.compile("Server returned HTTP response code: (\\d+).+");
         this.validCommands = "valid commands are [UP|DOWN|OPEN|CLOSE|NOTHING] with case sensitive";
         this.logger = new ElevatorLogger("HTTPElevator").logger();
-        this.requests = new LinkedBlockingQueue<>();
-        executor.execute(() -> {
-                    URL url = null;
-                    while (url == null || !url.getPath().equals(format("/%s", SHUTDOWN_URL))) {
-                        try {
-                            url = requests.take();
-                            URLConnection urlConnection = getUrlConnection(url);
-                            try (InputStream in = urlConnection.getInputStream()) {
-                                transportErrorMessage = null;
-                            }
-                        } catch (IOException e) {
-                            transportErrorMessage = createErrorMessage(url, e);
-                        } catch (InterruptedException e) {
-                            logger.log(WARNING, "Error occured when waiting for new URL", e);
-                        }
-                    }
-                }
-        );
     }
 
     @Override
     public ElevatorEngine call(Integer atFloor, Direction to) throws ElevatorIsBrokenException {
-        checkTransportError();
         httpGet("call?atFloor=" + atFloor + "&to=" + to);
         return this;
     }
 
     @Override
     public ElevatorEngine go(Integer floorToGo) throws ElevatorIsBrokenException {
-        checkTransportError();
         httpGet("go?floorToGo=" + floorToGo);
         return this;
     }
 
     @Override
     public Command nextCommand() throws ElevatorIsBrokenException {
-        checkTransportError();
-        while (!requests.isEmpty()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                logger.log(WARNING, "Error occured when waiting for requests to be send", e);
-            }
-        }
         StringBuilder out = new StringBuilder(nextCommand.toString());
         String commandFromResponse = "";
         try {
@@ -101,7 +64,6 @@ class HTTPElevator implements ElevatorEngine {
                 if (commandFromResponse == null) {
                     throw new ElevatorIsBrokenException(format("No command was provided; %s", validCommands));
                 }
-                transportErrorMessage = null;
                 Command command = Command.valueOf(commandFromResponse);
                 out.append(" ").append(command);
                 return command;
@@ -110,8 +72,7 @@ class HTTPElevator implements ElevatorEngine {
             out.append(" ").append(commandFromResponse);
             throw new ElevatorIsBrokenException(format("Command \"%s\" is not a valid command; %s", commandFromResponse, validCommands));
         } catch (IOException e) {
-            transportErrorMessage = createErrorMessage(nextCommand, e);
-            throw new ElevatorIsBrokenException(transportErrorMessage);
+            throw new ElevatorIsBrokenException(createErrorMessage(nextCommand, e));
         } finally {
             logger.info(out.toString());
         }
@@ -119,27 +80,20 @@ class HTTPElevator implements ElevatorEngine {
 
     @Override
     public ElevatorEngine userHasEntered(User user) throws ElevatorIsBrokenException {
-        checkTransportError();
         httpGet(userHasEntered);
         return this;
     }
 
     @Override
     public ElevatorEngine userHasExited(User user) throws ElevatorIsBrokenException {
-        checkTransportError();
         httpGet(userHasExited);
         return this;
     }
 
     @Override
     public ElevatorEngine reset(String cause) throws ElevatorIsBrokenException {
-        // do not check transport error
         httpGet(reset + "?cause=" + urlEncode(cause));
         return this;
-    }
-
-    public void shutdown() {
-        httpGet(SHUTDOWN_URL);
     }
 
     private void httpGet(String pathAndParameters) {
@@ -152,7 +106,13 @@ class HTTPElevator implements ElevatorEngine {
 
     private void httpGet(final URL url) {
         logger.info(url.toString());
-        requests.offer(url);
+        try {
+            URLConnection urlConnection = getUrlConnection(url);
+            try (InputStream in = urlConnection.getInputStream()) {
+            }
+        } catch (IOException e) {
+            throw new ElevatorIsBrokenException(createErrorMessage(url, e));
+        }
     }
 
     private URLConnection getUrlConnection(URL url) throws IOException {
@@ -160,12 +120,6 @@ class HTTPElevator implements ElevatorEngine {
         urlConnection.setConnectTimeout(1000);
         urlConnection.setReadTimeout(1000);
         return urlConnection;
-    }
-
-    private void checkTransportError() {
-        if (transportErrorMessage != null) {
-            throw new ElevatorIsBrokenException(transportErrorMessage);
-        }
     }
 
     private String urlEncode(String cause) {

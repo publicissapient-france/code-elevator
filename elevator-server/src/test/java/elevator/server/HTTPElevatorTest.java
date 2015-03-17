@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static elevator.Command.OPEN;
 import static elevator.Direction.UP;
@@ -31,55 +29,50 @@ public class HTTPElevatorTest {
     public ExpectedException expectedException = none();
     @Mock
     private URLConnection urlConnection;
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Test
     public void should_call_server_with_call() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080"),
                 new DontConnectURLStreamHandler("http://localhost:8080/call?atFloor=4&to=UP", urlConnection));
 
         httpElevator.call(4, UP);
 
-        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_go() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/go?floorToGo=3", urlConnection));
 
         httpElevator.go(3);
 
-        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_reset() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"),
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/reset?cause=reason", urlConnection));
 
         httpElevator.reset("reason");
 
-        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_userHasEntered() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"),
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasEntered", urlConnection));
 
         httpElevator.userHasEntered(mock(User.class));
 
-        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_userHasExited() throws Exception {
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://10.0.0.1/myApp/"),
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasExited", urlConnection));
 
         User user = mock(User.class);
@@ -87,14 +80,13 @@ public class HTTPElevatorTest {
         doReturn(1).when(user).getFloorToGo();
         httpElevator.userHasExited(user);
 
-        waitForHTTPSenderThread();
         verify(urlConnection).getInputStream();
     }
 
     @Test
     public void should_call_server_with_nextCommand() throws Exception {
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         Command nextCommand = httpElevator.nextCommand();
@@ -105,7 +97,7 @@ public class HTTPElevatorTest {
     @Test
     public void should_throws_exception_when_server_send_illegal_command() throws Exception {
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("_down".getBytes()));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
@@ -116,7 +108,7 @@ public class HTTPElevatorTest {
     @Test
     public void should_throws_exception_when_server_send_no_command() throws Exception {
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream(new byte[0]));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
@@ -127,7 +119,7 @@ public class HTTPElevatorTest {
     @Test
     public void should_handle_transport_error() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
@@ -138,7 +130,7 @@ public class HTTPElevatorTest {
     @Test
     public void should_handle_UnknownHostException() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new UnknownHostException("fakehost"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://fakehost"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://fakehost"),
                 new DontConnectURLStreamHandler("http://fakehost/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
@@ -147,25 +139,10 @@ public class HTTPElevatorTest {
     }
 
     @Test
-    public void should_tell_that_a_transport_error_has_occured_at_second_call_when_first_call_is_non_blocking() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
-                new DontConnectURLStreamHandler("http://127.0.0.1/call?atFloor=4&to=UP", urlConnection));
-        httpElevator.call(4, UP);
-        waitForHTTPSenderThread();
-
-        expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("connection failed");
-        httpElevator.call(4, UP);
-    }
-
-    @Test
     public void should_handle_404_error() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new FileNotFoundException("http://localhost:8080/context/call?atFloor=4&to=UP"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"),
                 new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
-        httpElevator.call(4, UP);
-        waitForHTTPSenderThread();
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("Resource \"http://localhost:8080/context/call\" is not found");
@@ -175,11 +152,9 @@ public class HTTPElevatorTest {
     @Test
     public void should_return_url_without_query_when_server_respond_with_HTTP_status_code_error() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call?atFloor=4&to=UP"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://localhost:8080/context/"),
                 new DontConnectURLStreamHandler("http://localhost:8080/context/call?atFloor=4&to=UP", urlConnection));
-        httpElevator.call(4, UP);
 
-        waitForHTTPSenderThread();
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call");
         httpElevator.call(4, UP);
@@ -188,19 +163,11 @@ public class HTTPElevatorTest {
     @Test
     public void should_tell_that_a_transport_error_has_occured_when_call_is_blocking() throws Exception {
         when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"), executorService,
+        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
                 new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
 
         expectedException.expect(ElevatorIsBrokenException.class);
         expectedException.expectMessage("connection failed");
         httpElevator.nextCommand();
-    }
-
-    private void waitForHTTPSenderThread() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

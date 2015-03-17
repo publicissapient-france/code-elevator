@@ -13,4 +13,7 @@ class BuildingAndElevator {
         this.elevator = elevator;
     }
 
+    Building building() {
+        return building;
+    }
 }

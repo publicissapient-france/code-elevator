@@ -1,6 +1,5 @@
 package elevator.server;
 
-import elevator.Clock;
 import elevator.server.security.UserPasswordValidator;
 
 import java.net.MalformedURLException;
@@ -9,20 +8,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 class ElevatorServer implements UserPasswordValidator {
     private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
-    private final Clock clock = new Clock();
+    private final ExecutorService asyncExecutor;
 
     private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
 
     ElevatorServer() {
-        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(clock::tick, 0, 1, SECONDS);
+        asyncExecutor = Executors.newSingleThreadExecutor();
     }
 
     public ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
@@ -34,7 +34,7 @@ class ElevatorServer implements UserPasswordValidator {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already been added");
         }
-        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, clock, score);
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, score);
         elevatorGames.put(player, elevatorGame);
     }
 
@@ -51,13 +51,13 @@ class ElevatorServer implements UserPasswordValidator {
     void removeElevatorGame(String email) {
         ElevatorGame elevatorGame = elevatorGame(email, FALSE);
         if (elevatorGame != null) {
-            elevatorGame.stop(TRUE);
+            elevatorGame.stop();
             elevatorGames.remove(elevatorGame.player);
         }
     }
 
     void pauseElevatorGame(String email) {
-        elevatorGame(email).stop(FALSE);
+        elevatorGame(email).stop();
     }
 
     void resumeElevatorGame(String email) {
@@ -68,8 +68,8 @@ class ElevatorServer implements UserPasswordValidator {
         return elevatorGame(email).getPlayerInfo();
     }
 
-    void resetPlayer(String email) {
-        elevatorGame(email).reset("player has requested a reset");
+    Future<?> resetPlayer(String email) {
+        return asyncExecutor.submit(() -> elevatorGame(email).reset("player has requested a reset"));
     }
 
     public Collection<ElevatorGame> getUnmodifiableElevatorGames() {
@@ -101,5 +101,15 @@ class ElevatorServer implements UserPasswordValidator {
             return null;
         }
         return elevatorGames.get(player);
+    }
+
+    public void start() {
+        while (true) {
+            elevatorGames.forEach((player, game) -> game.updateState());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
+        }
     }
 }

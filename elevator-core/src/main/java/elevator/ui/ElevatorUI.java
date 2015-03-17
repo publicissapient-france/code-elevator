@@ -1,7 +1,6 @@
 package elevator.ui;
 
 import elevator.Building;
-import elevator.Clock;
 import elevator.engine.ElevatorEngine;
 import elevator.user.ConstantMaxNumberOfUsers;
 
@@ -21,17 +20,15 @@ public class ElevatorUI extends JFrame {
 
     private static final long serialVersionUID = -7040543347613308702L;
 
-    public ElevatorUI() throws HeadlessException {
+    public ElevatorUI() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setLayout(new BorderLayout());
 
         List<BuildingAndElevator> buildings = new ArrayList<>();
-        final Clock clock = new Clock();
 
         for (ElevatorEngine elevatorEngine : ServiceLoader.load(ElevatorEngine.class)) {
             final Building building = new Building(elevatorEngine, new ConstantMaxNumberOfUsers());
-            clock.addClockListener(building::updateBuildingState);
             buildings.add(new BuildingAndElevator(building, elevatorEngine));
         }
 
@@ -41,7 +38,8 @@ public class ElevatorUI extends JFrame {
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
         executor.scheduleAtFixedRate(() -> {
-            clock.tick();
+            buildings.stream().map(BuildingAndElevator::building)
+                              .forEach(Building::updateBuildingState);
             interactionPanel.update();
         }, 0, 1, SECONDS);
 

@@ -1,47 +1,70 @@
 package elevator.server;
 
-import elevator.Clock;
 import elevator.user.ConstantMaxNumberOfUsers;
 import elevator.user.FloorsAndDirection;
 import elevator.user.InitializationStrategy;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.Spy;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
-import static java.lang.Boolean.FALSE;
+import static elevator.server.ElevatorGame.State.PAUSE;
+import static elevator.server.ElevatorGame.State.RESUME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElevatorGameTest {
-    @Spy
-    private Clock clock;
+    @Mock
+    private URLConnection urlConnection;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    
+    private URL url;
+
+    @Before
+    public void mockURLConnection() {
+        try {
+            when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+    
+    @Before
+    public void createURL() {
+        try {
+            url = new URL("http://127.0.0.1");
+        } catch (MalformedURLException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 
     @Test
     public void should_not_create_elevator_game_with_other_protocol_than_http() throws Exception {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("http is the only supported protocol");
 
-        new ElevatorGame(null, new URL("https://127.0.0.1"), null, clock, null);
+        new ElevatorGame(null, new URL("https://127.0.0.1"), null, null);
     }
 
     @Test
     public void should_get_player_info() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score(45));
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), url, null, new Score(45), () -> new FloorsAndDirection(0, 1), new DontConnectURLStreamHandler(urlConnection));
 
         PlayerInfo playerInfo = elevatorGame.getPlayerInfo();
 
@@ -52,12 +75,13 @@ public class ElevatorGameTest {
         assertThat(playerInfo.peopleInTheElevator).isZero();
         assertThat(playerInfo.pseudo).isEqualTo("player");
         assertThat(playerInfo.score).isEqualTo(45);
-        assertThat(playerInfo.state).isEqualTo("RESUME");
+        assertThat(playerInfo.state).isEqualTo("INIT");
     }
 
     @Test
-    public void should_loose_and_update_message_when_reset() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
+    public void should_loose_and_update_message_when_reset() throws MalformedURLException {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), url, null, new Score(), () -> new FloorsAndDirection(0, 1), new DontConnectURLStreamHandler(urlConnection));
+        elevatorGame.resume();
 
         elevatorGame.reset("error message");
 
@@ -66,29 +90,26 @@ public class ElevatorGameTest {
     }
 
     @Test
-    public void should_stop() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score());
+    public void should_stop() throws MalformedURLException {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), url, null, new Score(), () -> new FloorsAndDirection(0, 1), new DontConnectURLStreamHandler(urlConnection));
 
-        elevatorGame.stop(FALSE);
+        elevatorGame.stop();
 
-        verify(clock, times(1)).removeClockListener(elevatorGame);
-        assertThat(elevatorGame.getPlayerInfo().state).isEqualTo("PAUSE");
+        assertThat(elevatorGame.state).isEqualTo(PAUSE);
     }
 
     @Test
-    public void should_resume() throws Exception {
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), null, clock, new Score()).stop(FALSE);
+    public void should_resume() throws MalformedURLException {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), url, null, new Score(), () -> new FloorsAndDirection(0, 1), new DontConnectURLStreamHandler(urlConnection)).stop();
 
         elevatorGame.resume();
 
-        verify(clock, times(2)).addClockListener(elevatorGame);
+        assertThat(elevatorGame.state).isEqualTo(RESUME);
     }
 
     @Test
-    public void should_compute_score_even_if_user_have_not_wait_at_all() throws IOException, InterruptedException {
-        URLConnection urlConnection = mock(URLConnection.class);
-        when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("".getBytes()));
-        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), new URL("http://localhost"), new ConstantMaxNumberOfUsers(2), clock, new Score(), new InitializationStrategy() {
+    public void should_compute_score_even_if_user_have_not_wait_at_all() throws IOException {
+        ElevatorGame elevatorGame = new ElevatorGame(new Player("player@provider.com", "player"), url, new ConstantMaxNumberOfUsers(2), new Score(), new InitializationStrategy() {
 
             private Queue<Integer> initialFloor = new ArrayDeque<>(Arrays.asList(4, 0, 4));
 
@@ -98,19 +119,15 @@ public class ElevatorGameTest {
             }
 
         }, new DontConnectURLStreamHandler(urlConnection));
-        Thread.sleep(100);
+        elevatorGame.updateState();
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
-        clock.tick();
-        Thread.sleep(100);
+        elevatorGame.updateState();
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("CLOSE".getBytes()));
-        clock.tick();
-        Thread.sleep(100);
+        elevatorGame.updateState();
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("UP".getBytes()));
-        clock.tick();
-        Thread.sleep(100);
+        elevatorGame.updateState();
         when(urlConnection.getInputStream()).thenReturn(new ByteArrayInputStream("OPEN".getBytes()));
-        clock.tick();
-        Thread.sleep(100);
+        elevatorGame.updateState();
 
         assertThat(elevatorGame.score()).isEqualTo(20);
     }

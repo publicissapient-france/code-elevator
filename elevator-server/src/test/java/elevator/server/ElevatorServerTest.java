@@ -68,8 +68,9 @@ public class ElevatorServerTest {
     public void should_loose_and_give_message_when_user_wants_to_reset() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
         elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
+        elevatorServer.resumeElevatorGame("player@provider.com");
 
-        elevatorServer.resetPlayer("player@provider.com");
+        elevatorServer.resetPlayer("player@provider.com").get();
 
         PlayerInfo playerInfo = elevatorServer.getPlayerInfo("player@provider.com");
         assertThat(playerInfo.lastErrorMessage).isEqualTo("player has requested a reset");

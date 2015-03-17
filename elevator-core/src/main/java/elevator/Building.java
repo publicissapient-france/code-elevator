@@ -29,7 +29,6 @@ public class Building {
         this.elevatorEngine = elevatorEngine;
         this.maxNumberOfUsers = maxNumberOfUsers;
         this.elevator = new Elevator(this);
-        reset("the elevator is at floor 0 and its doors are closed");
     }
 
     public Building addUser(InitializationStrategy strategy) throws ElevatorIsBrokenException {
