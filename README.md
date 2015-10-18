@@ -64,24 +64,31 @@ To deploy to a cloudbees instance (example) :
 
 ## Running with Docker
 
-There are multiple ways of making this kind of project running with Docker, but here's the one we chose: a first container will actually deal with the Maven build, and put the result of it (the generated WAR) in a volume. That volume will then be used by a Jetty container allowing to run the application.
+There are multiple ways of making this kind of project running with Docker, but here's the one we chose: a first
+container will actually deal with the Maven build, and put the result of it (the generated WAR) in a volume. That volume
+will then be used by a Jetty container allowing to run the application.
 
-The only addition in this project is the Dockerfile describing what the maven container is supposed to do. Please notice that with this configuration, it's not even mandatory for you to have Maven installed anywhere. You can trigger the build directly with Docker which will take care of retrieving the correct version of Maven and JDK.
+The only addition in this project is the Dockerfile describing what the maven container is supposed to do. Please notice
+that with this configuration, it's not even mandatory for you to have Maven installed anywhere. You can trigger the
+build directly with Docker which will take care of retrieving the correct version of Maven and JDK.
 
 The commands to run are:
 
-- Build the Docker image for the Maven build: `docker build -t code_elevator .`
-- Run a container based on the previously created image: `docker run --name code_elevator_container code_elevator`
+- Build the Docker image for the Maven build: `docker build --tag code-elevator .`
+- Run a container based on the previously created image: `docker run --name code-elevator-container code_elevator`
 
-At this point, the Maven build of code-elevator will be managed, and the result of the build will be available in a volume managed by the container. The only remaining thing is to execute a Jetty container allowing to run our application:
+At this point, the Maven build of code-elevator will be managed, and the result of the build will be available in a
+volume managed by the container. The only remaining thing is to execute a Jetty container allowing to run our
+application:
 
-- `docker run -d -p 8080:8080 --volumes-from code_elevator_container jetty:9.2.9-jre8`
+- `docker run --detach --publish 8080:8080 --volumes-from code-elevator-container jetty:9.2.9-jre8`
 
 That's all! The server is now up and running in a Docker container!
 
 ## Export / Import users
 
-When you redeploy the application, all users are lost in the operation. You can then save all users and re-import after redeployment.
+When you redeploy the application, all users are lost in the operation. You can then save all users and re-import after
+redeployment.
 
 - export
 
@@ -99,7 +106,8 @@ Csv is user email, user login, server url and score:
 
     $ curl --basic --user :secret --url http://localhost:8080/resources/players.csv --form players=@players.csv > uploadResult.txt
 
-Upload result is a json file where the key is the user email and the value is the import result. Import is successful when the password is defined:
+Upload result is a json file where the key is the user email and the value is the import result. Import is successful
+when the password is defined:
 
     {
       "foo@exemple.org":["password","a game with player foo@exemple.org has already been added"],

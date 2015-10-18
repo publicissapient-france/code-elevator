@@ -1,2 +1,3 @@
-sudo  docker build -t code_elevator .
+#!/usr/bin/env bash
 
+docker build --tag code-elevator .
