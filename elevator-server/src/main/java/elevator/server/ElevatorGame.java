@@ -71,15 +71,21 @@ class ElevatorGame {
             return;
         }
         if (init()) {
-            reset("the elevator is at floor 0 and its doors are closed");
-            state = RESUME;
+            try {
+                reset("the elevator is at floor 0 and its doors are closed");
+                state = RESUME;
+            } catch (ElevatorIsBrokenException ignored) {
+            }
             return;
         }
         try {
             building.addUser(userInitializationStrategy);
             building.updateBuildingState().forEach(score::success);
         } catch (ElevatorIsBrokenException e) {
-            reset(e.getMessage());
+            try {
+                reset(e.getMessage());
+            } catch (ElevatorIsBrokenException ignored) {
+            }
         }
     }
 
@@ -110,7 +116,7 @@ class ElevatorGame {
         return score.getAverageScore();
     }
 
-    void reset(String message) {
+    void reset(String message) throws ElevatorIsBrokenException {
         if (!init()) {
             score.loose();
         }

@@ -65,7 +65,7 @@ public class Building {
         return elevator.applyCommand(command);
     }
 
-    public void reset(String cause) {
+    public void reset(String cause) throws ElevatorIsBrokenException {
         elevator.reset();
         users.clear();
         elevatorEngine.reset(cause);

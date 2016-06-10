@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,10 +22,10 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
-import static elevator.server.ElevatorGame.State.PAUSE;
-import static elevator.server.ElevatorGame.State.RESUME;
+import static elevator.server.ElevatorGame.State.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ElevatorGameTest {
@@ -130,5 +131,40 @@ public class ElevatorGameTest {
         elevatorGame.updateState();
 
         assertThat(elevatorGame.score()).isEqualTo(20);
+    }
+
+    @Test
+    public void should_have_init_state_when_elevator_participant_is_not_reachable() throws IOException {
+        final ElevatorGame elevatorGame = new ElevatorGame(
+                new Player("player@provider.com", "player"),
+                url,
+                null,
+                new Score(),
+                () -> new FloorsAndDirection(0, 1),
+                new DontConnectURLStreamHandler(urlConnection)
+        );
+        given(urlConnection.getInputStream()).willThrow(new ConnectException("Connection refused"));
+
+        elevatorGame.updateState();
+
+        assertThat(elevatorGame.state).isEqualTo(INIT);
+    }
+
+    @Test
+    public void should_decrease_score_when_elevator_participant_becomes_unreachable() throws IOException {
+        final ElevatorGame elevatorGame = new ElevatorGame(
+                new Player("player@provider.com", "player"),
+                url,
+                new MaxNumberOfUsers(),
+                new Score(),
+                () -> new FloorsAndDirection(0, 1),
+                new DontConnectURLStreamHandler(urlConnection)
+        );
+        elevatorGame.updateState();
+        given(urlConnection.getInputStream()).willThrow(new ConnectException("Connection refused"));
+
+        elevatorGame.updateState();
+
+        assertThat(elevatorGame.score()).isEqualTo(-10);
     }
 }
