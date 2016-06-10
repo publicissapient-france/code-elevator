@@ -74,7 +74,7 @@ public class WebResource {
 
     @GET
     @Path("/players.csv")
-    @Produces("text/csv; charset=UTF-8")
+    @Produces("text/csv;charset=UTF-8")
     @AdminAuthentication
     public String players() {
         return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(input -> on(',').join(newArrayList(
@@ -87,6 +87,7 @@ public class WebResource {
     @POST
     @Path("/players.csv")
     @Consumes(MULTIPART_FORM_DATA)
+    @Produces(APPLICATION_JSON)
     @AdminAuthentication
     public Map<String, Collection<String>> importPlayers(
             @FormDataParam("players") InputStream uploadedInputStream) throws IOException {

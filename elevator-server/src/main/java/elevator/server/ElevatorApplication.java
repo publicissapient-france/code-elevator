@@ -1,9 +1,9 @@
 package elevator.server;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.google.common.collect.Sets;
 import elevator.server.security.AdminAuthenticationFilter;
 import elevator.server.security.UserAuthenticationFilter;
-import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 import javax.ws.rs.core.Application;
