@@ -1,8 +1,9 @@
 package elevator.server;
 
 import elevator.user.User;
-import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.time.LocalDateTime;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -96,9 +97,9 @@ public class ScoreTest {
     public void should_compute_average_score() {
         Score score = new Score();
         score.score = 100;
-        score.started = new DateTime(2013, 9, 28, 9, 0);
+        score.started = LocalDateTime.of(2013, 9, 28, 9, 0);
 
-        Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 1));
+        Integer averageScore = score.getAverageScore(LocalDateTime.of(2013, 9, 28, 9, 1));
 
         assertThat(averageScore).isEqualTo(1500);
     }
@@ -107,9 +108,9 @@ public class ScoreTest {
     public void should_compute_average_score_with_precision() {
         Score score = new Score();
         score.score = 202;
-        score.started = new DateTime(2013, 9, 28, 9, 0);
+        score.started = LocalDateTime.of(2013, 9, 28, 9, 0);
 
-        Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 2));
+        Integer averageScore = score.getAverageScore(LocalDateTime.of(2013, 9, 28, 9, 2));
 
         assertThat(averageScore).isEqualTo(1515);
     }
@@ -118,9 +119,9 @@ public class ScoreTest {
     public void should_compute_average_score_after_15min() {
         Score score = new Score();
         score.score = 1600;
-        score.started = new DateTime(2013, 9, 28, 9, 0);
+        score.started = LocalDateTime.of(2013, 9, 28, 9, 0);
 
-        Integer averageScore = score.getAverageScore(new DateTime(2013, 9, 28, 9, 16));
+        Integer averageScore = score.getAverageScore(LocalDateTime.of(2013, 9, 28, 9, 16));
 
         assertThat(averageScore).isEqualTo(1500);
     }
