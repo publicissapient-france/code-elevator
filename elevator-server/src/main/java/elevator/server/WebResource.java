@@ -1,9 +1,5 @@
 package elevator.server;
 
-import com.google.common.base.Function;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import elevator.server.security.AdminAuthentication;
 import elevator.server.security.UserAuthentication;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -12,24 +8,17 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.nio.charset.Charset;
+import java.util.*;
 
-import static com.google.common.base.CharMatcher.is;
-import static com.google.common.base.Charsets.UTF_8;
-import static com.google.common.base.Joiner.on;
-import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
-import static com.google.common.io.CharStreams.readLines;
-import static java.util.stream.Collectors.toCollection;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
@@ -77,11 +66,12 @@ public class WebResource {
     @Produces("text/csv;charset=UTF-8")
     @AdminAuthentication
     public String players() {
-        return on('\n').join(from(server.getUnmodifiableElevatorGames()).transform(input -> on(',').join(newArrayList(
-                "\"" + input.getPlayerInfo().email + "\"",
-                "\"" + input.getPlayerInfo().pseudo + "\"",
-                "\"" + input.url + "\"",
-                input.score().toString()))));
+        return server.getUnmodifiableElevatorGames().stream().map(input -> "" +
+                "\"" + input.getPlayerInfo().email + "\"," +
+                "\"" + input.getPlayerInfo().pseudo + "\"," +
+                "\"" + input.url + "\"," +
+                input.score().toString())
+                .collect(joining("\n"));
     }
 
     @POST
@@ -91,24 +81,30 @@ public class WebResource {
     @AdminAuthentication
     public Map<String, Collection<String>> importPlayers(
             @FormDataParam("players") InputStream uploadedInputStream) throws IOException {
-        List<String> fileContent;
-        try (InputStreamReader inputStreamReader = new InputStreamReader(uploadedInputStream, UTF_8)) {
-            fileContent = readLines(inputStreamReader);
-        }
-        final ListMultimap<String, String> passwordsByEmail = ArrayListMultimap.create();
-        for (String s : fileContent) {
-            List<String> columns = Splitter.on(",").trimResults(is('"')).splitToList(s);
-            String email = columns.get(0);
-            String pseudo = columns.get(1);
-            String serverURL = columns.get(2);
-            Integer score = Integer.parseInt(columns.get(3));
-            try {
-                passwordsByEmail.put(email, newParticipantWithScore(email, pseudo, serverURL, score));
-            } catch (WebApplicationException e) {
-                passwordsByEmail.put(email, e.getResponse().getEntity().toString());
+        final Map<String, Collection<String>> passwordsByEmail = new HashMap<>();
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(uploadedInputStream, Charset.forName("UTF-8")))) {
+            String s;
+            while ((s = in.readLine()) != null) {
+                List<String> columns = stream(s.split(",")).map(column -> column.replaceAll("\"(.*)\"", "$1")).collect(toList());
+                String email = columns.get(0);
+                String pseudo = columns.get(1);
+                String serverURL = columns.get(2);
+                Integer score = Integer.parseInt(columns.get(3));
+                try {
+                    add(passwordsByEmail, email, newParticipantWithScore(email, pseudo, serverURL, score));
+                } catch (WebApplicationException e) {
+                    add(passwordsByEmail, email, e.getResponse().getEntity().toString());
+                }
             }
         }
-        return passwordsByEmail.asMap();
+        return passwordsByEmail;
+    }
+
+    private void add(Map<String, Collection<String>> passwordsByEmail, String email, String newParticipantWithScore) {
+        if (!passwordsByEmail.containsKey(email)) {
+            passwordsByEmail.put(email, new ArrayList<>());
+        }
+        passwordsByEmail.get(email).add(newParticipantWithScore);
     }
 
     @POST

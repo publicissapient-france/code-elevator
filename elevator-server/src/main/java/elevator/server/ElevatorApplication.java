@@ -1,7 +1,6 @@
 package elevator.server;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.google.common.collect.Sets;
 import elevator.server.security.AdminAuthenticationFilter;
 import elevator.server.security.UserAuthenticationFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -10,23 +9,23 @@ import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
 
 public class ElevatorApplication extends Application {
     private final HashSet<Object> singletons;
 
     public ElevatorApplication() {
         ElevatorServer server = new ElevatorServer();
-        singletons = newHashSet(
+        singletons = new HashSet<>(asList(
                 new WebResource(server),
                 new UserAuthenticationFilter(server),
                 new AdminAuthenticationFilter(),
-                new ServerStarter(server));
+                new ServerStarter(server)));
     }
 
     @Override
     public Set<Class<?>> getClasses() {
-        return Sets.<Class<?>>newHashSet(JacksonJsonProvider.class, MultiPartFeature.class);
+        return new HashSet<>(asList(JacksonJsonProvider.class, MultiPartFeature.class));
     }
 
     @Override
