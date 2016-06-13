@@ -159,15 +159,4 @@ public class HTTPElevatorTest {
         expectedException.expectMessage("Server returned HTTP response code: 500 for URL: http://localhost:8080/context/call");
         httpElevator.call(4, UP);
     }
-
-    @Test
-    public void should_tell_that_a_transport_error_has_occured_when_call_is_blocking() throws Exception {
-        when(urlConnection.getInputStream()).thenThrow(new IOException("connection failed"));
-        HTTPElevator httpElevator = new HTTPElevator(new URL("http://127.0.0.1"),
-                new DontConnectURLStreamHandler("http://127.0.0.1/nextCommand", urlConnection));
-
-        expectedException.expect(ElevatorIsBrokenException.class);
-        expectedException.expectMessage("connection failed");
-        httpElevator.nextCommand();
-    }
 }
