@@ -134,7 +134,7 @@ public class ElevatorGameTest {
     }
 
     @Test
-    public void should_have_init_state_when_elevator_participant_is_not_reachable() throws IOException {
+    public void should_have_init_state_and_loose_when_elevator_participant_is_not_reachable() throws IOException {
         final ElevatorGame elevatorGame = new ElevatorGame(
                 new Player("player@provider.com", "player"),
                 url,
@@ -148,6 +148,7 @@ public class ElevatorGameTest {
         elevatorGame.updateState();
 
         assertThat(elevatorGame.state).isEqualTo(INIT);
+        assertThat(elevatorGame.score()).isEqualTo(-10);
     }
 
     @Test

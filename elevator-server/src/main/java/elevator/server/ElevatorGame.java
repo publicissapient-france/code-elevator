@@ -75,6 +75,7 @@ class ElevatorGame {
                 reset("the elevator is at floor 0 and its doors are closed");
                 state = RESUME;
             } catch (ElevatorIsBrokenException ignored) {
+                score.loose();
             }
             return;
         }
