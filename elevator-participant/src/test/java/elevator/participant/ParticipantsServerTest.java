@@ -26,7 +26,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(400), eq(33l));
+        verify(httpExchange).sendResponseHeaders(eq(400), eq(33L));
         assertThat(responseBody.toString()).isEqualTo(" doesn't conform to \"^(.*)(/.+)$\"");
     }
 
@@ -38,7 +38,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(400), eq(34l));
+        verify(httpExchange).sendResponseHeaders(eq(400), eq(34L));
         assertThat(responseBody.toString()).isEqualTo("/ doesn't conform to \"^(.*)(/.+)$\"");
     }
 
@@ -50,7 +50,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(400), eq(55l));
+        verify(httpExchange).sendResponseHeaders(eq(400), eq(55L));
         assertThat(responseBody.toString()).isEqualTo("Elevator implementation \"UnknownElevator\" was not found");
     }
 
@@ -61,7 +61,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(200), eq(0l));
+        verify(httpExchange).sendResponseHeaders(eq(200), eq(0L));
         assertThat(FakeElevatorEngine.calls()).isEmpty();
     }
 
@@ -72,7 +72,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(200), eq(0l));
+        verify(httpExchange).sendResponseHeaders(eq(200), eq(0L));
         assertThat(FakeElevatorEngine.calls()).isEqualTo("call(0, UP)");
     }
 
@@ -83,7 +83,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(200), eq(0l));
+        verify(httpExchange).sendResponseHeaders(eq(200), eq(0L));
         assertThat(FakeElevatorEngine.calls()).isEqualTo("go(3)");
     }
 
@@ -95,7 +95,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(200), eq(7l));
+        verify(httpExchange).sendResponseHeaders(eq(200), eq(7L));
         assertThat(responseBody.toString()).isEqualTo("NOTHING");
         assertThat(FakeElevatorEngine.calls()).isEqualTo("nextCommand : NOTHING");
     }
@@ -107,7 +107,7 @@ public class ParticipantsServerTest {
 
         participantsServer.handle(httpExchange);
 
-        verify(httpExchange).sendResponseHeaders(eq(200), eq(0l));
+        verify(httpExchange).sendResponseHeaders(eq(200), eq(0L));
         assertThat(FakeElevatorEngine.calls()).isEqualTo("reset(because)");
     }
 

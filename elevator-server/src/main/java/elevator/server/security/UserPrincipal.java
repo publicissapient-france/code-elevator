@@ -5,7 +5,7 @@ import java.security.Principal;
 class UserPrincipal implements Principal {
     private final String email;
 
-    public UserPrincipal(String email) {
+    UserPrincipal(String email) {
         this.email = email;
     }
 

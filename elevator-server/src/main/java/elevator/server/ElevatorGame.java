@@ -58,7 +58,7 @@ class ElevatorGame {
         return building.floor();
     }
 
-    public long travelingUsers() {
+    long travelingUsers() {
         return building.travelingUsers();
     }
 
@@ -66,7 +66,7 @@ class ElevatorGame {
         return Door.OPEN.equals(building.door());
     }
 
-    public void updateState() {
+    void updateState() {
         if (state == PAUSE) {
             return;
         }
@@ -125,12 +125,12 @@ class ElevatorGame {
         lastErrorMessage = message;
     }
 
-    public Set<FloorState> floorStates() {
+    Set<FloorState> floorStates() {
         return building.floorStates();
     }
 
     enum State {
-        INIT, RESUME, PAUSE;
+        INIT, RESUME, PAUSE
     }
 
     private boolean init() {

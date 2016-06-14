@@ -15,7 +15,7 @@ public class Commands {
     private final Integer lowerFloor;
     private final Integer higherFloor;
 
-    public Commands(Integer lowerFloor, Integer higherFloor) {
+    Commands(Integer lowerFloor, Integer higherFloor) {
         this.lowerFloor = lowerFloor;
         this.higherFloor = higherFloor;
         commands = new LinkedHashSet<>(abs(higherFloor - lowerFloor) * 2);

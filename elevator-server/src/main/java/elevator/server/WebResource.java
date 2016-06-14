@@ -28,7 +28,7 @@ import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 public class WebResource {
     private final ElevatorServer server;
 
-    public WebResource(ElevatorServer server) {
+    WebResource(ElevatorServer server) {
         this.server = server;
     }
 

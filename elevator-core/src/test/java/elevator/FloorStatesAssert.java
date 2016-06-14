@@ -24,7 +24,7 @@ class FloorStatesAssert {
     FloorStatesAssert floors(Integer... expectedFloors) {
         Integer[] actualFloors = actual.stream()
                 .map(floorState -> floorState.floor)
-                .collect(toCollection(() -> new LinkedList<>()))
+                .collect(toCollection(LinkedList::new))
                 .toArray(new Integer[actual.size()]);
         assertThat(actualFloors).as("floors").isEqualTo(expectedFloors);
         return this;
@@ -33,7 +33,7 @@ class FloorStatesAssert {
     FloorStatesAssert waitingUsers(long... expectedWaitingUsers) {
         Long[] actualWaitingUsers = actual.stream()
                 .map(floorState -> floorState.waitingUsers)
-                .collect(toCollection(() -> new LinkedList<>()))
+                .collect(toCollection(LinkedList::new))
                 .toArray(new Long[actual.size()]);
         assertThat(actualWaitingUsers).as("waiting users").isEqualTo(expectedWaitingUsers);
         return this;
@@ -42,7 +42,7 @@ class FloorStatesAssert {
     FloorStatesAssert up(Boolean... expectedUp) {
         Boolean[] actualUp = actual.stream()
                 .map(floorState -> floorState.up)
-                .collect(toCollection(() -> new LinkedList<>()))
+                .collect(toCollection(LinkedList::new))
                 .toArray(new Boolean[actual.size()]);
         assertThat(actualUp).as("up").isEqualTo(expectedUp);
         return this;
@@ -51,7 +51,7 @@ class FloorStatesAssert {
     FloorStatesAssert down(Boolean... expectedDown) {
         Boolean[] actualDown = actual.stream()
                 .map(floorState -> floorState.down)
-                .collect(toCollection(() -> new LinkedList<>()))
+                .collect(toCollection(LinkedList::new))
                 .toArray(new Boolean[actual.size()]);
         assertThat(actualDown).as("down").isEqualTo(expectedDown);
         return this;
@@ -60,7 +60,7 @@ class FloorStatesAssert {
     FloorStatesAssert target(Boolean... expectedTarget) {
         Boolean[] actualTarget = actual.stream()
                 .map(floorState -> floorState.target)
-                .collect(toCollection(() -> new LinkedList<>()))
+                .collect(toCollection(LinkedList::new))
                 .toArray(new Boolean[actual.size()]);
         assertThat(actualTarget).as("target").isEqualTo(expectedTarget);
         return this;

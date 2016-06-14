@@ -22,7 +22,7 @@ public class SystemPropertyRule implements TestRule {
         private final String propertyName;
         private final Statement base;
 
-        public SaveAndRestoreSystemProperty(String propertyName, Statement base) {
+        SaveAndRestoreSystemProperty(String propertyName, Statement base) {
             this.propertyName = propertyName;
             this.base = base;
         }

@@ -11,7 +11,7 @@ import javax.ws.rs.client.WebTarget;
 import java.net.InetSocketAddress;
 
 class ElevatorServerRule extends ExternalResource {
-    public WebTarget target;
+    WebTarget target;
 
     private Server server;
     private Handler jettyHandler;

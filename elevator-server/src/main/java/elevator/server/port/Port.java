@@ -1,7 +1,7 @@
 package elevator.server.port;
 
 @FunctionalInterface
-public interface Port {
+interface Port {
 
     Integer port();
 

@@ -12,7 +12,7 @@ import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 abstract class AuthenticationFilter implements ContainerRequestFilter {
     private final UserPasswordValidator userPasswordValidator;
 
-    protected AuthenticationFilter(UserPasswordValidator userPasswordValidator) {
+    AuthenticationFilter(UserPasswordValidator userPasswordValidator) {
         this.userPasswordValidator = userPasswordValidator;
     }
 

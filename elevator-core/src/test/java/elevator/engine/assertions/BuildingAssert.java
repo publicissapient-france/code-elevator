@@ -9,7 +9,7 @@ import org.assertj.core.api.AbstractObjectAssert;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class BuildingAssert extends AbstractObjectAssert<BuildingAssert, Building> {
-    public BuildingAssert(Building actual) {
+    BuildingAssert(Building actual) {
         super(actual, BuildingAssert.class);
     }
 

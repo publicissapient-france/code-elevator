@@ -56,7 +56,7 @@ public class User {
         return state == State.DONE;
     }
 
-    public Boolean at(int floor) {
+    Boolean at(int floor) {
         return this.currentFloor == floor;
     }
 

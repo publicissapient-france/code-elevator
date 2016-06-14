@@ -25,12 +25,12 @@ class ElevatorServer implements UserPasswordValidator {
         asyncExecutor = Executors.newSingleThreadExecutor();
     }
 
-    public ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
+    ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
         addElevatorGame(player, server, new Score());
         return this;
     }
 
-    public void addElevatorGame(Player player, URL server, Score score) throws MalformedURLException {
+    void addElevatorGame(Player player, URL server, Score score) throws MalformedURLException {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already been added");
         }
@@ -72,7 +72,7 @@ class ElevatorServer implements UserPasswordValidator {
         return asyncExecutor.submit(() -> elevatorGame(email).reset("player has requested a reset"));
     }
 
-    public Collection<ElevatorGame> getUnmodifiableElevatorGames() {
+    Collection<ElevatorGame> getUnmodifiableElevatorGames() {
         return Collections.unmodifiableCollection(elevatorGames.values());
     }
 
@@ -103,7 +103,7 @@ class ElevatorServer implements UserPasswordValidator {
         return elevatorGames.get(player);
     }
 
-    public void start() {
+    void start() {
         while (true) {
             elevatorGames.forEach((player, game) -> game.updateState());
             try {

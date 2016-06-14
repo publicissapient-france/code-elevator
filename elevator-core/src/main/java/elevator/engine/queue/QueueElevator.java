@@ -13,7 +13,7 @@ import static elevator.Command.*;
 
 public class QueueElevator implements ElevatorEngine {
 
-    final Queue<Integer> floorsToStop = new ArrayDeque<>();
+    private final Queue<Integer> floorsToStop = new ArrayDeque<>();
 
     private Integer floor = 0;
     private Door door = Door.CLOSE;

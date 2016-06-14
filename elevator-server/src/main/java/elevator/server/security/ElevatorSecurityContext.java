@@ -6,7 +6,7 @@ import java.security.Principal;
 class ElevatorSecurityContext implements SecurityContext {
     private final String email;
 
-    public ElevatorSecurityContext(String email) {
+    ElevatorSecurityContext(String email) {
         this.email = email;
     }
 

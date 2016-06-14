@@ -24,7 +24,7 @@ import static java.lang.String.format;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 
 public class ParticipantsServer implements HttpHandler {
-    public static final Pattern PATH_PATTERN = Pattern.compile("^(.*)(/.+)$");
+    private static final Pattern PATH_PATTERN = Pattern.compile("^(.*)(/.+)$");
 
     private final HashMap<String, ElevatorEngine> elevators;
 

@@ -5,7 +5,7 @@ import elevator.FloorState;
 import java.io.Serializable;
 import java.util.Set;
 
-public class PlayerInfo implements Serializable {
+class PlayerInfo implements Serializable {
     public final String pseudo;
     public final String email;
     public final int score;
@@ -17,7 +17,7 @@ public class PlayerInfo implements Serializable {
     public final String state;
     public final Set<FloorState> floorStates;
 
-    public PlayerInfo(ElevatorGame game, Player player) {
+    PlayerInfo(ElevatorGame game, Player player) {
         email = player.email;
         pseudo = player.pseudo;
         score = game.score();

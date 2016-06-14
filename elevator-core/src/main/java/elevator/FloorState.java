@@ -7,7 +7,7 @@ public class FloorState {
     public final Boolean down;
     public final Boolean target;
 
-    public FloorState(Integer floor, long waitingUsers, Boolean up, Boolean down, Boolean target) {
+    FloorState(Integer floor, long waitingUsers, Boolean up, Boolean down, Boolean target) {
         this.floor = floor;
         this.waitingUsers = waitingUsers;
         this.up = up;
