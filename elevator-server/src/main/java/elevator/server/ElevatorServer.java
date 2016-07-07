@@ -14,9 +14,10 @@ import java.util.concurrent.Future;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.util.Collections.synchronizedSortedMap;
 
 class ElevatorServer implements UserPasswordValidator {
-    private final Map<Player, ElevatorGame> elevatorGames = new TreeMap<>();
+    private final Map<Player, ElevatorGame> elevatorGames = synchronizedSortedMap(new TreeMap<>());
     private final ExecutorService asyncExecutor;
 
     private MaxNumberOfUsers maxNumberOfUsers = new MaxNumberOfUsers();
