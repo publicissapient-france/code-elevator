@@ -2,3 +2,5 @@ elevator.engine.scan.ScanElevator
 elevator.engine.naive.NaiveElevator
 elevator.engine.queue.QueueElevator
 elevator.engine.crazy.CrazyElevator
+elevator.engine.scala.OmnibusElevatorManager
+elevator.engine.scala.SmartElevatorManager
