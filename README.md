@@ -52,16 +52,6 @@ If you run a public session you may modify admin password by starting server wit
 can also control max number of users per building which is three at first or kick out some subscribers when going to
 [http://localhost:8080/#/administration](http://localhost:8080/#/administration).
 
-## Running on a remote server
-
-Don't want to install Java nor fill up your hard drive with jar files you can try
-[Sebastian's online server](http://code-elevator.seblm.eu.cloudbees.net).
-
-To deploy to a cloudbees instance (example) :
-
-    $ mvn verify
-    $ bees app:deploy --appid seblm/code-elevator --endPoint eu [--message "informational message"] [-P ADMIN_PASSWORD=secret] --type tomcat7 elevator-server/target/elevator-server-1.1-SNAPSHOT.war
-
 ## Running with Docker
 
 There are multiple ways of making this kind of project running with Docker, but here's the one we chose: a first
