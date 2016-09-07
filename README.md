@@ -52,29 +52,6 @@ If you run a public session you may modify admin password by starting server wit
 can also control max number of users per building which is three at first or kick out some subscribers when going to
 [http://localhost:8080/#/administration](http://localhost:8080/#/administration).
 
-## Running with Docker
-
-There are multiple ways of making this kind of project running with Docker, but here's the one we chose: a first
-container will actually deal with the Maven build, and put the result of it (the generated WAR) in a volume. That volume
-will then be used by a Jetty container allowing to run the application.
-
-The only addition in this project is the Dockerfile describing what the maven container is supposed to do. Please notice
-that with this configuration, it's not even mandatory for you to have Maven installed anywhere. You can trigger the
-build directly with Docker which will take care of retrieving the correct version of Maven and JDK.
-
-The commands to run are:
-
-- Build the Docker image for the Maven build: `docker build --tag code-elevator .`
-- Run a container based on the previously created image: `docker run --name code-elevator-container code_elevator`
-
-At this point, the Maven build of code-elevator will be managed, and the result of the build will be available in a
-volume managed by the container. The only remaining thing is to execute a Jetty container allowing to run our
-application:
-
-- `docker run --detach --publish 8080:8080 --volumes-from code-elevator-container jetty:9.3.11-jre8`
-
-That's all! The server is now up and running in a Docker container!
-
 ## Export / Import users
 
 When you redeploy the application, all users are lost in the operation. You can then save all users and re-import after
