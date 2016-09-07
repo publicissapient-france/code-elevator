@@ -71,7 +71,7 @@ At this point, the Maven build of code-elevator will be managed, and the result 
 volume managed by the container. The only remaining thing is to execute a Jetty container allowing to run our
 application:
 
-- `docker run --detach --publish 8080:8080 --volumes-from code-elevator-container jetty:9.3.10-jre8`
+- `docker run --detach --publish 8080:8080 --volumes-from code-elevator-container jetty:9.3.11-jre8`
 
 That's all! The server is now up and running in a Docker container!
 
