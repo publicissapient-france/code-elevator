@@ -1,9 +1,11 @@
 package elevator.server;
 
 import elevator.server.security.UserPasswordValidator;
+import elevator.user.RandomUser;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -27,15 +29,23 @@ class ElevatorServer implements UserPasswordValidator {
     }
 
     ElevatorServer addElevatorGame(Player player, URL server) throws MalformedURLException {
-        addElevatorGame(player, server, new Score());
+        addElevatorGame(player, server, new Score(), null);
         return this;
     }
 
     void addElevatorGame(Player player, URL server, Score score) throws MalformedURLException {
+        addElevatorGame(player, server, score, null);
+    }
+
+    void addElevatorGame(Player player, URL server, URLStreamHandler urlStreamHandler) throws MalformedURLException {
+        addElevatorGame(player, server, new Score(), urlStreamHandler);
+    }
+
+    private void addElevatorGame(Player player, URL server, Score score, URLStreamHandler urlStreamHandler) throws MalformedURLException {
         if (elevatorGames.containsKey(player)) {
             throw new IllegalStateException("a game with player " + player + " has already been added");
         }
-        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, score);
+        ElevatorGame elevatorGame = new ElevatorGame(player, server, maxNumberOfUsers, score, new RandomUser(), urlStreamHandler);
         elevatorGames.put(player, elevatorGame);
     }
 

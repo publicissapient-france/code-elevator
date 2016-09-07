@@ -1,33 +1,25 @@
 package elevator.server;
 
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ElevatorServerTest {
-    @ClassRule
-    public static ElevatorServerRule elevatorServerRule = new ElevatorServerRule(new AlwaysOkHandler());
 
-    private static class AlwaysOkHandler extends AbstractHandler {
-        @Override
-        public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-            baseRequest.getResponse().setStatus(SC_OK);
-            baseRequest.setHandled(true);
-        }
-    }
+    @Rule
+    public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+    @Mock
+    private URLConnection urlConnection;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -67,7 +59,7 @@ public class ElevatorServerTest {
     @Test
     public void should_loose_and_give_message_when_user_wants_to_reset() throws Exception {
         ElevatorServer elevatorServer = new ElevatorServer();
-        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"));
+        elevatorServer.addElevatorGame(new Player("player@provider.com", "pseudo"), new URL("http://127.0.0.1:8080"), new DontConnectURLStreamHandler(urlConnection));
         elevatorServer.resumeElevatorGame("player@provider.com");
 
         elevatorServer.resetPlayer("player@provider.com").get();

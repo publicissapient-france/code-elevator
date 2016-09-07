@@ -1,52 +1,42 @@
 package elevator.server;
 
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.webapp.WebAppContext;
+import com.sun.net.httpserver.HttpServer;
+import org.glassfish.jersey.jdkhttp.JdkHttpServerFactory;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.rules.ExternalResource;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import java.net.InetSocketAddress;
+import javax.ws.rs.core.UriBuilder;
+import java.net.URI;
 
 class ElevatorServerRule extends ExternalResource {
+    private static final URI URI = UriBuilder.fromUri("")
+            .scheme("http").host("localhost").port(8080)
+            .path("resources")
+            .build();
+
     WebTarget target;
 
-    private Server server;
-    private Handler jettyHandler;
+    private HttpServer server;
 
     ElevatorServerRule() {
-        this(new WebAppContext("src/main/webapp", "/"));
-    }
-
-    ElevatorServerRule(Handler jettyHandler) {
-        this.jettyHandler = jettyHandler;
         this.target = ClientBuilder.newClient()
                 .register(MultiPartFeature.class)
-                .target("http://localhost:8080/resources");
-    }
-
-    public static void main(String[] args) throws Throwable {
-        final ElevatorServerRule elevatorServer = new ElevatorServerRule();
-
-        Runtime.getRuntime().addShutdownHook(new Thread(elevatorServer::after));
-
-        elevatorServer.before();
+                .target(URI);
     }
 
     @Override
     protected void before() throws Throwable {
-        InetSocketAddress address = new InetSocketAddress("localhost", 8080);
-        server = new Server(address);
-        server.setHandler(jettyHandler);
-        server.start();
+        ElevatorApplication application = new ElevatorApplication();
+        server = JdkHttpServerFactory.createHttpServer(URI, ResourceConfig.forApplication(application));
     }
 
     @Override
     protected void after() {
         try {
-            server.stop();
+            server.stop(0);
         } catch (Exception e) {
             e.printStackTrace();
         }
