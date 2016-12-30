@@ -44,6 +44,10 @@ Here is what you need to build and run a code elevator session :
     $ cd code-elevator
     $ mvn clean install
     $ mvn --file elevator-server/pom.xml jetty:run [-DADMIN_PASSWORD=secret]
+    
+Note : if you need to change the port because your port 8080 is already used, you can start it instead with :
+
+    $ mvn --file elevator-server/pom.xml jetty:run -Djetty.port=8086 [-DADMIN_PASSWORD=secret] 
 
 Go to [http://localhost:8080](http://localhost:8080), subscribe to a session and start implementing your elevator
 server.
