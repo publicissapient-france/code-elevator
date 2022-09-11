@@ -26,7 +26,7 @@ server :
 
 Here is what you need to build and run a code elevator session :
 
-- JDK 1.8
+- JDK 11
 - maven 3.x
 
 ### Steps
@@ -35,8 +35,11 @@ Here is what you need to build and run a code elevator session :
 
     $ git clone git@github.com:xebia-france/code-elevator.git
     $ cd code-elevator
-    $ ./build.sh
-    $ ./run.sh
+    $ docker build --tag code-elevator .
+    $ docker run --add-host=host.docker.internal:host-gateway --detach --name code-elevator --publish 8080:8080 code-elevator
+
+[Server is started](http://localhost:8080): you can register with a local elevator http server with
+`http://host.docker.internal[:port]` when you want to participate.
 
 ## Building yourself with maven
 

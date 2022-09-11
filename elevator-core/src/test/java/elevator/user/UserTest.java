@@ -5,7 +5,7 @@ import elevator.engine.ElevatorEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static elevator.engine.ElevatorEngine.HIGHER_FLOOR;
 import static elevator.engine.ElevatorEngine.LOWER_FLOOR;

@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ElevatorGameTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     private URL url;
 
     @Before
@@ -45,7 +45,7 @@ public class ElevatorGameTest {
             throw new UncheckedIOException(e);
         }
     }
-    
+
     @Before
     public void createURL() {
         try {

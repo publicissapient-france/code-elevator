@@ -10,12 +10,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.util.Base64;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
-import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebResourceTest {
@@ -265,6 +265,6 @@ public class WebResourceTest {
     }
 
     private String credentials(String user, String password) {
-        return "Basic " + printBase64Binary((user + ":" + password).getBytes());
+        return "Basic " + Base64.getEncoder().encodeToString((user + ":" + password).getBytes());
     }
 }

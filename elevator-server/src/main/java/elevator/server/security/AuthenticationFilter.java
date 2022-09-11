@@ -3,11 +3,10 @@ package elevator.server.security;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
-import java.io.IOException;
+import java.util.Base64;
 
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
-import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
 
 abstract class AuthenticationFilter implements ContainerRequestFilter {
     private final UserPasswordValidator userPasswordValidator;
@@ -17,14 +16,14 @@ abstract class AuthenticationFilter implements ContainerRequestFilter {
     }
 
     @Override
-    public final void filter(ContainerRequestContext requestContext) throws IOException {
+    public final void filter(ContainerRequestContext requestContext) {
         String authorization = requestContext.getHeaderString(AUTHORIZATION);
         if (authorization == null) {
             throw new WebApplicationException(UNAUTHORIZED);
         }
 
         authorization = authorization.replaceFirst("[Bb]asic ", "");
-        String userAndPassword = new String(parseBase64Binary(authorization));
+        String userAndPassword = new String(Base64.getDecoder().decode(authorization));
         if (!userAndPassword.contains(":")) {
             throw new WebApplicationException(UNAUTHORIZED);
         }

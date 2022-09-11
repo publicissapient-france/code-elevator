@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -76,8 +76,6 @@ public class HTTPElevatorTest {
                 new DontConnectURLStreamHandler("http://10.0.0.1/myApp/userHasExited", urlConnection));
 
         User user = mock(User.class);
-        doReturn(0).when(user).getInitialFloor();
-        doReturn(1).when(user).getFloorToGo();
         httpElevator.userHasExited(user);
 
         verify(urlConnection).getInputStream();
