@@ -2,12 +2,12 @@ package elevator.server;
 
 import elevator.server.security.AdminAuthentication;
 import elevator.server.security.UserAuthentication;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.SecurityContext;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,12 +17,12 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.*;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
+import static jakarta.ws.rs.core.Response.Status.FORBIDDEN;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
-import static javax.ws.rs.core.Response.Status.FORBIDDEN;
 
 @Path("/")
 public class WebResource {
@@ -67,10 +67,10 @@ public class WebResource {
     @AdminAuthentication
     public String players() {
         return server.getUnmodifiableElevatorGames().stream().map(input -> "" +
-                "\"" + input.getPlayerInfo().email + "\"," +
-                "\"" + input.getPlayerInfo().pseudo + "\"," +
-                "\"" + input.url + "\"," +
-                input.score().toString())
+                        "\"" + input.getPlayerInfo().email + "\"," +
+                        "\"" + input.getPlayerInfo().pseudo + "\"," +
+                        "\"" + input.url + "\"," +
+                        input.score().toString())
                 .collect(joining("\n"));
     }
 

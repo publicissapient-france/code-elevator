@@ -31,10 +31,9 @@ class FloorStatesAssert {
     }
 
     FloorStatesAssert waitingUsers(long... expectedWaitingUsers) {
-        Long[] actualWaitingUsers = actual.stream()
-                .map(floorState -> floorState.waitingUsers)
-                .collect(toCollection(LinkedList::new))
-                .toArray(new Long[actual.size()]);
+        long[] actualWaitingUsers = actual.stream()
+                .mapToLong(floorState -> floorState.waitingUsers)
+                .toArray();
         assertThat(actualWaitingUsers).as("waiting users").isEqualTo(expectedWaitingUsers);
         return this;
     }

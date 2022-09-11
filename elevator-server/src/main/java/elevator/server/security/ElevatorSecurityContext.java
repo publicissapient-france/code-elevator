@@ -1,6 +1,7 @@
 package elevator.server.security;
 
-import javax.ws.rs.core.SecurityContext;
+import jakarta.ws.rs.core.SecurityContext;
+
 import java.security.Principal;
 
 class ElevatorSecurityContext implements SecurityContext {

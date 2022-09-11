@@ -1,21 +1,21 @@
 package elevator.server;
 
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.junit.Rule;
 import org.junit.Test;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Base64;
 
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static javax.ws.rs.core.Response.Status.NO_CONTENT;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+import static jakarta.ws.rs.core.HttpHeaders.AUTHORIZATION;
+import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static jakarta.ws.rs.core.Response.Status.NO_CONTENT;
+import static jakarta.ws.rs.core.Response.Status.UNAUTHORIZED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebResourceTest {
@@ -212,7 +212,7 @@ public class WebResourceTest {
             final Response playerAsCSV = elevatorServerRule.target.path("/players.csv")
                     .request()
                     .header(AUTHORIZATION, credentials("", "admin"))
-                    .buildPost(Entity.entity(multipart, multipart.getMediaType())).invoke();
+                    .buildPost(Entity.entity(multipart, MediaType.MULTIPART_FORM_DATA_TYPE)).invoke();
 
             assertThat(playerAsCSV.getHeaderString(CONTENT_TYPE)).isEqualTo("application/json");
             String jsonPlayer = playerAsCSV.readEntity(String.class);
@@ -242,7 +242,7 @@ public class WebResourceTest {
             final Response playerAsCSV = elevatorServerRule.target.path("/players.csv")
                     .request()
                     .header(AUTHORIZATION, credentials("", "admin"))
-                    .buildPost(Entity.entity(multipart, multipart.getMediaType())).invoke();
+                    .buildPost(Entity.entity(multipart, MediaType.MULTIPART_FORM_DATA_TYPE)).invoke();
 
             assertThat(playerAsCSV.getHeaderString(CONTENT_TYPE)).isEqualTo("application/json");
             String jsonPlayer = playerAsCSV.readEntity(String.class);

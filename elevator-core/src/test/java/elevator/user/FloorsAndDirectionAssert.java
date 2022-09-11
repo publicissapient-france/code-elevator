@@ -12,17 +12,17 @@ class FloorsAndDirectionAssert {
     }
 
     FloorsAndDirectionAssert initialFloor(Integer expectedFloor) {
-        assertThat(expectedFloor).as("initial floor").isEqualTo(actual.initialFloor);
+        assertThat(actual.initialFloor).as("initial floor").isEqualTo(expectedFloor);
         return this;
     }
 
     FloorsAndDirectionAssert initialDirection(Direction expectedDirection) {
-        assertThat(expectedDirection).as("initial direction").isEqualTo(actual.initialDirection);
+        assertThat(actual.initialDirection).as("initial direction").isEqualTo(expectedDirection);
         return this;
     }
 
     FloorsAndDirectionAssert floorToGo(Integer expectedFloorToGo) {
-        assertThat(expectedFloorToGo).as("floor to go").isEqualTo(actual.floorToGo);
+        assertThat(actual.floorToGo).as("floor to go").isEqualTo(expectedFloorToGo);
         return this;
     }
 }

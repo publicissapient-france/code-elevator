@@ -1,11 +1,11 @@
 package elevator.server;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.fasterxml.jackson.jakarta.rs.json.JacksonJsonProvider;
 import elevator.server.security.AdminAuthenticationFilter;
 import elevator.server.security.UserAuthenticationFilter;
+import jakarta.ws.rs.core.Application;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
-import javax.ws.rs.core.Application;
 import java.util.HashSet;
 import java.util.Set;
 
